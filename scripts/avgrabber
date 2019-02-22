@@ -1,0 +1,16 @@
+#!/bin/bash
+#
+# Grab desktop video and audio.
+#
+
+case "$1" in
+    (*)
+    ffmpeg -thread_queue_size 512  \
+           -f x11grab -r 30 -s 1920x1080 -i :0.0+0,0 \
+           -f pulse -ac 2 -i 2 -q:v 0 /dev/shm/${USER}/dump.mp4
+    ;;
+esac
+
+#
+# Done.
+#

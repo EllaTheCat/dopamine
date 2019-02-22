@@ -1,0 +1,42 @@
+# This line is a comment.
+
+- Emacs backups.
+
+**~
+.#*
+#*
+
+# Build products.
+
+*.d
+*.o
+*.exe
+
+# Repos
+.git
+
+# Crystal Palace Streams.
+# DTVKit simulator testfiles.
+490000000.ts
+514000000.ts
+545833000.ts
+506000000.ts
+482000000.ts
+529833000.ts
+538000000.ts
+570000000.ts
+586000000.ts
+746000000.ts
+754000000.ts
+
+# DTVKit toplevel
+*/dtvkit/*-git-clone-latest.tar.gz
+*/dtvkit/App
+*/dtvkit/DVBCore
+*/dtvkit/HBBTV
+*/dtvkit/MHEG
+*/dtvkit/DSMCC
+
+#
+# Done
+#

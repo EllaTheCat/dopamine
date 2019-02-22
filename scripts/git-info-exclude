@@ -1,0 +1,41 @@
+#!/bin/dash
+#
+# Quick-and-dirty git configuration.
+
+EXCLUDE=".git/info/exclude"
+
+# HEADER
+echo "#" > ${EXCLUDE}
+echo "# git ls-files --others --exclude-from=.git/info/exclude" >> ${EXCLUDE}
+echo "# Lines that start with '#' are comments." >> ${EXCLUDE}
+
+# BODY
+echo '*~'		>> ${EXCLUDE} # Emacs
+echo '\#*\#'		>> ${EXCLUDE}
+echo 'TAGS'		>> ${EXCLUDE}
+
+echo '*.[ao]'		>> ${EXCLUDE} # C/C++
+
+echo '*.moc'		>> ${EXCLUDE} # QtCreator
+echo '*.obj'		>> ${EXCLUDE}
+echo '*.pch'		>> ${EXCLUDE}
+echo '*.rcc'		>> ${EXCLUDE}
+echo '*.pro.user'	>> ${EXCLUDE}
+
+echo '.~lock*'		>> ${EXCLUDE}
+
+# FOOTER
+echo '#' >> ${EXCLUDE}
+echo '# Done' >> ${EXCLUDE}
+echo '#' >> ${EXCLUDE}
+
+ATTRIBUTES=".git/info/attributes"
+
+echo "#" > ${ATTRIBUTES}
+echo '*.ods diff=odf' >> ${ATTRIBUTES}
+echo '*.odt diff=odf' >> ${ATTRIBUTES}
+echo '*.odp diff=odf' >> ${ATTRIBUTES}
+
+#
+# Done.
+#

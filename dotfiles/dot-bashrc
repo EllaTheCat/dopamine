@@ -1,0 +1,232 @@
+#!/bin/bash
+# dot-bashrc
+# ubuntu 16.04
+
+############################################################################
+
+case $(tty) in
+    (/dev/tty[0-9]*)
+    ;;
+    (*)
+    export TERM=xterm
+    ;;
+esac
+
+############################################################################
+
+export PATH=${HOME}/bin:${HOME}/local/bin
+export PATH=${PATH}:${HOME}/Programs/scripts:${HOME}/Programs/scrypts
+export PATH=${PATH}:/usr/local/bin:/usr/bin:/bin
+export PATH=${PATH}:/usr/local/sbin:/usr/sbin:/sbin
+
+############################################################################
+
+function parse_git_branch {
+  ref=$(git symbolic-ref HEAD 2> /dev/null) || return
+  echo "\040("${ref#refs/heads/}")"
+}
+
+function _prompt
+{
+    tail=$(pwd)
+    if test $(echo "$tail" | sed "s/ /_/g") == "/" ; then
+	PS1="$tail" # Depth = 0
+    else
+	head=$(dirname "$tail")
+	if test $(echo "$head" | sed "s/ /_/g") == "/" ; then
+	    PS1="$tail" # Depth = 1
+	else
+	    if test $(dirname "$head" | sed "s/ /_/g") == "/" ; then
+		PS1=/$(basename "$head")/$(basename "$tail") # Depth = 2
+	    else
+		PS1=-$(basename "$head")/$(basename "$tail") # Depth > 2
+	    fi
+	fi
+    fi
+    PS1="$PS1$(parse_git_branch)"
+    if test -n "${SSH_CLIENT}" ; then
+	PS1="\[\033[1m\]\h\[\033[0m\] $PS1> "
+    else
+	PS1="$PS1> "
+    fi
+    history -a; history -c; history -r
+}
+
+PROMPT_COMMAND=_prompt
+
+############################################################################
+
+# Remove system aliases.
+unalias -a
+
+# Voodoo for sudo.
+alias rm='/bin/rm -i'
+alias vi='/usr/bin/vim.tiny'
+alias sudo='sudo '
+alias visudo='EDITOR=/usr/bin/vim.tiny /usr/sbin/visudo'
+
+############################################################################
+
+export EDITOR="/usr/bin/vim.tiny"
+export HISTCONTROL="ignoredups:erasedups"
+export HISTIGNORE="&:cd:h:hc:l[ls]:[bf]g:exit:[ ]*"
+export HISTSIZE=99999
+export HISTFILESIZE=99999
+export IGNOREEOF=999
+export LC_COLLATE="POSIX"    # sort order for directory listing (was "C")
+export PAGER="/usr/bin/less"
+export TAR_OPTIONS=""
+
+############################################################################
+
+# Disabled in '/etc/bash.bashrc'.
+if [ -f /etc/bash_completion ] && ! shopt -oq posix; then
+    . /etc/bash_completion
+    #
+    ### complete -r mplayer
+fi
+
+# Cycle through possible completions.
+case "$-" in
+    (*i*)
+    bind '"\C-\M-i":menu-complete'
+    ;;
+esac
+
+# Be quiet.
+# setterm -blength 0
+[ "$XDG_CURRENT_DESKTOP" = "XFCE" ] && xset b off
+
+# Permissions.
+# &= ~umask (rwx|ugo)
+
+umask 022   # OpenEmbedded
+
+# Don't overwrite history on exit.
+shopt -s histappend
+
+############################################################################
+
+function df
+{
+    /bin/df "$@" | head -n 1
+    /bin/df "$@" | grep -v Mount | sort -k1
+}
+
+function grep
+{
+    /bin/grep --exclude '*~' "$@"
+}
+
+function h
+{
+    history | tail -40
+}
+
+function ll
+{
+    /bin/ls --ignore-backups -N -T 0 --color=none -ohL "$@"
+}
+
+function ls
+{
+    /bin/ls --ignore-backups -N -T 0 --color=none --block-size=\'1 "$@"
+}
+
+function a-ls
+{
+    lsattr "$@" | sort
+}
+function a-set
+{
+    sudo chattr +i "$@"
+}
+function a-clr
+{
+    sudo chattr -i "$@"
+}
+
+############################################################################
+
+function http
+{
+    python -m SimpleHTTPServer "$@"
+}
+
+function rename
+{
+    /usr/bin/rename.ul "$@"
+}
+
+############################################################################
+
+function gf
+{
+    git fetch && git log --date=local --stat ..origin/$(git branch | grep \* | awk '{print $2}')
+}
+
+function gl
+{
+    git log --date=local "$@"
+}
+
+function glo
+{
+    git log --date=local --pretty=oneline "$@"
+}
+
+function gls
+{
+    git log --date=local --stat "$@"
+}
+
+function glt
+{
+    git ls-tree --full-tree -r HEAD
+}
+
+function gc
+{
+    git checkout -- "$@"
+}
+
+function gd
+{
+    git diff "$@"
+}
+
+function gdc
+{
+    git diff --cached "$@"
+}
+
+function ga
+{
+    git add "$@"
+}
+
+function gk
+{
+    git commit "$@"
+}
+
+function gka
+{
+    git commit --amend "$@"
+}
+
+function gs
+{
+    git status "$@"
+}
+
+############################################################################
+
+function dmesg
+{
+    command dmesg -H --time-format ctime | grep -v UFW
+}
+
+############################################################################
+# Done.
+############################################################################

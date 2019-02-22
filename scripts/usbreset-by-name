@@ -1,0 +1,53 @@
+#!/bin/bash
+
+reset ()
+{
+    lineno=1  # Ensure device number increases with line number.
+    lsusb | grep "$1" | sort -k 4 | \
+        while read -r line
+    do
+        cmd=$(echo $line | \
+            awk '{print "sudo ${HOME}/scripts/usbreset /dev/bus/usb/" $2 "/" $4}' | sed 's/://g')
+        echo "${lineno} ${cmd}"
+        if [ "${lineno}" = "$2" ] || [ "$2" = "0" ] ; then
+            eval ${cmd}
+        fi
+        ((lineno++))
+    done
+}
+
+
+start ()
+{
+    case  "$1" in
+        (k|keyboard)
+        sleep 3
+        reset 'Dell Computer Corp. Keyboard'  0
+        ;;
+        (m|mouse)
+        sleep 3
+        reset 'Microsoft Corp. Basic Optical Mouse v2.0'  0
+        ;;
+        (dvbs)
+        reset 'TBS Technologies China'  0
+        ;;
+        (dvbt)
+        reset 'Geniatech T230 DVB-T2 TV Stick'  0
+        ;;
+        (dvbs?)
+        reset 'TBS Technologies China'  ${1#dvbs}
+        ;;
+        (dvbt?)
+        reset 'Geniatech T230 DVB-T2 TV Stick'  ${1#dvbt}
+        ;;
+        (*)
+        echo "Usage:\t$(basename $0) k|m|dvbs|dvbsN|dvbt|dvbtN"
+        echo "\tN: 0=all, 1= 1st, 2=2nd"
+        ;;
+    esac
+}
+
+#
+# Start here.
+#
+start "$1"

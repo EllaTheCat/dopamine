@@ -1,0 +1,35 @@
+#!/bin/bash
+#
+# https://www.reddit.com/r/commandline/comments/3hgxzt/does_anyone_know_of_a_program_or_a_script_that/
+#
+case $(hostname) in
+    (quietpc)
+    if test -z "$1"; then
+         nohup xfce4-terminal -T KeyClick -e "$0 by-path/pci-0000:00:??.?-usb-?:?:?.?-event-kbd" >/dev/null 2>&1
+    else
+        case "$1" in
+            (by-path/*event-kbd|event[0-9]|event[1-9][0-9])
+            cd $(dirname $0)
+            sudo stdbuf -oL od -A none -t u1 -w72 -v /dev/input/$1 | while read -s -a array; do
+                if [[ ( ${array[20]} != 0 ) && ( ${array[44]} == 0 ) || ( ${array[20]} == 0 ) && ( ${array[44]} != 0 ) ]]; then
+                    if [[ ( ${array[20]} == ${a20} ) && ${array[44]} == ${a44} ]]; then
+                        a20=-1
+                        a44=-1
+                    else
+                        aplay -q keyclick.wav &
+                        a20=${array[20]}
+                        a44=${array[44]}
+                    fi
+                else
+                    a20=${array[20]}
+                    a44=${array[44]}
+                fi
+                ### DEBUG ### echo "${array[20]} ${array[44]}"
+            done
+        esac
+    fi
+esac
+
+#
+# Done.
+#

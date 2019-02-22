@@ -1,0 +1,28 @@
+#!/bin/bash
+#
+# Fitzcarraldo How to stop the clock in a VirtualBox virtual machine from drifting
+# https://fitzcarraldoblog.wordpress.com/2016/07/01/how-to-stop-the-clock-in-a-virtualbox-virtual-machine-from-drifting/
+#
+
+case "$1" in
+    (ubuntu32e)
+    VBoxManage setextradata "ubuntu32e" "VBoxInternal/Devices/VMMDev/0/Config/GetHostTimeDisabled" 0
+    VBoxManage guestproperty set "ubuntu32e" "/VirtualBox/GuestAdd/VBoxService/--timesync-set-threshold" 10000
+    ;;
+esac
+
+
+# The setextradata command forces the virtual machine to get its time
+# of day from the host machine by setting GetHostTimeDisabled to zero
+# (0 = enabled, 1 = disabled). The command stores the parameter in the
+# .vbox XML file of the virtual machine, ensuring that it is set every
+# time the virtual machine boots.
+
+# The guestproperty command forces the virtual machine to
+# re-synchronise its clock to the host machine every ten seconds (ten
+# thousand milliseconds). The command also stores the parameter in the
+# .vbox XML file of the virtual machine.
+
+#
+# Done.
+#

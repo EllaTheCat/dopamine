@@ -1,0 +1,14 @@
+#!/bin/bash
+#
+# i3-make
+#
+
+I3FILES=$(readlink -f ~/Programs/i3files)
+cd ${I3FILES}
+make \
+    CONFIGURED=true I3BIN="${HOME}/local/bin" \
+    -f ${I3FILES}/Makefile -C ${I3FILES} "$@"
+
+#
+# Done.
+#

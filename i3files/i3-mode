@@ -1,0 +1,32 @@
+#!/bin/bash
+#
+# i3-mode
+#
+# Make the screen go dim when inside a non-default mode.
+#
+
+outputs=$(xrandr | grep ' connect' | awk '{print $1}')
+
+case "$1" in
+    (default)
+    i3-msg "mode \"$1\""
+    for output in ${outputs} ; do
+        xrandr --output "${output}" --brightness 1.0
+    done
+    # Kill any sleeping instance of this script.
+    # The subshell is a hack, be careful with exit status.
+    (pkill i3-mode) &
+    ;;
+    ([A-Z][a-z]*|OK)
+    i3-msg "mode \"$1\""
+    # Allow this instance to be killed before it dims the display.
+    sleep 1.4  # 0.7
+    for output in ${outputs} ; do
+        xrandr --output "${output}" --brightness 0.5
+    done
+    ;;
+esac
+
+#
+# Done.
+#

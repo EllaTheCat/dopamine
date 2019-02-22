@@ -1,0 +1,21 @@
+#!/bin/dash
+#
+# Find backup files that end in tilde for which no original file exists.
+# - Example usage: 'rm $(tildes)'.
+#
+
+tildes=''
+for tilde in $(find $(readlink -f ${1:-$(pwd)}) -name '*~' -or -name '.*~' 2> /dev/null)
+do
+  notilde=$(echo ${tilde} | sed s/~$//g)
+  if [ ! -e ${notilde} ] ; then
+      tildes="${tildes} ${tilde}"
+  fi
+done
+if [ ! -z "${tildes}" ] ; then
+    echo ${tildes}
+fi
+
+#
+# Done.
+#

@@ -1,0 +1,15 @@
+#!/bin/dash
+#
+# http://ubuntuincident.wordpress.com/2012/01/06/playing-star-trek-background-noise-with-a-linux-command/
+#
+
+case $(hostname) in
+    (quietpc)
+    nohup xfce4-terminal -T Engines -e 'play -c2 -n synth whitenoise band -n 100 24 band -n 300 100 gain +20' &
+    ;;
+esac
+
+
+#
+# Done.
+#

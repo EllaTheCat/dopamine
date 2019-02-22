@@ -1,0 +1,59 @@
+#!/bin/bash
+#
+# simple-command-server
+#
+
+startserver()
+{
+    simple-command-server.py $1  # Port number.
+}
+
+stopserver()
+{
+    pid=$(ps aux | grep simple-command-server.py | grep -v grep | awk '{print $2}')
+    if  ! test -z  "${pid}"; then
+        kill -HUP $pid
+    fi
+}
+
+statusserver()
+{
+    pid=$(ps aux | grep simple-command-server.py | grep -v grep | awk '{print $2}')
+    if  ! test -z  "${pid}"; then
+        echo "$(basename $0) is running with PID $pid"
+    else
+        echo "$(basename $0) is stopped"
+    fi
+}
+
+scs()
+{
+    if ! test -z "${SSH_CLIENT}"; then
+        echo "${SSH_CLIENT}" &&  exit 0
+    fi
+    case "$1" in
+        (start|restart)
+        stopserver
+        startserver $2
+        statusserver
+        ;;
+        (stop)
+        stopserver
+        statusserver
+        ;;
+        (status)
+        statusserver
+        ;;
+        (*)
+        echo "Usage: $(basename $0) start|stop|status"
+        ;;
+    esac
+}
+
+scs "$@"
+
+#
+# Done.
+#
+
+

@@ -1,0 +1,16 @@
+#!/bin/sh
+#
+# A wrapper round minicom
+#
+
+case "$1" in
+    (*)
+    sudo service tftpd-hpa restart
+    ;;
+esac
+sleep 2
+/usr/bin/minicom $1
+
+#
+# Done.
+#

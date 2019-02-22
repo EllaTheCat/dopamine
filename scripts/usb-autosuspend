@@ -1,0 +1,17 @@
+#!/bin/bash
+#
+# https://logfile.ch/linux/2017/06/15/disable-usb-autosuspend-linux/
+#
+# - Invoke as 'sudo $0'
+
+for dev in /sys/bus/usb/devices/*/power/control; do
+        echo $dev
+        # Valid values are 'auto' for automatic autosuspend and 'on'
+        # for disabling autosuspend (keeping your device on all the
+        # time).
+        echo on > $dev
+done
+
+#
+# Done.
+#

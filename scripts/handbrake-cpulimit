@@ -1,0 +1,14 @@
+#!/bin/bash
+#
+# handbrake-cpulimit
+#
+
+handbrake &
+sleep 5s
+# 200% of total CPU 800%.
+xfce4-terminal -T "Handbrake CPU limiter" -x sudo cpulimit -p $(pidof handbrake) -l 200
+
+
+#
+# Done.
+#

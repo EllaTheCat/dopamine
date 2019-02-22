@@ -1,0 +1,195 @@
+#!/bin/bash
+#
+# A script to start|stop various programs.
+#
+
+cmon=HDMI1
+# shellcheck disable=2034
+lmon=HDMI2
+# shellcheck disable=2034
+rmon=VGA1
+
+#
+# Start here.
+#
+verb=start
+for argument in "${@}"
+do
+    echo "${argument}"
+    case "${argument}" in
+        # A verb argument affects all subsequent arguments up until
+        # either the next verb argument or end-of-list.
+        (start|stop)
+        verb=${argument}
+        ;;
+
+        (watchers)
+        # Stop the watchers.
+        pkill -f 'i3-wrapper -s'
+        pkill -f 'i3-wrapper --focus-watcher'
+        # Start the watchers.
+        if [ "_${verb}" = "_start" ]; then
+            path=$(dirname "$0")
+            (eval "${path}/i3-wrapper --file-watcher") &
+            sleep 0.5
+            (eval "${path}/i3-wrapper --focus-watcher") &
+        fi
+        ;;
+
+        (workspaces)
+        i3-msg "focus output \"${cmon}\", rename workspace to \"${cmon}\""
+        ;;
+
+        (dropbox)
+        if [ "$(pgrep -c dropbox)" -ne 0 ]; then
+            if [ "_${verb}" = "_stop" ]; then
+                (dropbox stop) &
+                sleep 3
+            fi
+        fi
+        if [ "$(pgrep -c dropbox)" -eq 0 ]; then
+           if [ "_${verb}" = "_start" ]; then
+               # Dropbox needs to be launched with dbus.
+               dbus-launch dropbox start -i
+           fi
+        fi
+        ;;
+
+        (synergy)
+        if [ "$(pgrep -c synergy)" -ne 0 ]; then
+            if  [ "_${verb}" = "_stop" ]; then
+                pkill -f synergy
+                sleep 3
+            fi
+        fi
+        if [ "$(pgrep -c synergy)" -eq 0 ]; then
+            if [ "_${verb}" = "_start" ]; then
+                synergy &
+            fi
+        fi
+        ;;
+
+        (tvheadend)
+        if [ "$(pgrep -c tvheadend)" -ne 0 ]; then
+            if  [ "_${verb}" = "_stop" ]; then
+                pkill tvheadend
+                sleep 3
+            fi
+        fi
+        if [ "$(pgrep -c tvheadend)" -eq 0 ]; then
+            if  [ "_${verb}" = "_start" ]; then
+                # TV Headend behaves better without authentication.
+                (xfce4-terminal -T 'tvheadend' -x tvheadend --noacl) &
+            fi
+        fi
+        ;;
+
+        #
+        # Shutdown only.
+        #
+
+        (emacs)
+        if  [ "_${verb}" = "_stop" ]; then
+            i3-msg '[title="^Emacs :"] focus'
+            emacsclient.emacs24 -e "(save-buffers-kill-emacs)"
+        fi
+        ;;
+        (firefox)
+        if  [ "_${verb}" = "_stop" ]; then
+            # Firefox treats 'kill'/'pkill' as a crash.
+            id=$(xdotool search "Mozilla Firefox" | head -1)
+            xdotool windowactivate --sync "${id}"
+            xdotool key --clearmodifiers ctrl+q
+        fi
+        ;;
+        (chrome)
+        if  [ "_${verb}" = "_stop" ]; then
+            i3-msg '[class="Google-chrome"] kill'
+        fi
+        ;;
+        (thunderbird)
+        if  [ "_${verb}" = "_stop" ]; then
+            i3-msg '[title="Mozilla Thunderbird$"] kill'
+        fi
+        ;;
+        (VirtualBox)
+        if  [ "_${verb}" = "_stop" ]; then
+            if [ "$(VBoxManage list runningvms | wc -l)" -ne 0 ]; then
+                # Running VMs must be shutdown manually.
+                # Abandon shutdown completely to allow enough time.
+                exit 0
+            else
+                # Zero VMs running, safe to kill VirtualBox Manager.
+                i3-msg '[title="VirtualBox Manager$"] kill'
+            fi
+        fi
+        ;;
+
+        (marks)
+        # Stop anything with a mark. This is gentle but there is no
+        # housekeeping and data could be lost.
+        if [ "_${verb}" = "_stop" ]; then
+            marks="$(i3-msg -t get_marks)"
+            # shellcheck disable=2001
+            for m in $(echo "${marks}" | sed 's/[],"\[]/ /g'); do
+                i3-msg --quiet "[con_mark=\"${m}\"] kill"
+                sleep 0.5
+            done
+        fi
+        ;;
+
+        (usbdisks)
+        # Spin down USB HDDs.
+        #
+        # Do this after anything else done in this module followed
+        # only by logout and shutdown to ensure no disk spins up
+        # unrequested.
+        if  [ "_${verb}" = "_stop" ]; then
+            sudo umount /snapdisks/banana
+            sudo umount /snapdisks/tabasco
+            sleep 3
+            sudo hd-idle -t sdd  # banana
+            sudo hd-idle -t sdc  # tabasco
+        fi
+        ;;
+
+        (lists)
+        # Safely start or stop everything listed in proper sequence.
+        # To proceed press OK or wait for the short timeout to expire.
+        # Ensure the dialog appears on the primary monitor.
+        # The watchers must be started first, the rest are optional.
+        if  [ "_${verb}" = "_start" ]; then
+            i3-msg "focus output HDMI1"
+            xdotool mousemove --sync --clearmodifiers 2880 384; sleep 1
+            yad --title="Starting ..." --mouse --timeout=10 --timeout-indicator=top
+            if  [ "$?" -ne 1 ]; then
+                eval "$0 start watchers tvheadend dropbox synergy workspaces"
+            fi
+        fi
+        if  [ "_${verb}" = "_stop" ]; then
+            i3-msg "focus output HDMI1"
+            xdotool mousemove --sync --clearmodifiers 2880 384; sleep 1
+            yad --title="Stopping ..." --mouse --timeout=10 --timeout-indicator=top
+            if  [ "$?" -ne 1 ]; then
+                eval "$0 stop VirtualBox"
+                eval "$0 stop emacs firefox chrome thunderbird"
+                eval "$0 stop synergy dropbox"
+                eval "$0 stop tvheadend marks watchers"
+                # To prevent spinning down the USB disks the only way
+                # is to press cancel before the short timeout expires.
+                i3-msg "focus output HDMI1"
+                xdotool mousemove --sync --clearmodifiers 2880 384; sleep 1
+                yad --title="Spindown ..." --mouse --timeout=10 --timeout-indicator=top
+                if  [ "$?" -ne 1 ]; then
+                    eval "$0 stop usbdisks"
+                fi
+            fi
+       fi
+        ;;
+
+    esac
+done
+
+#
+# Done.
+#

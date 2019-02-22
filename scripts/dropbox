@@ -1,0 +1,10 @@
+#!/bin/bash
+
+case "$@" in
+    (start)
+    /usr/bin/dropbox stop && DBUS_SESSION_BUS_ADDRESS="" /usr/bin/dropbox start
+    ;;
+    (*)
+    /usr/bin/dropbox $@
+    ;;
+esac

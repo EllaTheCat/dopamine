@@ -1,0 +1,16 @@
+#!/bin/bash
+#
+# Speech synthesis from a string no longer than a sentence.
+#
+
+words="$@"
+wav="/dev/shm/${USER}/speech-synthesis/speech.wav"
+mkdir -p $(dirname ${wav})
+
+# Avoid peak clipping by reducing the volume.
+# The markup is guesswork from 'http://dafpolo.free.fr/telecharger/svoxpico/SVOX_Pico_Manual.pdf'.
+pico2wave -w=${wav} -l=en-GB "<volume level='50'> ${words} </volume>" &&  mpv --no-video ${wav}
+
+#
+# Done.
+#

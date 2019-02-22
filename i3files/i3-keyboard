@@ -1,0 +1,48 @@
+#!/bin/bash
+#
+# i3-keyboard
+#
+
+#
+# Bind standalone modifier keys.
+#
+case ${XDG_CURRENT_DESKTOP} in
+    (XFCE)
+    killall -q ibus-x11  # mumble
+    killall -q xcape
+    k1='Super_L=Menu'
+    k2='Alt_L=Escape'
+    k3='ISO_Level3_Shift=Escape'
+    # The timeout is a compromise. ymmv.
+    xcape -t 667 -e "$k1;$k2;$k3"
+    ;;
+esac
+
+#
+# Set the keyboard layout.
+#
+# To override XFCE settings, you must TICK this tickbox:
+# "Settings_Manager|Keyboard|Layout|Use_system_defaults"
+# to avoid randomly reverting this:
+#
+case ${XDG_CURRENT_DESKTOP} in
+    (XFCE)
+    setxkbmap -model pc105 -layout us -variant altgr-intl option ctrl:nocaps
+    xmodmap -e 'keycode 51 = Return asciitilde'
+    xmodmap -e 'pointer = default'
+    ;;
+esac
+
+#
+# Restore the keyboard in i3wm.
+#
+case ${XDG_CURRENT_DESKTOP} in
+    (XFCE)
+    i3-msg mode default
+    xdotool key --clearmodifiers Return
+    ;;
+esac
+
+#
+# Done.
+#

@@ -1,0 +1,45 @@
+#!/bin/bash
+#
+# i3-mouse
+#
+# Requires : xinput
+#
+
+#
+# Use this to tame the mouse.
+#
+setmouse ()
+{
+    id=$(xinput list | grep Mouse | cut -d= -f 2 | cut -f 1)
+    cd=$(xinput --list-props "${id}" | grep "Constant Deceleration" | cut -d: -f 2 | awk '{print $1}')
+
+    case "$1" in
+        (disable)
+        xinput --set-prop "${id}" "Device Enabled" "0"
+        ;;
+        (enable)
+        xinput --set-prop "${id}" "Device Enabled" "1"
+        ;;
+        (fast)
+        xset m 2 0
+        xinput --set-prop "${id}" "Device Accel Constant Deceleration" 1
+        ;;
+        (slow)
+        xset m 1 0
+        xinput --set-prop "${id}" "Device Accel Constant Deceleration" 8
+        ;;
+        (*)
+        if [ "${cd}" = "1.000000" ] ; then
+            setmouse slow
+        else
+            setmouse fast
+        fi
+        ;;
+    esac
+}
+
+setmouse "$1"
+
+#
+# Done.
+#

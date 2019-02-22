@@ -1,0 +1,12 @@
+#!/bin/bash
+#
+#
+
+for k in "$@"; do
+    xdotool  search --classname "gl" search --class "mpv"  key "$k"
+    sleep 0.2s
+done
+
+#
+# Done.
+#

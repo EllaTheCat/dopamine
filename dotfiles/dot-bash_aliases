@@ -1,0 +1,21 @@
+#!/bin/sh
+#
+# Minimal dot-bash_aliases for root, as imported by dot-bashrc.
+#
+
+function rm ()
+{
+  /bin/rm -i "$@"
+}
+
+function vi ()
+{
+  /usr/bin/vim.tiny "$@"
+}
+
+setterm -blength 0
+
+#
+# Done.
+#
+

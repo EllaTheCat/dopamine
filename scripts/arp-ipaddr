@@ -1,0 +1,7 @@
+#!/bin/bash
+
+arp -a | grep ${1:-KJ-THINKPAD} | awk '{print $2}' | sed 's/[\)\(]//g'
+
+#
+# Done.
+#

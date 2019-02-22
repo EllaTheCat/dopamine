@@ -1,0 +1,534 @@
+#!/bin/bash
+#
+# i3-wrapper
+#
+# - This script and its companion scripts (i3-{apps, keyboard, mouse,
+# - display, status, mode} together with a Makefile provide functions
+# - that support my way of working.
+#
+# - This script uses a dmenu to enter commands that are typically two
+# - or three characters long. Commands are written to a magic file and
+# - each write triggers evaluation of the file contents. The mechanism
+# - supports remote writers seamlessly.
+#
+
+#
+# The wrapper Interface is a frequently modified magic file in shared
+# memory.
+#
+dir=/dev/shm/${USER}/i3
+file=command
+
+#
+# Label the (L)eft (C)entre (R)ight (MON)itors.
+# My three monitors were arranged thus: [HDMI2] [HDMI1] [VGA1].
+# Use 'xrandr' with no arguments to list monitor names and geometry.
+#
+lmon=HDMI2
+cmon=HDMI1
+rmon=VGA1
+
+#
+# The timeout in seconds for the main dynamic menu. Upon expiry,
+# whatever has been entered wil be treated as a command to be
+# executed. Try to reduce the timeout duration such that user has no
+# need to press Enter. Start at 5 seconds.
+#
+export commandtimeout=4
+
+#
+# Focus or launch a program.
+#
+# EITHER switch focus to the running program matching on $1=$2, OR
+# launch $5 with arguments ${@:6} on workspace $3 and output $4.
+#
+focus ()
+{
+    case "$1" in
+        # Attempt to match the running program and obtain its window id.
+        (instance)
+        W=$(xdotool search --classname "$2" | head -1) ;;
+        (class)
+        W=$(xdotool search --class "$2" | head -1) ;;
+        (title)
+        W=$(xdotool search --name "$2" | head -1) ;;
+        (*)
+        W='' ;;
+    esac
+
+    if [ -z "$W" ]; then
+        if [ $# -ge 5 ]; then
+            # Change to the specified workspace and launch from there.
+            # Set $3 'none' to stay on current workspace.
+            if [ "$3" == 'none' ]; then
+                i3-msg "exec ${*:5};"
+            else
+                i3-msg "workspace $3; exec ${*:5};"
+            fi
+            case "$4" in
+                (${lmon}|${cmon}|${rmon})
+                # Change to the specified output when window appears.
+                # Set $4 'none' to stay on current output.
+                sleep 1
+                i3-msg "move workspace to output $4"
+                ;;
+            esac
+            sleep 1; i3um  # Assign a unique mark.
+        fi
+    else
+        # Focus the program i.
+        i3-msg "workspace $3"
+    fi
+}
+
+#
+# Scratchpad (drop down) terminal.
+#
+i3dd()
+{
+    # Only one key binding is required, the first keypress performs
+    # initialisation and hides the terminal again.
+    if [ "_$(xdotool search --classname "Scratchpad" | head -1)"  = "_" ]; then
+        xfce4-terminal -T Scratchpad &
+        sleep 1
+        # Set the instance to identify the scratchpad.
+        xdotool getwindowfocus set_window --classname "Scratchpad"
+        i3-msg "[instance=\"Scratchpad\"] resize set 80 ppt 80 ppt"
+        i3-msg "[instance=\"Scratchpad\"] move absolute position 2112 24"
+        i3-msg "[instance=\"Scratchpad\"] move scratchpad"
+    else
+        i3-msg "focus output ${cmon}"
+        i3-msg "[instance=\"Scratchpad\"] scratchpad show"
+    fi
+}
+
+#
+# Add a terminal (split h, side-by-side).
+#
+i3tt()
+{
+    i3-msg "split h"
+    i3terminal
+}
+
+#
+# Add a terminal (split v, stacked).
+#
+i3yy()
+{
+    i3-msg "split v"
+    i3terminal
+}
+
+#
+# AutoVoice.
+#
+i3av()
+{
+    if [ "$(i3-msg -t get_workspaces | jq 'map(.name)' | grep -c 'AutoVoice')" -eq 0 ]; then
+        i3-msg "workspace AutoVoice"
+        sleep 0.7
+        i3-msg "exec google-chrome --new-window"
+        sleep 0.7 && \
+            xdotool type \
+                    'chrome://extensions/?id=mefllcpfdfhohmeadieejdjcdcbibeml' && \
+            xdotool key 'Return'
+        sleep 0.7
+        i3-msg "exec emacsclient.emacs24 -c  -e '(switch-to-buffer \"AutoVoice\")'"
+    else
+        i3-msg "workspace autovoice"
+    fi
+}
+
+#
+# Assign a unique mark.
+#
+i3um()
+{
+    # Generate a random 2 digit mark.  Reject and retry if it matches
+    # an assigned mark. The retry loop takes more time as the number
+    # of marked containers approaches 100.
+    while : ; do
+        id=$((10#$(date +%N) % 100))
+        id=$(printf "%02d" "${id}")
+        count=$(for m in $(i3-msg -t get_marks | sed 's/,/\ /g');
+                do echo "${m}"; done | grep -c "${id}")
+        if [ "${count}" -eq 0 ] ; then break; fi
+    done
+    sleep 1
+    windowid=$(printf "0x%x" "$(xdotool getwindowfocus)")
+    i3-msg "[id=\"${windowid}\"] mark --toggle \"${id}\""
+    i3-msg "[con_mark=\"${id}\"] focus"
+}
+
+#
+# Active Marks. Selecting a mark visits that mark.
+#
+# The implementation has to focus all marked windows one at a time
+# in order to gather their titles. This is visually disconcerting, so avoid
+# doiing it when not necessary.
+#
+i3am()
+{
+    # Only update if the current list of marks differs from the list
+    # of marks in the first line of the file holding the last update.
+    oldmarks=$(head -n 1 "${dir}/marks")
+    newmarks="$(i3-msg -t get_marks)"
+    if [ "${newmarks}" != "${oldmarks}" ] ; then
+        echo "${newmarks}" > "${dir}/marks"
+        # Stash the active window identifier.
+        id=$(xdotool getactivewindow)
+        # 1. Replace the non-number characters with spaces.
+        # shellcheck disable=2001
+        for m in $(echo "${newmarks}" | sed 's/[],"\[]/ /g'); do
+            i3-msg --quiet "[con_mark=\"${m}\"] focus"
+            cws=$(i3-msg -t get_workspaces | jq '.[] | .name,.focused' | \
+                         grep true -B1 | grep -v true)
+            # 2. Hard double quotes enclose the usual double quotes
+            # that enclose the expression or variable. I forget why!
+            echo -e  "\"${m}\""  \""[${cws}]"\" \""$(xdotool getactivewindow getwindowname)"\" >> "${dir}/marks"
+            sleep 0.3  # Settling time.
+        done
+        # Restore the original activated window.
+        xdotool windowactivate "${id}" click --clearmodifiers --window "${id}" 1
+    fi
+    # Strip the first line containing the list of marks.
+    text=$(tail -n +2 "${dir}/marks")
+    # Strip out the double quotes, the square brackets separate.
+    # shellcheck disable=2001
+    text=$(echo "${text}" | sed 's/\"//g' )
+    triple=$(echo -e "cancel\n ${text}" | dmenu -b -fn 'pango:DejaVu Sans 11' -m 0 -p 'Marks: ')
+    # shellcheck disable=2086
+    id=$(echo ${triple} | awk '{print $1}')
+    if [ "${id}" != "cancel"  ]; then
+        i3-msg "[con_mark=${id}] focus"
+    fi
+}
+
+#
+# Add a terminal and assign a mark (subroutine).
+#
+i3terminal ()
+{
+    xfce4-terminal -T "xfce4-terminal" &
+    # Allow time for the window to appear then apply the mark.
+    sleep 1
+    i3um
+}
+
+#
+# Create a workspace with a terminal inside if none exists, othewise
+# visit the workspace. The name of the workspace is the command alias.
+#
+i3lowerlower()
+{
+    cws=$(i3-msg -t get_workspaces | jq '.[] | .name,.focused' | \
+                 grep true -B1 | grep -v true)
+    tws=$(i3-msg -t get_workspaces | jq '.[] | .name' | grep -c "$1")
+    if [ "${cws}" != "\"$1\"" ]; then
+        i3-msg "workspace $1"
+        if [ "${tws}" -eq 0 ]; then
+            i3terminal
+        fi
+    fi
+}
+
+#
+# Move all workspaces to the specified output.
+#
+i3workspaces ()
+{
+    for ws in $(i3-msg -t get_workspaces | jq 'map(.name)')
+    do
+        case "$1" in
+            (${lmon}|${cmon}|${rmon})
+            case "${ws}" in
+                ([|]) ;;  # Ignore the enclosing square brackets.
+                (*)
+                i3-msg workspace "${ws}"
+                sleep 0.5
+                i3-msg move workspace to output "$1"
+                sleep 0.5
+                ;;
+            esac
+          ;;
+        esac
+    done
+}
+
+#
+# Subroutine for emacs frames and chrome windows.
+#
+# $1 (e[0-9] g[0-9] instance)
+# $2 emacs24, chrome
+# $3 emacs24 -rv, google-chrome
+# $4 emacsclient.emacs24 -c, google-chrome --new-window
+#
+i3emgc ()
+{
+    cws=$(i3-msg -t get_workspaces | jq '.[] | .name,.focused' | grep true -B1 | grep -v true)
+    arg="$1"
+    # shellcheck disable=2086
+    if [ "$(pgrep -c $2)" -eq 0 ]; then
+        if  [ "${cws}" != "${arg}" ]; then
+            # shellcheck disable=2086
+            i3-msg "workspace ${arg}, exec sleep 1"
+        fi
+        i3-msg "exec  $3"
+    else
+        # shellcheck disable=2086
+        count=$(i3-msg -t get_workspaces | jq 'map(.name)' | grep -c \"${arg}\")
+        if [ "${count}" -eq 0 ]; then
+            if  [ "${cws}" != "${arg}" ]; then
+                i3-msg "workspace ${arg}, exec sleep 1"
+            fi
+            i3-msg "exec $4"
+        else
+            i3-msg "workspace ${arg}"
+        fi
+    fi
+}
+
+#
+# 1. Common programs with examples of how to integrate them.
+# 2. Terminals, editor, browser, and management of their marks.
+# 3. Support for spoken dictation of sentences.
+# 0. TODO. Split this function?
+#
+i3programs ()
+{
+    case "$1" in
+        # Emacs frames.
+        # Use 'em' to add another frame alongside an existing one.
+        (e[0-9])
+        i3emgc "${1/11/e}" 'emacs24' 'emacs24 -rv' 'emacsclient.emacs24 -c' ;;
+        (em)
+        i3-msg "exec emacsclient.emacs24 -c" ;;
+
+        # Chrome windows.
+        # Use 'gc' to add another window alongside an existing one.
+        (g[0-9])
+        i3emgc "${1/22/g}" 'chrome' 'google-chrome' 'google-chrome --new-window' ;;
+        (gc)
+        i3-msg "exec google-chrome --new-window" ;;
+
+        # 1. Terminal in the current workspace. Split is top-bottom.
+        # 2. Terminal in the current workspace. Split is left-right.
+        # 3. Two half height terminals to the right of e.g. Emacs.
+        (tt)
+        i3tt ;;
+        (yy)
+        i3yy ;;
+        (ty)
+        i3tt && i3yy ;;
+
+        # 1. Access the "Active Marks" dynamic menu.
+        # 2. Assign a unique mark. Fix missing marks.
+        (am)
+        i3am ;;
+        (um)
+        i3um ;;
+
+        (av)
+        i3av ;;
+
+        (ff)
+        focus instance Navigator 'ff' ${cmon} firefox ;;
+        (tb)
+        focus class Thunderbird 'tb' ${lmon} thunderbird ;;
+        (th)
+        focus title 'File Manager' 'none' 'none' \
+              exo-open --launch FileManager "${HOME}/Downloads" ;;
+
+        (sk)
+        focus instance skype 'sk' ${lmon} /snap/bin/skype ;;
+        (ws)
+        focus instance wireshark 'ws' ${cmon} wireshark ;;
+        (sy)
+        focus instance synaptic 'sy' ${lmon} synaptic-pkexec ;;
+
+        (pp)
+        focus title "LibreOffice Impress"  'pp' 'none'   libreoffice --impress ;;
+        (ss)
+        focus title "LibreOffice Calc"  'ss' 'none'  libreoffice --calc ;;
+        (ww)
+        focus title "LibreOffice Writer"  'ww' 'none'   libreoffice --writer ;;
+
+        (fp)
+        focus class ffplay 'fp' ;;
+        (mp)
+        focus class mpv 'mp' ;;
+        (vp)
+        focus instance vlc 'vp' ${lmon} /snap/bin/vlc ;;
+        (hb)
+        focus instance handbrake 'hb' ${cmon} "handbrake-cpulimit" ;;
+
+        (vb)
+        focus title 'Oracle VM VirtualBox' 'vb' ${cmon} virtualbox ;;
+        (os)
+        focus instance openshot 'os'  ${cmon} openshot ;;
+
+        (zz)
+        i3-msg "workspace $1" ;;
+        (sg)
+        xfce4-screenshooter -d 2 ;;
+        # Scratchpad terminal, alias 'dropdown'.
+        (dd)
+        i3dd ;;
+
+        ([a-z][a-z])
+        # Create the eponymous workspace and launch a terminal there
+        # if neither exists, otherwise visit the workspace.
+        i3lowerlower "$1" ;;
+
+        ([0][0-9][0-9])
+        # Visit a mark. Marks are two digit numbers.
+        arg="${1:1:2}"
+        i3-msg "[con_mark=\"${arg}\"] focus" ;;
+
+        ([5][0-9][0-9])
+        # Swap this container with the matching marked container.
+        arg="${1:1:2}"
+        i3-msg "swap container with mark ${arg}" ;;
+
+        (0|Ping.)
+        echo "$1" ;;
+        (1|Undo.)
+        emacsclient.emacs24 -e "(with-current-buffer \"AutoVoice\" (undo))"
+        echo "$1" ;;
+        (2|Cancel.)
+        emacsclient.emacs24 -e "(with-current-buffer \"AutoVoice\" (previous-line)(kill-line))"
+        echo "$1" ;;
+
+        ([A-Z]*)
+        # Distinguish a sentence by the uppercase first letter.
+        # Insert into both clipboards and then paste into Emacs.
+        echo "${*}" | xclip -selection primary     # mouse button 2
+        echo "${*}" | xclip -selection clipboard   # emacs control y
+        emacsclient.emacs24 -e "(with-current-buffer \"AutoVoice\" (yank))"
+        echo "$*" ;;
+
+        # Security relies on using ssh to access ${dir}/${file}.
+        (:*)
+        (eval "${1/:/} ${*:2}") & ;;
+    esac
+}
+
+#
+# Entry point for invoking a command alias supplied either directly
+# via command line or indirectly via the file watcher.
+#
+start ()
+{
+    i3programs "$@"
+}
+
+#
+# When the file held in shared memory [ ${dir}/${file} ] changes, the
+# file contents are passed into the i3wrapper as a command.  The
+# typical command consists of a two or three character string but
+# longer commands with argument lists are accepted; the former are
+# called "command aliases" and the latter are assumed to be i3-msg
+# commands.
+#
+# Don't call this directly. Called from i3filewatcher.
+#
+i3command ()
+{
+    cmd=$(cat "${dir}/${file}")
+    start "${cmd}"
+}
+
+#
+# File watcher.
+#
+# Create a file in shared memory, monitor it for changes, and when it
+# changes, call i3wrapper with the file contents passed as argument.
+#
+i3filewatcher ()
+{
+    mkdir -p "${dir}"
+    echo "--" | tee "${dir}/${file}"  # no-op
+    exe=$(basename  "$0")
+    xfce4-terminal -T "${exe}: file watcher" -x \
+        inotify-hookable \
+        --watch-files "${dir}/${file}" \
+        --on-modify-command "$0 -s" &
+}
+
+#
+# Light a (Dell) keyboard LED when in an Emacs window.
+#
+i3focuswatcher ()
+{
+    # This was added in i3 4.16, replacing 3 functions.
+    i3-msg -t subscribe  -m '[ "window" ]' | while read line
+    do
+        # shellcheck disable=2046
+        if [ $(echo "${line}" | grep -c -i emacs ) -eq 0 ]; then
+            xset -led 3 # OFF
+        else
+            xset led 3 # ON
+        fi
+    done
+}
+
+#
+#  Provide a text entry command prompt for command aliases and command
+#  numbers.
+#
+dashp ()
+{
+    # Apply the Return key if dmenu still running after a few seconds.
+    (sleep $commandtimeout && pgrep -c -f \
+                      "dmenu -b -fn pango:DejaVu Sans 11 -m 0 -p Command:" && \
+            xdotool key Return) &
+    # The above timeout makes this list less useful than it might seem.
+    list=$(egrep "\([a-zA-Z][a-zA-Z0-9]\)$" "$0" | sort | sed 's/[ ()]//g')
+    list="cancel ${list}"
+    # Numpad enters digits.
+    numlockx on
+    # The dmenu monitor number 0 always exists; it selects the primary
+    # output on my machine.
+    cmd=$(echo "${list}" | sed 's/\ /\n/g' | \
+                 dmenu -b -fn 'pango:DejaVu Sans 11' -m 0 -p 'Command: ')
+    if [ "${cmd}" != "cancel" ]; then
+        echo "${cmd}" | tee "${dir}/${file}"
+    fi
+    numlockx off
+}
+
+#
+# Start here.
+#
+case ${XDG_CURRENT_DESKTOP} in
+    (XFCE)
+    case "$1" in
+        # FIXME: This single dash option works, a double dash
+        # equivalent doesn't, and I'm not sure why.
+        (-s) i3command ;;
+        # The command prompt writes to ${dir}/{file} instead of
+        # calling i3wrapper with the command as its argument.
+        (-p) dashp ;;
+        # Verbosity over obscurity, not enough single letters.
+        (--file-watcher) i3filewatcher ;;
+        (--focus-watcher)  i3focuswatcher ;;
+        (--dropdown) i3dd ;;
+        (--active-marks) i3am ;;
+        (--unique-mark) i3um ;;
+        (--move-workspaces-lmon) i3workspaces "${lmon}" ;;
+        (--move-workspaces-cmon) i3workspaces "${cmon}" ;;
+        (--move-workspaces-rmon) i3workspaces "${rmon}" ;;
+        # In production, do nothing here?
+        (*) start "$@" ;;
+    esac
+    exit 0
+    ;;
+    (*)
+    exit 2
+    ;;
+esac
+
+#
+# Done.
+#

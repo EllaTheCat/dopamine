@@ -1,0 +1,24 @@
+#!/bin/dash
+#
+# Replace spaces and colons in a filename with underscores.
+#
+
+if ! test -z "$1" ; then
+   for file in "$@"
+   do
+       # spaces
+       SRC="${file}"  
+       DST=$(echo ${SRC} | sed "s/ /_/g")
+       echo "->${SRC}<- ->${DST}<-"
+       test "${SRC}" != ${DST} && mv "${SRC}" ${DST}
+       # colons
+       SRC=${DST}
+       DST=$(echo ${SRC} | sed "s/:/_/g")
+       echo "->${SRC}<- ->${DST}<-"
+       test "${SRC}" != ${DST} && mv "${SRC}" ${DST}
+   done
+fi
+
+#
+# Done
+#
