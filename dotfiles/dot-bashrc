@@ -227,6 +227,11 @@ function dmesg
     command dmesg -H --time-format ctime | grep -v UFW
 }
 
+function fingerprint
+{
+    ssh-keygen -lf $1 -E md5
+}
+
 ############################################################################
 # Done.
 ############################################################################
