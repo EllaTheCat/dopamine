@@ -59,7 +59,7 @@ CONFIGURED=false
 # Do not customise anything below here.
 #
 
-all:  .configured .custom .checks .install .restart .reload .done
+all:  .configured .checks .install .restart .reload .done
 
 help:
 	@echo "Please read the Makefile."
@@ -99,9 +99,6 @@ help:
     $(I3FILES)/.i3-mouse.log \
     $(I3FILES)/.i3-status.log \
     $(I3FILES)/.i3-wrapper.log
-
-.custom: \
-    $(I3FILES)/.i3-custom.save
 
 $(I3CFG): $(I3FILES)/dot-config-i3-config
 	@install -m $(DIRMODE) -d `dirname  $(I3CFG)`
@@ -199,11 +196,6 @@ $(I3FILES)/.i3-wrapper.log: $(I3FILES)/i3-wrapper
 #
 # Customisations.
 #
-
-$(I3FILES)/.i3-custom.save: $(I3FILES)/i3-wrapper
-	@[ `git diff $(I3FILES)/i3-wrapper | wc -l` -ne 0 ] && \
-	awk '/i3-custom-opening-tag/,/i3-custom-closing-tag/' \
-	$(I3FILES)/i3-wrapper > "$@" || touch "$@"
 
 # The WM restarts and clears the flag after the flag has been set by
 # changes that require a restart.
