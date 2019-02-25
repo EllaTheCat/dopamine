@@ -294,9 +294,9 @@ mode "Secondary" {
 
     bindsym backslash $default, $i3wrapper -p
 
-    # Recovery: z/f = Focus Watcher; x/g = File watcher;
-    bindsym z $default, $i3wrapper -f
-    bindsym x $default, $i3wrapper -g
+    # File and focus watchers. No need to stop before (re)starting.
+    bindsym z $default, $i3apps start watchers
+    bindsym x $default, $i3apps stop watchers
 
     # Audible keyclicks require audio to be routed to speakers,
     # my setup doesn't enforce this (when watching TV).

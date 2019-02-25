@@ -26,7 +26,7 @@ do
         (watchers)
         # Stop the watchers.
         pkill -f 'i3-wrapper -s'
-        pkill -f 'i3-wrapper --focus-watcher'
+        pkill -f 'i3-msg -t subscribe -m'
         # Start the watchers.
         if [ "_${verb}" = "_start" ]; then
             path=$(dirname "$0")
