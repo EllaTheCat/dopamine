@@ -34,7 +34,7 @@ set $cmon HDMI1
 set $rmon VGA1
 
 # Type 'pacmd list sinks' to list audio outputs. I use an HDMI to DVI
-# cable fromm PC to monitor, it carries only video. To get audio the
+# cable from PC to monitor, it carries only video. To get audio the
 # simplest method is to use the rear headphone jack.
 set $analogaudiosink alsa_output.pci-0000_00_1b.0.analog-stereo
 set $hdmiaudiosink alsa_output.pci-0000_00_03.0.hdmi-stereo
@@ -232,7 +232,7 @@ mode "Primary" {
     bindsym KP_Delete focus down
     bindsym KP_Insert $default, $i3wrapper -p
 
-    # Pressing cycles through the three modes. Pri->Sec->Def->Pri
+    # Pressing cycles through the three modes. Pri->Sec->Def->Pri.
     bindsym Menu mode "Secondary"
     # Go back to normal. Using space is a design decision, please do
     # not change.
@@ -332,8 +332,9 @@ mode "Secondary" {
     bindsym KP_Delete focus down
     bindsym KP_Insert $default, $i3wrapper -p
 
-    # Pressing cycles through the three modes. Sec->Def->Pri->Sec
-    bindsym Menu $default
+    # Pressing cycles through the three modes. Sec->Def->Pri->Sec.
+    # Triple-pressing(!) cancels a.o. slow mouse in Emacs.
+    bindsym Menu $default, $i3mouse fast
     # Go back to normal. Using space is a design decision, please do
     # not change.
     bindsym space $default
