@@ -1,4 +1,145 @@
-This file is temporary so I can try out some git commands.
+= "dopamine"
 
-I struggle to do git push.
+== Introduction
+Nine months ago I
+https://www.reddit.com/r/i3wm/comments/8h2961/using_i3_for_better_accessibility_with_parkinsons/[posted on reddit],
+saying that the i3 window manager was very well suited to my needs
+as someone living with Parkinson's Disease (PD).
+The https://github.com/EllaTheCat/dopamine[i3-parkinson] repository on github is a code snapshot from that time.
 
+You are currently reading the README for the github repository https://github.com/EllaTheCat/dopamine[dopamine]
+a tidied up direct descendant of i3-parkinson that I'm using and actively working on.
+I chose the name to be short and memorable.
+(PD happens when https://en.wikipedia.org/wiki/Dopamine[dopamine]
+producing neurons in the brain start dying.)
+
+== Scope
+
+=== i3files directory
+The i3files  directory contains my i3wm configuration files and some i3-related helper scripts.
+These are the primary content of the dopamine repository,
+discuussed in the remainder of this document.
+
+The other directories are included for your reference, and as my backups.
+These are the secondary content of the repository,
+discuussed in the remainder of this section.
+
+=== dotfiles directory
+My PD makes dot-inputrc absolutely essential; combined with a huge bash history size set by dot-bashrc,
+I can recall, edit and apply commands with minimal typing.
+The dot-bashrc has some nice github functions and a prompt that knows about git.
+The files here are the ones I use.
+Nothing is installed.
+
+=== dotemacs directory
+Emacs and dopamine provide a minimalist voice-assisted editing feature.
+The files here are the ones I use.
+Nothing is installed.
+
+=== scripts directory
+These are scripts have come in handy, for example when making a video.
+Nothing is installed.
+
+== My i3
+=== Numpad
+Nine months ago I thought modes would replace modifiers in my way of working.
+I've realised that there are some i3 commands that don't suit modes,
+but modifiers dont suit me.
+The compromise is to use the numpad, on a desktop with a full size keyboard.
+Laptop users: sorry about that, but USB numpads are a thing.
+
+The numpad is interesting in i3; the NumLock key toggles between two sets of bindings,
+the KP_Insert set, and the KP_0 set. Here's what works for me:
+
+- bindsym KP_Left focus left
+- bindsym KP_Right focus right
+- bindsym KP_Up focus up
+- bindsym KP_Home workspace prev
+- bindsym KP_Prior workspace next
+- bindsym KP_End move left
+- bindsym KP_Down move down
+- bindsym KP_Begin move up
+- bindsym KP_Next move right
+- bindsym KP_Delete focus down
+
+=== i3 modes
+There are now only three i3 modes: the default mode, the Primary mode, and the Secondary mode.
+The Menu key cycles through these modes, the space key returns to default mode from the other two.
+The screen will dim when in Primary or Secondary mode.
+Note: See the Menu keybinding in default mode.
+If a binding returns to default mode the screen will dim momentarily.
+Note: See the definition $default.
+
+Primary mode contains my most often used bindings after the numpad ones.
+Secondary mode contains bindings that are useful but aren't used often.
+
+OK mode is a blatant hack to provide a visual bell for i3-make (q.v.).
+It can't be hidden, so it is ignored when we say there are three modes.
+It may occasionally get confused, pressing the Menu key a few times resets it.
+
+== i3 marks
+Whenever a terminal, emacs frame, or google chrome window is created,
+a unique two digit mark is attached and is displayed top right on the titlebar.
+
+i3 has a goto-mark function bound to 00[0-9][0-9] and a
+swap-container-with-mark function bound to 05[0-9][0-9].
+
+Exchanging marks can make rearranging windows easier than
+the conventional incremental movement of focus or windows.
+
+== Bash scripts
+
+=== i3-wrapper
+This script is the main one and is described in detail in the section after this one.
+The other scripts described in this section are the result of refactoring i3-wrapper.
+
+=== i3-keyboard
+I'm from the UK, but I prefer the US keyboard layout because
+back in the day there was no choice but US layout.
+I have a 105 key UK keyboard, and this script creates my custom US-style keyboard.
+Apropos of i3, this is where I invoke
+https://github.com/alols/xcape[xcape] to define how modifier keys work when pressed singly.
+
+    - k1='Super_L=Menu'
+    - k2='Alt_L=Escape'
+    - k3='ISO_Level3_Shift=Escape'
+
+=== i3-mouse
+It's the "i3 way" to prefer the keyboard.
+Disable the mouse to prevent accidental waking up of the display when the desk is jolted.
+Slow down the mouse and frustrate the user to encourage keyboard use.
+Enable and disable, fast and slow, are bound in Secondary mode.
+
+The mouse will automatically slow down the mouse inside any Emacs window.
+This is a deliberate decision, to encourage keyboard use and discourage mouse use.
+
+- If you really don't want this (mis)feature, consider removing both i3-mouse commands
+in the i3focuswatcher() function inside i3-wrapper.
+- If you do want this feature, but would like to be able to override it at will,
+note that returning to default mode from Secondary mode with the Menu key
+will reset the mouse speed to fast.
+This is achieved with a Menu key triple-press when in default mode,
+easily performed with whichever hand is not holding the mouse.
+
+=== i3-display
+
+I don't like automatic blanking of the display and neither do I like screensavers.
+This script can request that the display sleeps or wakes up.
+Sleep and wake are bound in Secondary mode.
+
+=== i3-status
+This script is a straightforward wrapper round 'i3status'. It adds two things:
+
+- On/Off control and status for USB webcam microphone and analog stereo microphone.
+I need both to cover Google Search,
+Google Chrome Autovoice extension (a mission critical capability in my case),
+Skype (which actually works when installed as a snap package).
+
+- A list of the marks that are assigned to terminals, Emacs frames, Chrome windows.
+The utility is debatable.
+
+=== i3-apps
+This script makes explicit how the applications I use should be started and stopped.
+
+== i3-wrapper
+TO-DO.
