@@ -309,11 +309,9 @@ mode "Secondary" {
     bindsym n $default, exec --no-startup-id nitrogen --restore
     bindsym m $secondarynop
 
-    # Move all workspaces to one output.
-    # Mistaken invocations are annoying, hence the awkward bindings.
-    bindsym comma $default, $i3wrapper --move-workspaces-lmon
-    bindsym period $default, $i3wrapper --move-workspaces-cmon
-    bindsym slash $default, $i3wrapper --move-workspaces-rmon
+    bindsym comma $secondarynop
+    bindsym period $secondarynop
+    bindsym slash $secondarynop
 
     # Control-Alt-Delete is a design decision please do not change.
     bindsym Control+Mod1+Delete $default,kill

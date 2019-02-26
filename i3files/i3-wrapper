@@ -234,29 +234,6 @@ i3lowerlower()
 }
 
 #
-# Move all workspaces to the specified output.
-#
-i3workspaces ()
-{
-    for ws in $(i3-msg -t get_workspaces | jq 'map(.name)')
-    do
-        case "$1" in
-            (${lmon}|${cmon}|${rmon})
-            case "${ws}" in
-                ([|]) ;;  # Ignore the enclosing square brackets.
-                (*)
-                i3-msg workspace "${ws}"
-                sleep 0.5
-                i3-msg move workspace to output "$1"
-                sleep 0.5
-                ;;
-            esac
-          ;;
-        esac
-    done
-}
-
-#
 # Subroutine for emacs frames and chrome windows.
 #
 # $1 (e[0-9] g[0-9] instance)
@@ -519,9 +496,6 @@ case ${XDG_CURRENT_DESKTOP} in
         (--dropdown) i3dd ;;
         (--active-marks) i3am ;;
         (--unique-mark) i3um ;;
-        (--move-workspaces-lmon) i3workspaces "${lmon}" ;;
-        (--move-workspaces-cmon) i3workspaces "${cmon}" ;;
-        (--move-workspaces-rmon) i3workspaces "${rmon}" ;;
         # In production, do nothing here?
         (*) start "$@" ;;
     esac
