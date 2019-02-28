@@ -157,8 +157,9 @@ mode "Primary" {
     bindsym y $primarynop
     bindsym i $primarynop
 
-    bindsym bracketleft $primarynop
-    bindsym bracketright $primarynop
+    # Scratchpad (exclude the scratchpad terminal which is a special case).
+    bindsym bracketleft move scratchpad
+    bindsym bracketright scratchpad show
 
     # Command prompt.
     bindsym Tab $default, $i3wrapper -p
@@ -209,11 +210,11 @@ mode "Primary" {
         -P '(move container to workspace): ' \
         -F 'move container to workspace "%s"'
 
-    # Scratchpad (exclude the scratchpad terminal which is a special case).
-    bindsym comma move scratchpad
-    bindsym period scratchpad show
-
-    bindsym slash $primarynop
+    # Focus an unspecified window on the specified output.
+    # Used with 'move workspace to output' hence no default mode.
+    bindsym comma focus output $lmon
+    bindsym period focus output $cmon
+    bindsym slash focus output $rmon
 
     # Control-Alt-Delete is a design decision please do not change.
     bindsym Control+Mod1+Delete $default,kill
@@ -331,7 +332,7 @@ mode "Secondary" {
     bindsym KP_Insert $default, $i3wrapper -p
 
     # Pressing cycles through the three modes. Sec->Def->Pri->Sec.
-    # Triple-pressing(!) cancels a.o. slow mouse in Emacs.
+    # Triple-pressing(!) in default mode cancels a.o. slow mouse in Emacs.
     bindsym Menu $default, $i3mouse fast
     # Go back to normal. Using space is a design decision, please do
     # not change.
