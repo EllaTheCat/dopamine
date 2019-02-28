@@ -7,7 +7,7 @@ saying that the i3 window manager was very well suited to my needs
 as someone living with Parkinson's Disease (PD).
 The https://github.com/EllaTheCat/dopamine[i3-parkinson] repository on github is a code snapshot from that time.
 
-You are currently reading the README for the github repository https://github.com/EllaTheCat/dopamine[dopamine]
+You are currently reading the README for the github repository https://github.com/EllaTheCat/dopamine[dopamine],
 a tidied up direct descendant of i3-parkinson that I'm using and actively working on.
 I chose the name to be short and memorable.
 (PD happens when https://en.wikipedia.org/wiki/Dopamine[dopamine]
@@ -16,23 +16,23 @@ producing neurons in the brain start dying.)
 == Scope
 
 === i3files directory
-The i3files  directory contains my i3wm configuration files and some i3-related helper scripts.
-These are the primary content of the dopamine repository,
-discuussed in the remainder of this document.
-
-The other directories are included for your reference, and as my backups.
-These are the secondary content of the repository,
-discuussed in the remainder of this section.
+The i3files directory contains my i3 configuration files and some i3-related helper scripts.
+The other directories contain configurations and scripts that I use in conjunction with the aforementioned i3 files.
+These other files provide context for i3 and my PD; on github they act as my backups.
+The i3files are discussed in depth in a later section.
 
 === dotfiles directory
 My PD makes dot-inputrc absolutely essential; combined with a huge bash history size set by dot-bashrc,
-I can recall, edit and apply commands with minimal typing.
+I can recall, edit and apply commands with minimal typing. I type a few letters to filter what is to be shown,
+then use up ordown arrow to cycle through matching commands.
 The dot-bashrc has some nice github functions and a prompt that knows about git.
 The files here are the ones I use.
 Nothing is installed.
 
 === dotemacs directory
 Emacs and dopamine provide a minimalist voice-assisted editing feature.
+Spoken sentences are converted to text externally about which more later.
+The text is inserted into an Emacs buffer as a single line by default, the user can choose to remove said single line.
 The files here are the ones I use.
 Nothing is installed.
 
@@ -40,16 +40,21 @@ Nothing is installed.
 These are scripts have come in handy, for example when making a video.
 Nothing is installed.
 
-== My i3
+== Ergonomics
+
 === Numpad
 Nine months ago I thought modes would replace modifiers in my way of working.
 I've realised that there are some i3 commands that don't suit modes,
-but modifiers dont suit me.
-The compromise is to use the numpad, on a desktop with a full size keyboard.
-Laptop users: sorry about that, but USB numpads are a thing.
+but modifiers don't suit me.
+The compromise is to use the numeric keypad, alias the numpad,
+as found on the far right of full-size keyboards.
+Separate USB numpads are available for laptop users and left handed users.
 
-The numpad is interesting in i3; the NumLock key toggles between two sets of bindings,
-the KP_Insert set, and the KP_0 set. Here's what works for me:
+The NumLock key toggles between two sets of keys:
+the KP_0 set for numeric entry and
+the KP_Insert set for navigation.
+The arithmetic operators and KP_Enter are unaffected by NumLock.
+Here's what works for me:
 
 - bindsym KP_Left focus left
 - bindsym KP_Right focus right
@@ -62,41 +67,76 @@ the KP_Insert set, and the KP_0 set. Here's what works for me:
 - bindsym KP_Next move right
 - bindsym KP_Delete focus down
 
+The focus up key wraps round, and since my workspaces seldom stack containers more than two deep,
+KP_Delete need not be bound to focus down.
+
 === i3 modes
 There are now only three i3 modes: the default mode, the Primary mode, and the Secondary mode.
 The Menu key cycles through these modes, the space key returns to default mode from the other two.
 The screen will dim when in Primary or Secondary mode.
-Note: See the Menu keybinding in default mode.
-If a binding returns to default mode the screen will dim momentarily.
-Note: See the definition $default.
+If a Primary or Secondary mode binding returns to default mode automatically, the screen will dim momentarily.
 
-Primary mode contains my most often used bindings after the numpad ones.
-Secondary mode contains bindings that are useful but aren't used often.
-
-OK mode is a blatant hack to provide a visual bell for i3-make (q.v.).
+- Primary mode contains my most often used bindings after the numpad ones.
+- Secondary mode contains bindings that are useful but aren't used often.
+- OK mode is a blatant hack to provide a visual bell for i3-make (q.v.).
 It can't be hidden, so it is ignored when we say there are three modes.
 It may occasionally get confused, pressing the Menu key a few times resets it.
 
-== i3 marks
+=== Commands
+
+Press Menu followed by Tab to show a dmenu with a "Command:" prompt.
+There is just enough time to enter two or three characters before the dmenu
+is automatically dismissed. Whatever has been entered is evaluated as a command.
+Entering "tt" launches a terminal, for example. Pressing backslash instead of Tab
+is slightly easier with a UK keyboard.
+
+Pressing KP_Insert shows the same dmenu. The numpad reconfigures to
+supply the numbers on keys KP_0 KP_1 ... KP_8 KP_9. Entering 3 digit
+commands is easier via the numpad, even with my right hand tremor,
+probably due to the compact arrangement of the digits. There is just enough time
+to enter three digits before automatic evaluation as before.
+
+Commands are a hangover from a past attempt to make a mouse-heavy
+window manager keyboard-operable. The concept was to either launch a
+program or switch to a running instance.
+This is explained in more detail in subsection "Launch or Focus" in section "i3-wrapper".
+
+=== Marks
 Whenever a terminal, emacs frame, or google chrome window is created,
-a unique two digit mark is attached and is displayed top right on the titlebar.
+a unique two digit mark is allocated and displayed on the right side of the titlebar.
+The quick-and-dirty implementation risks failing to terminate while allocating.
+i3 has a goto-mark function bound to the 3 digit sequence 0[0-9][0-9] and a
+swap-container-with-mark function bound to the 3 digit sequence 5[0-9][0-9].
+Exchanging marks can make rearranging windows easier than relying upon
+the conventional incremental movement of focus or windows alone.
 
-i3 has a goto-mark function bound to 00[0-9][0-9] and a
-swap-container-with-mark function bound to 05[0-9][0-9].
+=== Numeric Commands
+The support for marks is the only use of purely numeric commands.
+In the past nine months I have experimented with assigning numbers to commands,
+which sounds promiising (the "teletext argument") but fails in practice.
+Failures are why some features of "dopamine" seem to have little or weak justification.
 
-Exchanging marks can make rearranging windows easier than
-the conventional incremental movement of focus or windows.
+=== i3-make
+The i3files directory contais several files, copies of which must be installed in their
+run-time locations. Changing the i3 configuration requires that i3 reloads,
+changing the i3-status script requires that i3 restarts.
+The repository Makefile is used to automate installation, reloading and restarting.
+The i3-make script is a wrapper for 'make' calling the Makefile with custom make variables.
+The example just happens to work for me by default,
+the user should modify it to suit their system.
 
 == Bash scripts
 
 === i3-wrapper
 This script is the main one and is described in detail in the section after this one.
 The other scripts described in this section are the result of refactoring i3-wrapper.
+The refactoring is still work in progress.
 
 === i3-keyboard
 I'm from the UK, but I prefer the US keyboard layout because
-back in the day there was no choice but US layout.
+back in the day there was no choice but the US layout.
 I have a 105 key UK keyboard, and this script creates my custom US-style keyboard.
+
 Apropos of i3, this is where I invoke
 https://github.com/alols/xcape[xcape] to define how modifier keys work when pressed singly.
 
@@ -105,24 +145,19 @@ https://github.com/alols/xcape[xcape] to define how modifier keys work when pres
     - k3='ISO_Level3_Shift=Escape'
 
 === i3-mouse
-It's the "i3 way" to prefer the keyboard.
-Disable the mouse to prevent accidental waking up of the display when the desk is jolted.
-Slow down the mouse and frustrate the user to encourage keyboard use.
-Enable and disable, fast and slow, are bound in Secondary mode.
+
+- Disable the mouse to prevent accidental waking up of the display when the desk is jolted.
+- Slow down the mouse to encourage keyboard use.
 
 The mouse will automatically slow down the mouse inside any Emacs window.
 This is a deliberate decision, to encourage keyboard use and discourage mouse use.
-
-- If you really don't want this (mis)feature, consider removing both i3-mouse commands
+If you really don't want this (mis)feature, consider removing both i3-mouse commands
 in the i3focuswatcher() function inside i3-wrapper.
-- If you do want this feature, but would like to be able to override it at will,
-note that returning to default mode from Secondary mode with the Menu key
-will reset the mouse speed to fast.
-This is achieved with a Menu key triple-press when in default mode,
-easily performed with whichever hand is not holding the mouse.
+If you do want this feature, but would like to be able to override it at will,
+press Menu at least once, until default mode is reactivated.
+Pressing Menu is easily performed with whichever hand is not holding the mouse.
 
 === i3-display
-
 I don't like automatic blanking of the display and neither do I like screensavers.
 This script can request that the display sleeps or wakes up.
 Sleep and wake are bound in Secondary mode.
@@ -134,7 +169,6 @@ This script is a straightforward wrapper round 'i3status'. It adds two things:
 I need both to cover Google Search,
 Google Chrome Autovoice extension (a mission critical capability in my case),
 Skype (which actually works when installed as a snap package).
-
 - A list of the marks that are assigned to terminals, Emacs frames, Chrome windows.
 The utility is debatable.
 
@@ -142,4 +176,54 @@ The utility is debatable.
 This script makes explicit how the applications I use should be started and stopped.
 
 == i3-wrapper
-TO-DO.
+=== File Watcher
+The file watcher monitors a file in shared memory, using inotify-hookable.
+When a command is written to this file, it is forwarded to i3-wrapper for evaluation.
+
+
+=== Focus Watcher
+The focus watcher  started out as a joke and programming challenge:
+to light a keyboard LED when Emacs had focus.
+The implementation was a hack.
+Since then, i3 4.16 has provided "i3-msg -t subscribe -m ..." which subscribes to events,
+in particular  the window (changed) event.
+The implementation is no longer a gimmick. The "Emacs LED" remains,
+but now this indicates that the mouse speed has been considerably reduced
+when Emacs has focus.
+This is done to encourage using the keyboard and discourage using the mouse.
+This was implemented for my benefit, and since I
+sometimes find it more than annoying, there is a back door.
+As described in subsection "i3-mouse", the mouse speed can be
+restored by a triple press of the Menu key.
+
+=== Launch or Focus
+
+if the program is not already running the focus function will launch the requested program
+in a designated workspace on a designated output
+If the program is running, the focus function changes workspace and output
+as required to focus the running program.
+
+The "i3programs" function in i3-wrapper has a bash case statement that
+accepts commands to launch or focus a program using the aforementioned
+focus function. The example here launches thunderbird "tb" on the
+workspace "tb" on the left monitor in response to the command "tb",
+unless a Thunderbird window exists, in which case ithe window will
+receive focus on whatever workspace or output it currently occupies.
+
+----
+(tb)
+focus class Thunderbird 'tb' ${lmon} thunderbird ;;
+----
+
+Not all case statements use the focus function. The ten 'g0 g1 ... g8
+g9' commands launch or focus Google Chrome windows on eponymous
+workspaces. The "gc" command will launch a Google Chrome window on the
+current workspace. There are ten commands 'e0 e1 ... e8 e9' that
+launch or focus Emacs frames on eponymous workspaces, and 'em' for the
+current workspace. These rely on the 'emgc' function instead of 'focus'.
+
+There are more commented commands that launch and focus terminals,
+support the allocation and applications of marks, insert text into Emacs,
+remove text in Emacs, ...
+
+===
