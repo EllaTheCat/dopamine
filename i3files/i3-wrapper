@@ -166,7 +166,7 @@ i3um()
 #
 # The implementation has to focus all marked windows one at a time
 # in order to gather their titles. This is visually disconcerting, so avoid
-# doiing it when not necessary.
+# doing it when not necessary.
 #
 i3am()
 {
@@ -264,6 +264,44 @@ i3emgc ()
             i3-msg "workspace ${arg}"
         fi
     fi
+}
+
+#
+# Convert a "ltvheadend link command" into omxplayer format.
+#
+i3tvh2omx ()
+{
+    # Strip the tag that identified the command.
+    link=$(basename "${1/:tvheadend:/}")
+    # Convert a channel name to a link. I have no idea whether or not
+    # these persist across sessions. We shall learn by doing.
+    case "${link}" in
+        (bbc?one?hd)
+        link=fa9e3e4a56734e4e944215d4900d231e ;;
+        (channel?4?hd)
+        link=63b5fd9b117dc5ebf0133a0be7e7659b ;;
+        (channel?5?hd)
+        link=6aa3836df35ca01fc2560e23a33c8563 ;;
+        (itv2)
+        link=4d4d809c8e8e972942f1eb4c88ffd5e4 ;;
+    esac
+    echo "${link}"
+}
+
+#
+# Play a TVHeadend stream on a Raspberry Pi Zero W.
+#
+i3tvheadend ()
+{
+    client='siro'
+    server='192.168.1.33'
+    # Saving a stream in tvheadend creates a file whose name can
+    # be used as a link, no need to grep the file contents.
+    link=$(i3tvh2omx "$@")
+    # Singleton.
+    ssh "${client}" pkill -f omxplayer.bin
+    # shellcheck disable=2029
+    ssh "${client}" omxplayer "http://${server}:9981/stream/channel/${link}" &
 }
 
 #
@@ -384,6 +422,9 @@ i3programs ()
         echo "${*}" | xclip -selection clipboard   # emacs control y
         emacsclient.emacs24 -e "(with-current-buffer \"AutoVoice\" (yank))"
         echo "$*" ;;
+
+        (:tvheadend:*)
+        i3tvheadend  "$@" ;;
 
         # Security relies on using ssh to access ${dir}/${file}.
         (:*)
