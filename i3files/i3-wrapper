@@ -271,27 +271,33 @@ i3emgc ()
 #
 i3tvh2omx ()
 {
-    # Strip the tag that identified the command.
-    link=$(basename "${1/:tvheadend:/}")
-    # Convert a channel name to a link. I have no idea whether or not
-    # these persist across sessions. We shall learn by doing.
+    # Strip the tag that identified the command unconditionally.
+    link=$(basename "${1/:tvhplay:/}")
+    # Convert a channel name link to a hex id link.
+    # Some HD channels in the UK plus an SD channel for example.
+    # In Firefox, saving a channel creates a playlist.
+    # The hex id here is the name of the playlist file.
     case "${link}" in
         (bbc?one?hd)
         link=fa9e3e4a56734e4e944215d4900d231e ;;
+        (bbc?two?hd)
+        link=4997718f5f51b7e4cef540692c3d557b ;;
+        (itv?hd)
+        link=66be15a254ee858a4dc8087fcaf0c983 ;;
         (channel?4?hd)
         link=63b5fd9b117dc5ebf0133a0be7e7659b ;;
         (channel?5?hd)
         link=6aa3836df35ca01fc2560e23a33c8563 ;;
-        (itv2)
-        link=4d4d809c8e8e972942f1eb4c88ffd5e4 ;;
+        (dave)
+        link=33c575b002e6ddaa465cfbc049c77414 ;;
     esac
     echo "${link}"
 }
 
 #
-# Play a TVHeadend stream on a Raspberry Pi Zero W.
+# Play a TVHeadend stream. (Raspberry Pi Zero W)
 #
-i3tvheadend ()
+i3tvhplay ()
 {
     client='siro'
     server='192.168.1.33'
@@ -423,10 +429,13 @@ i3programs ()
         emacsclient.emacs24 -e "(with-current-buffer \"AutoVoice\" (yank))"
         echo "$*" ;;
 
-        (:tvheadend:*)
-        i3tvheadend  "$@" ;;
+        (:tvhplay:*)
+        # Watch TV on an STB class media player (Raspberry Pi Zero W).
+        # Tag your ad-hoc commands with a string enclosed in colons.
+        i3tvhplay  "$@" ;;
 
         # Security relies on using ssh to access ${dir}/${file}.
+        # Using this default is deprecated!
         (:*)
         (eval "${1/:/} ${*:2}") & ;;
     esac
