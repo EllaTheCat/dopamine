@@ -288,6 +288,8 @@ i3tvh2omx ()
         link=63b5fd9b117dc5ebf0133a0be7e7659b ;;
         (channel?5?hd)
         link=6aa3836df35ca01fc2560e23a33c8563 ;;
+        (4seven)
+        link=6bf95906c9b58a2be1f8f17c5e555e1b ;;
         (dave)
         link=33c575b002e6ddaa465cfbc049c77414 ;;
     esac
