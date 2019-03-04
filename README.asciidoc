@@ -13,6 +13,15 @@ I chose the name to be short and memorable.
 (PD happens when https://en.wikipedia.org/wiki/Dopamine[dopamine]
 producing neurons in the brain start dying.)
 
+== How to run dopamine
+Writing INSTALL is on my ToDo list.
+
+Consider evaluating dopamine on a VM so you minimise the risk of breaking your current install,
+and because
+(http://feeblenerd.blogspot.com/2015/11/pretty-i3-with-xfce.html)[dopamine is running on i3 on Xubuntu 16.04 LTS].
+Symlink the dotfiles and scripts to their runtime locations,
+use i3-make to install the i3 related files.
+
 == Scope
 
 === i3files directory
@@ -24,21 +33,19 @@ The i3files are discussed in depth in a later section.
 === dotfiles directory
 My PD makes dot-inputrc absolutely essential; combined with a huge bash history size set by dot-bashrc,
 I can recall, edit and apply commands with minimal typing. I type a few letters to filter what is to be shown,
-then use up ordown arrow to cycle through matching commands.
+then use up arrow or down arrow to cycle through matching commands.
 The dot-bashrc has some nice github functions and a prompt that knows about git.
-The files here are the ones I use.
-Nothing is installed.
+The files here are the ones I use. Nothing here is installed by the Makefile in i3files.
 
 === dotemacs directory
 Emacs and dopamine provide a minimalist voice-assisted editing feature.
 Spoken sentences are converted to text externally about which more later.
 The text is inserted into an Emacs buffer as a single line by default, the user can choose to remove said single line.
-The files here are the ones I use.
-Nothing is installed.
+The files here are the ones I use. Nothing here is installed by the Makefile in i3files.
 
 === scripts directory
 These are scripts have come in handy, for example when making a video.
-Nothing is installed.
+The files here are the ones I use. Nothing here is installed by the Makefile in i3files.
 
 == Ergonomics
 
@@ -104,7 +111,8 @@ This is explained in more detail in subsection "Launch or Focus" in section "i3-
 === Marks
 Whenever a terminal, emacs frame, or google chrome window is created,
 a unique two digit mark is allocated and displayed on the right side of the titlebar.
-The quick-and-dirty implementation risks failing to terminate while allocating.
+The quick-and-dirty implementation of mark assignment risks failing to terminate
+when the number of marked containers approaches 100.
 i3 has a goto-mark function bound to the 3 digit sequence 0[0-9][0-9] and a
 swap-container-with-mark function bound to the 3 digit sequence 5[0-9][0-9].
 Exchanging marks can make rearranging windows easier than relying upon
@@ -180,7 +188,6 @@ This script makes explicit how the applications I use should be started and stop
 The file watcher monitors a file in shared memory, using inotify-hookable.
 When a command is written to this file, it is forwarded to i3-wrapper for evaluation.
 
-
 === Focus Watcher
 The focus watcher  started out as a joke and programming challenge:
 to light a keyboard LED when Emacs had focus.
@@ -197,16 +204,18 @@ As described in subsection "i3-mouse", the mouse speed can be
 restored by a triple press of the Menu key.
 
 === Launch or Focus
-
-if the program is not already running the focus function will launch the requested program
-in a designated workspace on a designated output
-If the program is running, the focus function changes workspace and output
-as required to focus the running program.
-
-The "i3programs" function in i3-wrapper has a bash case statement that
+The i3program" function in i3-wrapper has a bash case statement that
 accepts commands to launch or focus a program using the aforementioned
-focus function. The example here launches thunderbird "tb" on the
-workspace "tb" on the left monitor in response to the command "tb",
+focus function:
+
+- If a requested program is not already running,
+the focus function will launch the requested program
+in a designated workspace on a designated output.
+- If a requested program is already running,
+the focus function changes to its workspace and to its output.
+
+The example here launches thunderbird in response to command "tb",
+launching  on the workspace "tb" on the left monitor ${lmon},
 unless a Thunderbird window exists, in which case ithe window will
 receive focus on whatever workspace or output it currently occupies.
 
@@ -225,5 +234,3 @@ current workspace. These rely on the 'emgc' function instead of 'focus'.
 There are more commented commands that launch and focus terminals,
 support the allocation and applications of marks, insert text into Emacs,
 remove text in Emacs, ...
-
-===
