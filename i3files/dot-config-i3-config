@@ -260,11 +260,8 @@ mode "Secondary" {
     # Spin both down, blue LEDs should stay dark when quietpc is off.
     bindsym u $default, $i3apps stop usbdisks
 
-    # DVI and HDMI auto-switching support.
-    # Raspberry Pi HDMI turned off to power down the shared monitor.
-    # https://raspberrypi.stackexchange.com/a/53267
-    bindsym i $default, exec ssh siro vcgencmd display_power 1
-    bindsym o $default, exec ssh siro vcgencmd display_power 0
+    bindsym i $secondarynop
+    bindsym o $secondarynop
 
     # Find the mouse pointer! You may prefer different xy coordinates.
     # I chose (2048,128), top left corner of the right hand monitor in
@@ -308,7 +305,9 @@ mode "Secondary" {
 
     # Desktop background.
     bindsym n $default, exec --no-startup-id nitrogen --restore
-    bindsym m $secondarynop
+    # Benq DVI and HDMI auto-switching to save wear & tear.
+    # https://raspberrypi.stackexchange.com/a/53267
+    bindsym m $default, $i3display toggle
 
     bindsym comma $secondarynop
     bindsym period $secondarynop

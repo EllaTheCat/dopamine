@@ -7,6 +7,11 @@
 
 outputs=$(xrandr | grep ' connect' | awk '{print $1}')
 
+# Hardcoded emergency hack ...
+if [  -f  "/dev/shm/$USER/benq" ]; then
+    outputs="${outputs/HDMI2/}"
+fi
+
 case "$1" in
     (default)
     i3-msg "mode \"$1\""

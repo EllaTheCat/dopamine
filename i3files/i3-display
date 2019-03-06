@@ -5,6 +5,16 @@
 # Requires i3-mouse for setmouse, xdotool.
 #
 
+#
+# My three monitors were arranged thus: [HDMI2] [HDMI1] [VGA1].
+# Use 'xrandr' with no arguments to list monitor names and geometry.
+#
+lmon=HDMI2
+cmon=HDMI1
+
+# At startup this does not exist, and quietpc has the HDMI2 monitor.
+flag=/dev/shm/$USER/benq
+
 setdisplay ()
 {
     case "$1" in
@@ -26,7 +36,25 @@ setdisplay ()
         xset s off
         xset -dpms
         ;;
-        (*)
+        # Assign the specified monitor to i3wm on PC 'quietpc'.
+        (quietpc)
+        ssh siro vcgencmd display_power 0
+        xrandr --output "${lmon}" --auto --left-of "${cmon}"
+        xrandr --output "${lmon}" --brightness 1.0
+        rm -f "${flag}"
+        ;;
+        # Assign the specified monitor to Raspberry Pi Zero W 'siro'..
+        (siro)
+        xrandr --output "${lmon}" --off
+        ssh siro vcgencmd display_power 1
+        touch "${flag}"
+        ;;
+        (toggle)
+        if [ -f "${flag}" ]; then
+            eval "$0" quietpc
+        else
+            eval "$0" siro
+        fi
         ;;
     esac
 }

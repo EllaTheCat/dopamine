@@ -267,52 +267,6 @@ i3emgc ()
 }
 
 #
-# Convert a "ltvheadend link command" into omxplayer format.
-#
-i3tvh2omx ()
-{
-    # Strip the tag that identified the command unconditionally.
-    link=$(basename "${1/:tvhplay:/}")
-    # Convert a channel name link to a hex id link.
-    # Some HD channels in the UK plus an SD channel for example.
-    # In Firefox, saving a channel creates a playlist.
-    # The hex id here is the name of the playlist file.
-    case "${link}" in
-        (bbc?one?hd)
-        link=fa9e3e4a56734e4e944215d4900d231e ;;
-        (bbc?two?hd)
-        link=4997718f5f51b7e4cef540692c3d557b ;;
-        (itv?hd)
-        link=66be15a254ee858a4dc8087fcaf0c983 ;;
-        (channel?4?hd)
-        link=63b5fd9b117dc5ebf0133a0be7e7659b ;;
-        (channel?5?hd)
-        link=6aa3836df35ca01fc2560e23a33c8563 ;;
-        (4seven)
-        link=6bf95906c9b58a2be1f8f17c5e555e1b ;;
-        (dave)
-        link=33c575b002e6ddaa465cfbc049c77414 ;;
-    esac
-    echo "${link}"
-}
-
-#
-# Play a TVHeadend stream. (Raspberry Pi Zero W)
-#
-i3tvhplay ()
-{
-    client='siro'
-    server='192.168.1.33'
-    # Saving a stream in tvheadend creates a file whose name can
-    # be used as a link, no need to grep the file contents.
-    link=$(i3tvh2omx "$@")
-    # Singleton.
-    ssh "${client}" pkill -f omxplayer.bin
-    # shellcheck disable=2029
-    ssh "${client}" omxplayer "http://${server}:9981/stream/channel/${link}" &
-}
-
-#
 # 1. Common programs with examples of how to integrate them.
 # 2. Terminals, editor, browser, and management of their marks.
 # 3. Support for spoken dictation of sentences.
@@ -433,8 +387,7 @@ i3programs ()
 
         (:tvhplay:*)
         # Watch TV on an STB class media player (Raspberry Pi Zero W).
-        # Tag your ad-hoc commands with a string enclosed in colons.
-        i3tvhplay  "$@" ;;
+        i3-tvheadend  "$@" ;;
 
         # Security relies on using ssh to access ${dir}/${file}.
         # Using this default is deprecated!
