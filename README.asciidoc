@@ -166,9 +166,17 @@ press Menu at least once, until default mode is reactivated.
 Pressing Menu is easily performed with whichever hand is not holding the mouse.
 
 === i3-display
-I don't like automatic blanking of the display and neither do I like screensavers.
-This script can request that the display sleeps or wakes up.
-Sleep and wake are bound in Secondary mode.
+I simply don't like automatic display blanking, but because
+my tremor would easily disturb the mouse
+I can't allow automatic display unblanking.
+Keybindings can use this script request that the display sleeps or wakes up.
+
+I have two monitors driven from my PC, and I hope to have three again in future.
+The left monitor can be driven from other sources, typically the other source is a
+Raspberry Pi Zero W that streams video.
+I wish to avoid selecting inputs with buttons on the left monitor.
+Keybindings can use this script to send commands to both sources
+such that the left monitor source can be selected programmatically.
 
 === i3-status
 This script is a straightforward wrapper round 'i3status'. It adds two things:
@@ -180,13 +188,27 @@ Skype (which actually works when installed as a snap package).
 - A list of the marks that are assigned to terminals, Emacs frames, Chrome windows.
 The utility is debatable.
 
+=== i3-tvheadend
+I have a tvheadend server on the machine I'm developing dopamine on,
+so I can watch digital TV when the PD requires that I take a break.
+
+The client is a Raspberry Pi Zero W that makes a surprisingly good attempt at
+using its Broadcom hardware accelerated media player
+to render streaming video in high resolution at 25fps (frames not fields).
+
+The i3-headend script provides the client, the i3-wrapper script recognises
+commands intended for the client and forwards them to i3-tvheadend.
+There is a command syntax convention for adding subsystems like this,
+a prefix string between colons.
+
 === i3-apps
 This script makes explicit how the applications I use should be started and stopped.
 
 == i3-wrapper
 === File Watcher
-The file watcher monitors a file in shared memory, using inotify-hookable.
-When a command is written to this file, it is forwarded to i3-wrapper for evaluation.
+The file watcher monitors a file in shared memory, using
+inotify-hookable.  When a command is written to this file, it is
+forwarded to the i3programs() function in i3-wrapper for evaluation.
 
 === Focus Watcher
 The focus watcher  started out as a joke and programming challenge:
@@ -204,7 +226,7 @@ As described in subsection "i3-mouse", the mouse speed can be
 restored by a triple press of the Menu key.
 
 === Launch or Focus
-The i3program" function in i3-wrapper has a bash case statement that
+The i3programs function in i3-wrapper has a bash case statement that
 accepts commands to launch or focus a program using the aforementioned
 focus function:
 
