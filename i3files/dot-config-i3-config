@@ -263,11 +263,9 @@ mode "Secondary" {
     bindsym i $secondarynop
     bindsym o $secondarynop
 
-    # Find the mouse pointer! You may prefer different xy coordinates.
-    # I chose (2048,128), top left corner of the right hand monitor in
-    # a two monitor arrangement.
-    bindsym p $default, exec --no-startup-id \
-            xdotool mousemove --clearmodifiers 2048 128
+    # Benq DVI and HDMI auto-switching to save wear & tear.
+    # https://raspberrypi.stackexchange.com/a/53267
+    bindsym p $default, $i3display toggle
 
     # Command prompt.
     bindsym Tab $default, $i3wrapper -p
@@ -305,9 +303,11 @@ mode "Secondary" {
 
     # Desktop background.
     bindsym n $default, exec --no-startup-id nitrogen --restore
-    # Benq DVI and HDMI auto-switching to save wear & tear.
-    # https://raspberrypi.stackexchange.com/a/53267
-    bindsym m $default, $i3display toggle
+
+    # Find the mouse! You may prefer different xy coordinates.  I
+    # chose (1792,128), top right corner of the leftmost monitor.
+    bindsym m $default, exec --no-startup-id \
+            xdotool mousemove --clearmodifiers 1792 128
 
     bindsym comma $secondarynop
     bindsym period $secondarynop
