@@ -298,8 +298,8 @@ mode "Secondary" {
     # my setup doesn't enforce this (when watching TV).
     bindsym c $default, exec --no-startup-id keyclick
 
-    bindsym v $secondarynop
-    bindsym b $secondarynop
+    bindsym v $default, $i3apps start tvheadend
+    bindsym b $default, $i3apps stop tvheadend
 
     # Desktop background.
     bindsym n $default, exec --no-startup-id nitrogen --restore

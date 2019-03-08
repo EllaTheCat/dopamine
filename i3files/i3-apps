@@ -186,7 +186,7 @@ do
                     eval "$0 stop usbdisks"
                 fi
             fi
-       fi
+        fi
         ;;
 
     esac
