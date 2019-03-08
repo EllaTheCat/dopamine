@@ -76,11 +76,6 @@ bindsym Control+Mod4+Delete [workspace="__focused__"] kill
 # This key chord works for my right hand.
 bindsym Control+Delete $i3wrapper dd
 
-# Move focus to another output when the left hand is free.
-# Move focus to another output when the left hand has the mouse.
-bindsym Control+Tab $i3wrapper op
-bindsym Control+Return $i3wrapper op
-
 # In default mode, this facilitates move and resize using the mouse
 # without having to precisely position the mouse on window edges.
 floating_modifier Mod4
@@ -109,13 +104,21 @@ bindsym KP_Add \
 bindsym KP_Left focus left
 bindsym KP_Right focus right
 bindsym KP_Up focus up
-bindsym KP_Home workspace prev
-bindsym KP_Prior workspace next
+bindsym KP_Home workspace prev_on_output
+bindsym KP_Prior workspace next_on_output
 bindsym KP_End move left
 bindsym KP_Down move down
 bindsym KP_Begin move up
 bindsym KP_Next move right
 bindsym KP_Delete focus down
+
+# Move focus to another output when the left hand is free.
+# Move focus to another output when the left hand has the mouse.
+# Necessary because the numpad cycles workspaces on output.
+# These should also be bound in Primary and Secondary modes.
+bindsym Control+Tab $i3wrapper op
+bindsym Control+Return $i3wrapper op
+
 # Command prompt.
 # The numpad enters numbers during command entry.
 # Do not rebind KP_0, KP_1 ... KP_8, KP_9, KP_Decimal.
@@ -228,14 +231,17 @@ mode "Primary" {
     bindsym KP_Left focus left
     bindsym KP_Right focus right
     bindsym KP_Up focus up
-    bindsym KP_Home workspace prev
-    bindsym KP_Prior workspace next
+    bindsym KP_Home workspace prev_on_output
+    bindsym KP_Prior workspace next_on_output
     bindsym KP_End move left
     bindsym KP_Down move down
     bindsym KP_Begin move up
     bindsym KP_Next move right
     bindsym KP_Delete focus down
     bindsym KP_Insert $default, $i3wrapper -p
+
+    bindsym Control+Tab $i3wrapper op
+    bindsym Control+Return $i3wrapper op
 
     # Pressing cycles through the three modes. Pri->Sec->Def->Pri.
     bindsym Menu mode "Secondary"
@@ -325,14 +331,17 @@ mode "Secondary" {
     bindsym KP_Left focus left
     bindsym KP_Right focus right
     bindsym KP_Up focus up
-    bindsym KP_Home workspace prev
-    bindsym KP_Prior workspace next
+    bindsym KP_Home workspace prev_on_output
+    bindsym KP_Prior workspace next_on_output
     bindsym KP_End move left
     bindsym KP_Down move down
     bindsym KP_Begin move up
     bindsym KP_Next move right
     bindsym KP_Delete focus down
     bindsym KP_Insert $default, $i3wrapper -p
+
+    bindsym Control+Tab $i3wrapper op
+    bindsym Control+Return $i3wrapper op
 
     # Pressing cycles through the three modes. Sec->Def->Pri->Sec.
     # Triple-pressing(!) in default mode cancels a.o. slow mouse in Emacs.

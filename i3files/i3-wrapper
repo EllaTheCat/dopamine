@@ -116,7 +116,10 @@ i3op ()
     # With two outputs connected (even though three may be defined),
     # the list now has one item, the current workspace to focus. What
     # happens with three outputs is undecided and untested.
-    i3-msg "workspace $ws"
+    ws=${ws:1:2}
+    if [ ${#ws} -eq 2 ]; then  # belt and braces
+        i3-msg "workspace $ws"
+    fi
 }
 
 #
