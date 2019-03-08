@@ -103,6 +103,23 @@ i3dd()
 }
 
 #
+# Move focus to another output.
+#
+i3op ()
+{
+    # The focused workspace on this output.
+    ws=$(i3-msg -t get_workspaces | jq '.[] | .name,.focused' | grep -B1 true | grep -v true)
+    # A list of the current workspace on each output,
+    # excluding the focused workpace.
+    ws=$(i3-msg -t get_outputs | jq '.[] | .name,.current_workspace' | \
+                grep -A1 "\($lmon\|$cmon\|$rmon\)" | grep -v "\($lmon\|$cmon\|$rmon\|$ws\)")
+    # With two outputs connected (even though three may be defined),
+    # the list now has one item, the current workspace to focus. What
+    # happens with three outputs is undecided and untested.
+    i3-msg "workspace $ws"
+}
+
+#
 # Add a terminal (split h, side-by-side).
 #
 i3tt()
@@ -349,9 +366,13 @@ i3programs ()
         i3-msg "workspace $1" ;;
         (sg)
         xfce4-screenshooter -d 2 ;;
-        # Scratchpad terminal, alias 'dropdown'.
+
+        # Dropdown terminal.
         (dd)
         i3dd ;;
+        # Move focus to another output.
+        (op)
+        i3op ;;
 
         ([a-z][a-z])
         # Create the eponymous workspace and launch a terminal there
@@ -498,7 +519,6 @@ case ${XDG_CURRENT_DESKTOP} in
         # Verbosity over obscurity, not enough single letters.
         (--file-watcher) i3filewatcher ;;
         (--focus-watcher)  i3focuswatcher ;;
-        (--dropdown) i3dd ;;
         (--active-marks) i3am ;;
         (--unique-mark) i3um ;;
         # In production, do nothing here?

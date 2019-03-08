@@ -11,7 +11,6 @@
 
 # Helpers. Embedding the path explicitly is belt and braces.
 set $default exec --no-startup-id ~/local/bin/i3-mode default
-set $dropdown exec --no-startup-id ~/local/bin/i3-wrapper --dropdown
 set $i3apps exec --no-startup-id ~/local/bin/i3-apps
 set $i3display exec --no-startup-id ~/local/bin/i3-display
 set $i3keyboard exec --no-startup-id ~/local/bin/i3-keyboard
@@ -75,7 +74,12 @@ bindsym Control+Mod4+Delete [workspace="__focused__"] kill
 
 # A key chord to toggle the scratchpad terminal.
 # This key chord works for my right hand.
-bindsym Control+Delete $dropdown
+bindsym Control+Delete $i3wrapper dd
+
+# Move focus to another output when the left hand is free.
+# Move focus to another output when the left hand has the mouse.
+bindsym Control+Tab $i3wrapper op
+bindsym Control+Return $i3wrapper op
 
 # In default mode, this facilitates move and resize using the mouse
 # without having to precisely position the mouse on window edges.
@@ -128,7 +132,7 @@ bindsym KP_Insert $default, $i3wrapper -p
 # Primary mode.
 mode "Primary" {
 
-    # This is independent of the similarly namde configuration setting.
+    # This is independent of the similarly named configuration setting.
     bindsym q $default, workspace back_and_forth
 
     # (W)orkspace.
@@ -142,7 +146,7 @@ mode "Primary" {
         -P '(rename this workspace to): ' \
         -F 'rename workspace to "%s"'
 
-    # [T]abbed layoutd..
+    # [T]abbed layout.
     bindsym t $default, layout tabbed
 
     # Focus the workspace with the latest [u]rgency hint.
