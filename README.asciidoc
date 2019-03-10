@@ -66,16 +66,18 @@ Here's what works for me:
 - bindsym KP_Left focus left
 - bindsym KP_Right focus right
 - bindsym KP_Up focus up
-- bindsym KP_Home workspace prev
-- bindsym KP_Prior workspace next
+- bindsym KP_Home workspace prev_on_output
+- bindsym KP_Prior workspace next_on_output
 - bindsym KP_End move left
 - bindsym KP_Down move down
 - bindsym KP_Begin move up
 - bindsym KP_Next move right
 - bindsym KP_Delete focus down
 
-The focus up key wraps round, and since my workspaces seldom stack containers more than two deep,
-KP_Delete need not be bound to focus down.
+The 'op' command moves focus to another output. I find it to be very useful.
+
+- bindsym Control+Tab $i3wrapper op
+- bindsym Control+Return $i3wrapper op
 
 === i3 modes
 There are now only three i3 modes: the default mode, the Primary mode, and the Secondary mode.
