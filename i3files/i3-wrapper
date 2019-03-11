@@ -333,9 +333,15 @@ i3programs ()
         focus instance Navigator 'ff' ${cmon} firefox ;;
         (tb)
         focus class Thunderbird 'tb' ${lmon} thunderbird ;;
+
+        # Does the user want this program to launch in a dedicated
+        # workspace or in the current workspace?
         (th)
+        focus title 'File Manager' 'th' ${cmon} \
+              exo-open --launch FileManager "${HOME}/1/Downloads" ;;
+        (tn)
         focus title 'File Manager' 'none' 'none' \
-              exo-open --launch FileManager "${HOME}/Downloads" ;;
+              exo-open --launch FileManager "${HOME}/1/Downloads" ;;
 
         (sk)
         focus instance skype 'sk' ${lmon} /snap/bin/skype ;;
