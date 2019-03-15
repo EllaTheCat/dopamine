@@ -18,7 +18,7 @@ Writing INSTALL is on my ToDo list.
 
 Consider evaluating dopamine on a VM so you minimise the risk of breaking your current install,
 and because
-(http://feeblenerd.blogspot.com/2015/11/pretty-i3-with-xfce.html)[dopamine is running on i3 on Xubuntu 16.04 LTS].
+http://feeblenerd.blogspot.com/2015/11/pretty-i3-with-xfce.html[dopamine is running on i3 on Xubuntu 16.04 LTS].
 Symlink the dotfiles and scripts to their runtime locations,
 use i3-make to install the i3 related files.
 
