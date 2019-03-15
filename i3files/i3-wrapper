@@ -175,7 +175,7 @@ i3um()
                 do echo "${m}"; done | grep -c "${id}")
         if [ "${count}" -eq 0 ] ; then break; fi
     done
-    sleep 1
+    sleep 1 # No need for caller to wait for the window.
     windowid=$(printf "0x%x" "$(xdotool getwindowfocus)")
     i3-msg "[id=\"${windowid}\"] mark --toggle \"${id}\""
     i3-msg "[con_mark=\"${id}\"] focus"
@@ -231,9 +231,7 @@ i3am()
 i3terminal ()
 {
     xfce4-terminal -T "xfce4-terminal" &
-    # Allow time for the window to appear then apply the mark.
-    sleep 1
-    i3um
+    sleep 1 && i3um  # Assign a unique mark.
 }
 
 #
@@ -466,6 +464,7 @@ i3filewatcher ()
         inotify-hookable \
         --watch-files "${dir}/${file}" \
         --on-modify-command "$0 -s" &
+    sleep 1 && i3um  # Assign a unique mark.
 }
 
 #

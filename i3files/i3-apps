@@ -38,10 +38,6 @@ do
         fi
         ;;
 
-        (workspaces)
-        i3-msg "focus output \"${cmon}\", rename workspace to \"${cmon}\""
-        ;;
-
         (dropbox)
         if [ "$(pgrep -c dropbox)" -ne 0 ]; then
             if [ "_${verb}" = "_stop" ]; then
@@ -84,6 +80,12 @@ do
                 (xfce4-terminal -T 'tvheadend' -x tvheadend --noacl) &
             fi
         fi
+        ;;
+
+        (workspaces)
+        # A subroutine to be called during i3 startup.
+        # Rename any remaining empty workspaces.
+        i3-msg "focus output \"${cmon}\", rename workspace to \"${cmon}\""
         ;;
 
         #
