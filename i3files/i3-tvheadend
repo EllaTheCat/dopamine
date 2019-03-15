@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# tvheadend is a broadcast stream server
+# STB class media player for a tvheadend client.
 #
 
 
@@ -12,9 +12,11 @@ tvh2omx ()
     # Strip the tag that identified the command unconditionally.
     link=$(basename "${1/:tvhplay:/}")
     # Convert a channel name link to a hex id link.
-    # Some HD channels in the UK plus an SD channel for example.
     # In Firefox, saving a channel creates a playlist.
     # The hex id here is the name of the playlist file.
+    #
+    # EXAMPLE, YMMV:
+    # Some HD channels in the UK plus an SD channel.
     case "${link}" in
         (bbc?one?hd)
         link=fa9e3e4a56734e4e944215d4900d231e ;;
@@ -35,10 +37,15 @@ tvh2omx ()
 }
 
 #
-# Play a TVHeadend stream. (Raspberry Pi Zero W)
+# Play a TVHeadend stream.
+#
+# - Platform used to test: Raspberry Pi Zero W (Broadcom GPU)
+# - Usage example: i3-wrapper :tvhplay:channel_4_hd
 #
 tvhplay ()
 {
+    # Hardcoded hostname, hardcoded IP address, change to suit your
+    # server and client, use either format.
     client='siro'
     server='192.168.1.33'
     # Saving a stream in tvheadend creates a file whose name can
@@ -47,7 +54,11 @@ tvhplay ()
     # Singleton.
     ssh "${client}" pkill -f omxplayer.bin
     # shellcheck disable=2029
-    ssh "${client}" omxplayer "http://${server}:9981/stream/channel/${link}" &
+    ssh "${client}" omxplayer --live --refresh  --hdmiclocksync \
+        --audio_queue 20 --video_queue 80 --timeout 5 \
+        "http://${server}:9981/stream/channel/${link}" &
+    # ^^^ The 2nd and 3rd omxplayer parameters seem to have fixed a
+    # problem where the video became corrupt after about half-an-hour.
 }
 
 #
