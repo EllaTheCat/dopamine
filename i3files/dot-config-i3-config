@@ -435,7 +435,7 @@ bar {
     tray_output $cmon
     font pango:DejaVu Sans 11
     bindsym button2 $default, [urgent=latest] focus
-    bindsym button3 $default, nop
+    bindsym button3 $default, $i3mouse fast
 }
 
 # Mouse behaviour wrt windows.
