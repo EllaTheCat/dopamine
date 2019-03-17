@@ -28,6 +28,21 @@ setmouse ()
         xset m 1 0
         xinput --set-prop "${id}" "Device Accel Constant Deceleration" 8
         ;;
+        (window)
+        # The mouse will warp to a point within the newly focused
+        # window.  The point is offset gfrom the top left corner by a
+        # fraction of the window width and a fraction of the window
+        # height. On 2019-03-17 the fraction was one third.
+        i3-msg -t subscribe -m '[ "window" ]' | while read
+        do
+            # shellcheck disable=2046
+            eval $(xdotool getwindowfocus getwindowgeometry --shell)
+            xdotool mousemove $((X + WIDTH / 3)) $((Y + HEIGHT / 3))
+        done
+        ;;
+        (desktop)
+        pkill -f "$0 window"
+        ;;
         (*)
         if [ "${cd}" = "1.000000" ] ; then
             setmouse slow

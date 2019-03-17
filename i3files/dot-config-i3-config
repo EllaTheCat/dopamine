@@ -314,14 +314,12 @@ mode "Secondary" {
     # Desktop background.
     bindsym n $default, exec --no-startup-id nitrogen --restore
 
-    # Find the mouse! You may prefer different xy coordinates.  I
-    # chose (1792,128), top right corner of the leftmost monitor.
-    bindsym m $default, exec --no-startup-id \
-            xdotool mousemove --clearmodifiers 1792 128
+    # Focus a window, warp the mouse inside the window, or not.
+    bindsym m $default, $i3mouse window
+    bindsym slash $default, $i3mouse desktop
 
     bindsym comma $secondarynop
     bindsym period $secondarynop
-    bindsym slash $secondarynop
 
     # Control-Alt-Delete is a design decision please do not change.
     bindsym Control+Mod1+Delete $default,kill
