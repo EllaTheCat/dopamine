@@ -1,17 +1,19 @@
 = "dopamine"
 
 == Introduction
-Nine months ago I
-https://www.reddit.com/r/i3wm/comments/8h2961/using_i3_for_better_accessibility_with_parkinsons/[posted on reddit],
+Nine months ago (as of 2019-03-16)
+https://www.reddit.com/r/i3wm/comments/8h2961/using_i3_for_better_accessibility_with_parkinsons/[I posted on reddit],
 saying that the i3 window manager was very well suited to my needs
 as someone living with Parkinson's Disease (PD).
-The https://github.com/EllaTheCat/dopamine[i3-parkinson] repository on github is a code snapshot from that time.
 
 You are currently reading the README for the github repository https://github.com/EllaTheCat/dopamine[dopamine],
 a tidied up direct descendant of i3-parkinson that I'm using and actively working on.
 I chose the name to be short and memorable.
 (PD happens when https://en.wikipedia.org/wiki/Dopamine[dopamine]
 producing neurons in the brain start dying.)
+I have made a post on reddit about dopamine and there's once again
+https://www.reddit.com/r/i3wm/comments/b1i2io/dopamine_using_i3_when_the_user_has_a_movement/[an
+ongoing discussion].
 
 == How to run dopamine
 Writing INSTALL is on my ToDo list.
@@ -158,6 +160,8 @@ https://github.com/alols/xcape[xcape] to define how modifier keys work when pres
 
 - Disable the mouse to prevent accidental waking up of the display when the desk is jolted.
 - Slow down the mouse to encourage keyboard use.
+- Warp the mouse to follow window focus changes and
+reduce the overall manual mouse movement distance.
 
 The mouse will automatically slow down the mouse inside any Emacs window.
 This is a deliberate decision, to encourage keyboard use and discourage mouse use.
@@ -166,6 +170,17 @@ in the i3focuswatcher() function inside i3-wrapper.
 If you do want this feature, but would like to be able to override it at will,
 press Menu at least once, until default mode is reactivated.
 Pressing Menu is easily performed with whichever hand is not holding the mouse.
+
+A recent and very useful idea from reddit is
+https://www.reddit.com/r/i3wm/comments/b0lj73/where_focus_goes_mouse_follows/["mouse follows focus"]:
+When the keyboard is used to focus a window, the mouse is warped into
+the window, to a point offset from the top left corner
+by one-third of the window width and one-third of the window height.
+
+Using the mouse to focus a window with a single click highlights the
+region between the mouse click point and the keyboard focus point. Using
+a double-click instead leaves no highlight. Please, try to use the keyboard!
+
 
 === i3-display
 I simply don't like automatic display blanking, but because
@@ -255,6 +270,60 @@ current workspace. There are ten commands 'e0 e1 ... e8 e9' that
 launch or focus Emacs frames on eponymous workspaces, and 'em' for the
 current workspace. These rely on the 'emgc' function instead of 'focus'.
 
-There are more commented commands that launch and focus terminals,
-support the allocation and applications of marks, insert text into Emacs,
-remove text in Emacs, ...
+=== Scratchpad Terminal
+The popularity of dropdown terminals (Guake, Yakuake ...) has seen i3
+users implementing similar functionality using the i3 scratchpad.
+
+A single key binding (Control+Delete) operates the scratchpad terminal.
+The first two presses perform initialisation,
+subsequent presses toggle the scratchpad terminal between being visible and being hidden;.
+There is no dropdown animation.
+I have locked the terminal to a fixed position on my primary monitor.
+
+My decision to use Control+Delete despite my right hand tremors
+relies on the space between the two key clusters to the left of the numpad
+to rest my fingers and steady my hand.
+
+=== Tiled Terminals
+I  use tiled terminals laid out in a limited number of different arrangements,
+which result in bindings to bash functions that perform these operations:
+
+- 1 terminal opened to the right of an existing container.
+- 1 terminal opened underneath an existing container.
+- 2 terminals opened to the right of an existing container, stacked vertically.
+- Given two terminals stacked one above the other, arrange them side-by-side.
+- Given two terminals stacked side-by-side, arrange them one above the other.
+
+The hardcore i3 user might be able to split but it made my head hurt.
+These terminal commands combine the splitting and the invoking.
+
+=== AutoVoice
+My external speech to text engine is a mobile phone that can write a
+command or sentence into the file monitored by the file watcher.
+
+The i3programs() function
+considers a string to be a command if it starts with [a-z0-9],
+and considers a string to be a sentence if it starts with [A-Z].
+
+The string is injected into an Emacs buffer if it is a sentence.
+It's rather cool that this can happen
+with neither the Emacs frame being focused nor its workspace being active.
+Injection is unconditional. Mistakes can be removed by saying
+"cancel".  Obviously recognising "cancel" is not 100% accurate.
+
+Nevertheless the draft of an email or drafting a section in a document
+can be done more or less hands-free using speech input.
+Even with mistakes it is acceptably fast,
+and can be faster than my typing one handed.
+
+Apropos of the processing done by the phone.
+if I say a sentence, it is turned into text.
+Some common words are Camel Cased or UPPER CASED,
+and a period (full stop) or question mark is appended.
+Question detection is partly automated, For example,
+it looks for sentences that begin with
+"Who / What / Where / Which / How".
+
+The 'av' command launches a dedicated singleton workspace or focuses the existing one.
+The workspace shows the Emacs autovoice buffer alongside a Google Chrome window.
+I like to write using 'asciidoc markup', the browser shows WYSIWYG of my writing.
