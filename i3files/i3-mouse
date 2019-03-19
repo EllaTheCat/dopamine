@@ -30,7 +30,7 @@ setmouse ()
         ;;
         (window)
         # The mouse will warp to a point within the newly focused
-        # window.  The point is offset gfrom the top left corner by a
+        # window.  The point is offset from the top left corner by a
         # fraction of the window width and a fraction of the window
         # height. On 2019-03-17 the fraction was one third.
         i3-msg -t subscribe -m '[ "window" ]' | while read

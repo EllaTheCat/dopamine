@@ -468,8 +468,8 @@ i3filewatcher ()
 }
 
 #
-# When an Emacs window has focus turn on (Dell) keyboard LED 3 and set
-# the mouse speed to slow.
+# When an Emacs window gains/loses focus turn on/off (Dell) keyboard
+# LED 3 and disable/enable the mouse.
 #
 i3focuswatcher ()
 {
@@ -479,10 +479,10 @@ i3focuswatcher ()
         # shellcheck disable=2046
         if [ $(echo "${line}" | grep -c -i emacs ) -gt 0 ]; then
             xset led 3 # ON
-            eval $(dirname "$0")/i3-mouse slow
+            eval $(dirname "$0")/i3-mouse disable
         else
             xset -led 3 # OFF
-            eval $(dirname "$0")/i3-mouse fast
+            eval $(dirname "$0")/i3-mouse enable
         fi
     done
 }

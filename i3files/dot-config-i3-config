@@ -350,8 +350,8 @@ mode "Secondary" {
     bindsym Control+Return $i3wrapper op
 
     # Pressing cycles through the three modes. Sec->Def->Pri->Sec.
-    # Triple-pressing(!) in default mode cancels a.o. slow mouse in Emacs.
-    bindsym Menu $default, $i3mouse fast
+    # Triple-pressing(!) in default mode enables mouse in Emacs.
+    bindsym Menu $default, $i3mouse enable
     # Go back to normal. Using space is a design decision, please do
     # not change.
     bindsym space $default
