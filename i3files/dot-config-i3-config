@@ -98,6 +98,14 @@ bindsym KP_Subtract \
 bindsym KP_Add \
         exec pactl set-sink-volume $analogaudiosink +10%
 
+# Eye candy. KP_Add increases translucency. KP_Subtract will not set
+# opacity beyond 100%, hence using keyboard autorepeat will safely
+# make the window opaque.
+bindsym Mod4+KP_Subtract \
+        exec --no-startup-id compton-trans -c -o +10
+bindsym Mod4+KP_Add \
+        exec --no-startup-id compton-trans -c -o -10
+
 # Numpad cursor controls (highly recommended).
 # Focus up wraps around, most desktops are wide.
 # These should also be bound in Primary and Secondary modes.
