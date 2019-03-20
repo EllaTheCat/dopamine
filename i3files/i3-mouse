@@ -11,7 +11,7 @@
 setmouse ()
 {
     id=$(xinput list | grep Mouse | cut -d= -f 2 | cut -f 1)
-    cd=$(xinput --list-props "${id}" | grep "Constant Deceleration" | cut -d: -f 2 | awk '{print $1}')
+### cd=$(xinput --list-props "${id}" | grep "Constant Deceleration" | cut -d: -f 1 | awk '{print $1}')
 
     case "$1" in
         (disable)
@@ -42,13 +42,6 @@ setmouse ()
         ;;
         (desktop)
         pkill -f "$0 window"
-        ;;
-        (*)
-        if [ "${cd}" = "1.000000" ] ; then
-            setmouse slow
-        else
-            setmouse fast
-        fi
         ;;
     esac
 }
