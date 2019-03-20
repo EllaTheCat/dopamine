@@ -159,11 +159,11 @@ https://github.com/alols/xcape[xcape] to define how modifier keys work when pres
 === i3-mouse
 
 - Disable the mouse to prevent accidental waking up of the display when the desk is jolted.
-- Slow down the mouse to encourage keyboard use.
+- Disable the mouse when Emacs has focus to encourage keyboard use.
 - Warp the mouse to follow window focus changes and
 reduce the overall manual mouse movement distance.
 
-The mouse will automatically slow down the mouse inside any Emacs window.
+The mouse will automatically disable the mouse inside any Emacs window.
 This is a deliberate decision, to encourage keyboard use and discourage mouse use.
 If you really don't want this (mis)feature, consider removing both i3-mouse commands
 in the i3focuswatcher() function inside i3-wrapper.
@@ -180,7 +180,6 @@ by one-third of the window width and one-third of the window height.
 Using the mouse to focus a window with a single click highlights the
 region between the mouse click point and the keyboard focus point. Using
 a double-click instead leaves no highlight. Please, try to use the keyboard!
-
 
 === i3-display
 I simply don't like automatic display blanking, but because
@@ -234,13 +233,12 @@ The implementation was a hack.
 Since then, i3 4.16 has provided "i3-msg -t subscribe -m ..." which subscribes to events,
 in particular  the window (changed) event.
 The implementation is no longer a gimmick. The "Emacs LED" remains,
-but now this indicates that the mouse speed has been considerably reduced
-when Emacs has focus.
+but now this indicates that the mouse is disabled when Emacs has focus.
 This is done to encourage using the keyboard and discourage using the mouse.
 This was implemented for my benefit, and since I
 sometimes find it more than annoying, there is a back door.
-As described in subsection "i3-mouse", the mouse speed can be
-restored by a triple press of the Menu key.
+As described in subsection "i3-mouse", the mouse can be
+enabled again by a triple press of the Menu key.
 
 === Launch or Focus
 The i3programs function in i3-wrapper has a bash case statement that
