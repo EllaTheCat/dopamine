@@ -26,8 +26,10 @@ do
         (watchers)
         # Stop the watchers.
         if [ "_${verb}" = "_stop" ]; then
-            pkill -f 'i3-wrapper -s'
-            pkill -f 'i3-msg -t subscribe -m'
+            # shellcheck disable=2046
+            kill -HUP $(pgrep -f 'i3-wrapper -s')
+            # shellcheck disable=2046
+            kill -HUP $(pgrep -f 'focus-watcher')
         fi
         # Start the watchers.
         if [ "_${verb}" = "_start" ]; then

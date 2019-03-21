@@ -468,16 +468,18 @@ i3filewatcher ()
 }
 
 #
-# When an Emacs window gains/loses focus turn on/off (Dell) keyboard
+# When a matching window gains/loses focus turn on/off (Dell) keyboard
 # LED 3 and disable/enable the mouse.
 #
 i3focuswatcher ()
 {
+    # String to match. Default is "emacs". Disable matching with "xyzzy".
+    string="emacs"
     # This was added in i3 4.16, replacing 3 functions.
     i3-msg -t subscribe  -m '[ "window" ]' | while read line
     do
         # shellcheck disable=2046
-        if [ $(echo "${line}" | grep -c -i emacs ) -gt 0 ]; then
+        if [ $(echo "${line}" | grep -c -i "${string}" ) -gt 0 ]; then
             xset led 3 # ON
             eval $(dirname "$0")/i3-mouse disable
         else

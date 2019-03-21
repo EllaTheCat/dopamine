@@ -159,27 +159,28 @@ https://github.com/alols/xcape[xcape] to define how modifier keys work when pres
 === i3-mouse
 
 - Disable the mouse to prevent accidental waking up of the display when the desk is jolted.
-- Disable the mouse when Emacs has focus to encourage keyboard use.
+- Disable the mouse when (for example) Emacs has focus, in order to encourage keyboard use.
 - Warp the mouse to follow window focus changes and
 reduce the overall manual mouse movement distance.
 
 The mouse will automatically disable the mouse inside any Emacs window.
 This is a deliberate decision, to encourage keyboard use and discourage mouse use.
-If you really don't want this (mis)feature, consider removing both i3-mouse commands
-in the i3focuswatcher() function inside i3-wrapper.
+There is a means to associate this feature with another program instead of Emacs,
+that also permits disabling the feature completely.
 If you do want this feature, but would like to be able to override it at will,
 press Menu at least once, until default mode is reactivated.
 Pressing Menu is easily performed with whichever hand is not holding the mouse.
 
-A recent and very useful idea from reddit is
+A recent useful idea from reddit is
 https://www.reddit.com/r/i3wm/comments/b0lj73/where_focus_goes_mouse_follows/["mouse follows focus"]:
 When the keyboard is used to focus a window, the mouse is warped into
 the window, to a point offset from the top left corner
 by one-third of the window width and one-third of the window height.
-
 Using the mouse to focus a window with a single click highlights the
 region between the mouse click point and the keyboard focus point. Using
-a double-click instead leaves no highlight. Please, try to use the keyboard!
+a slow double-click instead leaves no highlight.
+
+These latter two trick modes are mutually exclusive in my opinion, use one or none.
 
 === i3-display
 I simply don't like automatic display blanking, but because
