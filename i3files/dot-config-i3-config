@@ -308,9 +308,9 @@ mode "Secondary" {
 
     bindsym backslash $default, $i3wrapper -p
 
-    # File and focus watchers. No need to stop before (re)starting.
-    bindsym z $default, $i3apps start watchers
-    bindsym x $default, $i3apps stop watchers
+    # Focus watcher start and stop.
+    bindsym z $default, $i3apps start focuswatcher
+    bindsym x $default, $i3apps stop focuswatcher
 
     # Audible keyclicks require audio to be routed to speakers,
     # my setup doesn't enforce this (when watching TV).
@@ -322,12 +322,15 @@ mode "Secondary" {
     # Desktop background.
     bindsym n $default, exec --no-startup-id nitrogen --restore
 
-    # Focus a window, warp the mouse inside the window, or not.
-    bindsym m $default, $i3mouse window
-    bindsym slash $default, $i3mouse desktop
+    # File watcher start. Seldom required, crashes are extremely rare.
+    bindsym m $default, $i3apps start filewatcher
 
-    bindsym comma $secondarynop
-    bindsym period $secondarynop
+    # Focus a window, warp the mouse inside the window, or not.
+    bindsym comma $default, $i3mouse window
+    bindsym period $default, $i3mouse desktop
+
+    # File watcher stop binding is RESERVED and DEPRECATED.
+    bindsym slash $secondarynop
 
     # Control-Alt-Delete is a design decision please do not change.
     bindsym Control+Mod1+Delete $default,kill

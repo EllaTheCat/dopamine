@@ -240,6 +240,8 @@ This was implemented for my benefit, and since I
 sometimes find it more than annoying, there is a back door.
 As described in subsection "i3-mouse", the mouse can be
 enabled again by a triple press of the Menu key.
+Emacs may not be your cup of tea so there is a runtime mechanism
+to specify another program instead.
 
 === Launch or Focus
 The i3programs function in i3-wrapper has a bash case statement that

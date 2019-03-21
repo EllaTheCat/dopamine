@@ -473,11 +473,14 @@ i3filewatcher ()
 #
 i3focuswatcher ()
 {
-    # String to match. Default is "emacs". Disable matching with "xyzzy".
-    string="emacs"
     # This was added in i3 4.16, replacing 3 functions.
     i3-msg -t subscribe  -m '[ "window" ]' | while read line
     do
+        if [ -f "${dir}/focus" ]; then
+            string=$(cat "${dir}/focus")
+        else
+            string="emacs"
+        fi
         # shellcheck disable=2046
         if [ $(echo "${line}" | grep -c -i "${string}" ) -gt 0 ]; then
             xset led 3 # ON

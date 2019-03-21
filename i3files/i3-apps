@@ -23,19 +23,24 @@ do
         verb=${argument}
         ;;
 
-        (watchers)
-        # Stop the watchers.
+        (filewatcher)
         if [ "_${verb}" = "_stop" ]; then
             # shellcheck disable=2046
             kill -HUP $(pgrep -f 'i3-wrapper -s')
-            # shellcheck disable=2046
-            kill -HUP $(pgrep -f 'focus-watcher')
         fi
-        # Start the watchers.
         if [ "_${verb}" = "_start" ]; then
             path=$(dirname "$0")
             (eval "${path}/i3-wrapper --file-watcher") &
-            sleep 0.5
+        fi
+        ;;
+
+        (focuswatcher)
+        if [ "_${verb}" = "_stop" ]; then
+            # shellcheck disable=2046
+            kill -HUP $(pgrep -f 'focus-watcher')
+        fi
+        if [ "_${verb}" = "_start" ]; then
+            path=$(dirname "$0")
             (eval "${path}/i3-wrapper --focus-watcher") &
         fi
         ;;
@@ -169,7 +174,7 @@ do
             xdotool mousemove --sync --clearmodifiers 2880 384; sleep 1
             yad --title="Starting ..." --mouse --timeout=10 --timeout-indicator=top
             if  [ "$?" -ne 1 ]; then
-                eval "$0 start watchers tvheadend dropbox synergy workspaces"
+                eval "$0 start filewatcher focuswatcher tvheadend dropbox synergy workspaces"
             fi
         fi
         if  [ "_${verb}" = "_stop" ]; then
@@ -180,7 +185,9 @@ do
                 eval "$0 stop VirtualBox"
                 eval "$0 stop emacs firefox chrome thunderbird"
                 eval "$0 stop synergy dropbox"
-                eval "$0 stop tvheadend marks watchers"
+                eval "$0 stop tvheadend marks focuswatcher"
+                # Housekeeping that sweeps things under the rug.
+                eval "$0 stop filewatcher"
                 # To prevent spinning down the USB disks the only way
                 # is to press cancel before the short timeout expires.
                 i3-msg "focus output HDMI1"
