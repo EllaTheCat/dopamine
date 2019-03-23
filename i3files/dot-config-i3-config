@@ -303,8 +303,7 @@ mode "Secondary" {
     # mimic US layout on UK keyboard, but not keyclick.
     bindsym k $default, $i3keyboard
 
-    # L for the List of apps and USB HDDs to stop before Logout.
-    bindsym l $default, $i3apps stop lists
+    bindsym l $secondarynop
 
     bindsym backslash $default, $i3wrapper -p
 
@@ -333,8 +332,10 @@ mode "Secondary" {
     bindsym slash $secondarynop
 
     # Control-Alt-Delete is a design decision please do not change.
+    # Kill a window, kill a workspace, close a session.
     bindsym Control+Mod1+Delete $default,kill
-    bindsym Control+Mod4+Delete [workspace="__focused__"] $default,kill
+    bindsym Control+Mod4+Delete [workspace="__focused__"] $default, kill
+    bindsym Control+Mod4+Mod1+Delete  $default, $i3apps stop everything
 
     # Numpad cursor keys copied from default mode.
     bindsym KP_Left focus left
@@ -472,7 +473,7 @@ exec --no-startup-id sleep 10s && nitrogen --restore &
 # Applications.
 # The 10 second delay ensures that the dialog appears after the
 # desktop background changes.
-exec --no-startup-id sleep 10s && ~/local/bin/i3-apps start lists
+exec --no-startup-id sleep 10s && ~/local/bin/i3-apps start everything
 
 #
 # Done

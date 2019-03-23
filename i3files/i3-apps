@@ -164,7 +164,7 @@ do
         fi
         ;;
 
-        (lists)
+        (everything)
         # Safely start or stop everything listed in proper sequence.
         # To proceed press OK or wait for the short timeout to expire.
         # Ensure the dialog appears on the primary monitor.
