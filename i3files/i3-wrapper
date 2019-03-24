@@ -468,27 +468,34 @@ i3filewatcher ()
 }
 
 #
-# When a matching window gains/loses focus turn on/off (Dell) keyboard
-# LED 3 and disable/enable the mouse.
+# When a matching Emacs frame gains/loses focus turn on/off (Dell)
+# keyboard LED 3 and disable/enable the mouse.
+#
+# - The workspace and the window must match to disable the mouse.
+# - The standard matching workspaces are e0, e1, ... e8, e9 and em.
+# - The workspace may be renamed to disallow disabling the mouse.
 #
 i3focuswatcher ()
 {
     # This was added in i3 4.16, replacing 3 functions.
     i3-msg -t subscribe  -m '[ "window" ]' | while read line
     do
-        if [ -f "${dir}/focus" ]; then
-            string=$(cat "${dir}/focus")
-        else
-            string="emacs"
-        fi
-        # shellcheck disable=2046
-        if [ $(echo "${line}" | grep -c -i "${string}" ) -gt 0 ]; then
-            xset led 3 # ON
-            eval $(dirname "$0")/i3-mouse disable
-        else
+        ws=$(i3-msg -t get_workspaces | jq '.[] | .name,.focused' | grep -B1 true | grep -v true)
+        case "$ws" in
+            (\"e[0-9m]\")
+            if [ "$(echo "${line}" | grep -c -i 'emacs' )" -gt 0 ]; then
+                xset led 3 # ON
+                eval "$(dirname "$0")/i3-mouse" disable
+            else
+                xset -led 3 # OFF
+                eval "$(dirname "$0")/i3-mouse" enable
+            fi
+            ;;
+            (*)
             xset -led 3 # OFF
-            eval $(dirname "$0")/i3-mouse enable
-        fi
+            eval "$(dirname "$0")/i3-mouse" enable
+            ;;
+        esac
     done
 }
 

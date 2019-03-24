@@ -163,13 +163,14 @@ https://github.com/alols/xcape[xcape] to define how modifier keys work when pres
 - Warp the mouse to follow window focus changes and
 reduce the overall manual mouse movement distance.
 
-The mouse will automatically disable the mouse inside any Emacs window.
+The mouse will automatically disable the mouse inside any Emacs window inside
+any of the standard Emacs workspaces e[0-9] and em.
 This is a deliberate decision, to encourage keyboard use and discourage mouse use.
-There is a means to associate this feature with another program instead of Emacs,
-that also permits disabling the feature completely.
-If you do want this feature, but would like to be able to override it at will,
+To prevent the mouse being disabled for the session,
+either move the window or rename the workspace.
+To enable the mouse for just long enough to escape such a mousetrap
 press Menu at least once, until default mode is reactivated.
-Pressing Menu is easily performed with whichever hand is not holding the mouse.
+There is no need to restart the focus watcher.
 
 A recent useful idea from reddit is
 https://www.reddit.com/r/i3wm/comments/b0lj73/where_focus_goes_mouse_follows/["mouse follows focus"]:
@@ -267,9 +268,11 @@ focus class Thunderbird 'tb' ${lmon} thunderbird ;;
 Not all case statements use the focus function. The ten 'g0 g1 ... g8
 g9' commands launch or focus Google Chrome windows on eponymous
 workspaces. The "gc" command will launch a Google Chrome window on the
-current workspace. There are ten commands 'e0 e1 ... e8 e9' that
+current workspace. There are also ten commands 'e0 e1 ... e8 e9' that
 launch or focus Emacs frames on eponymous workspaces, and 'em' for the
-current workspace. These rely on the 'emgc' function instead of 'focus'.
+current workspace. These all rely on the 'emgc' function instead of 'focus'.
+Their names are the "standard" names that other features may expect,
+as does the focus watcher for example.
 
 === Scratchpad Terminal
 The popularity of dropdown terminals (Guake, Yakuake ...) has seen i3
