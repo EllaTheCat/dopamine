@@ -76,11 +76,6 @@ Here's what works for me:
 - bindsym KP_Next move right
 - bindsym KP_Delete focus down
 
-The 'op' command moves focus to another output. I find it to be very useful.
-
-- bindsym Control+Tab $i3wrapper op
-- bindsym Control+Return $i3wrapper op
-
 === i3 modes
 There are now only three i3 modes: the default mode, the Primary mode, and the Secondary mode.
 The Menu key cycles through these modes, the space key returns to default mode from the other two.

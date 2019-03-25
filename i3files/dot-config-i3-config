@@ -120,12 +120,11 @@ bindsym KP_Begin move up
 bindsym KP_Next move right
 bindsym KP_Delete focus down
 
-# Move focus to another output when the left hand is free.
-# Move focus to another output when the left hand has the mouse.
+# Move focus to another output.
 # Necessary because the numpad cycles workspaces on output.
 # These should also be bound in Primary and Secondary modes.
-bindsym Control+Tab $i3wrapper op
-bindsym Control+Return $i3wrapper op
+bindsym Control+Tab focus output left
+bindsym Control+Return focus output right
 
 # Command prompt.
 # The numpad enters numbers during command entry.
@@ -248,8 +247,8 @@ mode "Primary" {
     bindsym KP_Delete focus down
     bindsym KP_Insert $default, $i3wrapper -p
 
-    bindsym Control+Tab $i3wrapper op
-    bindsym Control+Return $i3wrapper op
+    bindsym Control+Tab focus output left
+    bindsym Control+Return focus output right
 
     # Pressing cycles through the three modes. Pri->Sec->Def->Pri.
     bindsym Menu mode "Secondary"
@@ -350,8 +349,8 @@ mode "Secondary" {
     bindsym KP_Delete focus down
     bindsym KP_Insert $default, $i3wrapper -p
 
-    bindsym Control+Tab $i3wrapper op
-    bindsym Control+Return $i3wrapper op
+    bindsym Control+Tab focus output left
+    bindsym Control+Return focus output right
 
     # Pressing cycles through the three modes. Sec->Def->Pri->Sec.
     # Triple-pressing(!) in default mode enables mouse in Emacs.
