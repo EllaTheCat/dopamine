@@ -128,15 +128,9 @@ i3av()
     if [ "$(i3-msg -t get_workspaces | jq 'map(.name)' | grep -c 'AutoVoice')" -eq 0 ]; then
         i3-msg "workspace AutoVoice"
         sleep 0.7
-        i3-msg "exec google-chrome --new-window"
-        sleep 0.7 && \
-            xdotool type \
-                    'chrome://extensions/?id=mefllcpfdfhohmeadieejdjcdcbibeml' && \
-            xdotool key 'Return'
-        sleep 0.7
         i3-msg "exec emacsclient.emacs24 -c  -e '(switch-to-buffer \"AutoVoice\")'"
     else
-        i3-msg "workspace autovoice"
+        i3-msg "workspace AutoVoice"
     fi
 }
 
