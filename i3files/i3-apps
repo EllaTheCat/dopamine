@@ -89,6 +89,14 @@ do
         fi
         ;;
 
+        (siro)
+        if  [ "_${verb}" = "_stop" ]; then
+            ssh siro vcgencmd display_power 0
+        else
+            ssh siro vcgencmd display_power 1
+        fi
+        ;;
+
         (workspaces)
         # A subroutine to be called during i3 startup.
         # Rename any remaining empty workspaces.
@@ -174,7 +182,7 @@ do
             xdotool mousemove --sync --clearmodifiers 2880 384; sleep 1
             yad --title="Starting ..." --mouse --timeout=10 --timeout-indicator=top
             if  [ "$?" -ne 1 ]; then
-                eval "$0 start filewatcher focuswatcher tvheadend dropbox synergy workspaces"
+                eval "$0 start filewatcher focuswatcher tvheadend dropbox synergy siro workspaces"
             fi
         fi
         if  [ "_${verb}" = "_stop" ]; then
@@ -184,7 +192,7 @@ do
             if  [ "$?" -ne 1 ]; then
                 eval "$0 stop VirtualBox"
                 eval "$0 stop emacs firefox chrome thunderbird"
-                eval "$0 stop synergy dropbox"
+                eval "$0 stop siro synergy dropbox"
                 eval "$0 stop tvheadend marks focuswatcher"
                 # Housekeeping that sweeps things under the rug.
                 eval "$0 stop filewatcher"
