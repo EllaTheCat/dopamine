@@ -446,7 +446,8 @@ i3filewatcher ()
 # keyboard LED 3 and disable/enable the mouse.
 #
 # - The workspace and the window must match to disable the mouse.
-# - The standard matching workspaces are e0, e1, ... e8, e9 and em.
+# - The standard matching workspaces are e1, e2, ... e8, e9 and em.
+# - The standard exception is the workspace e0.
 # - The workspace may be renamed to disallow disabling the mouse.
 #
 i3focuswatcher ()
@@ -456,7 +457,7 @@ i3focuswatcher ()
     do
         ws=$(i3-msg -t get_workspaces | jq '.[] | .name,.focused' | grep -B1 true | grep -v true)
         case "$ws" in
-            (\"e[0-9m]\")
+            (\"e[1-9m]\")
             if [ "$(echo "${line}" | grep -c -i 'emacs' )" -gt 0 ]; then
                 xset led 3 # ON
                 eval "$(dirname "$0")/i3-mouse" disable
