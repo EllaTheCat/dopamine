@@ -282,7 +282,7 @@ mode "Secondary" {
 
     # Benq DVI and HDMI auto-switching to save wear & tear.
     # https://raspberrypi.stackexchange.com/a/53267
-    bindsym p $default, $i3display toggle
+    bindsym p $default, $i3display menu
 
     # Command prompt.
     bindsym Tab $default, $i3wrapper -p

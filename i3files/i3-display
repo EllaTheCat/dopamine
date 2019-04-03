@@ -11,12 +11,12 @@
 #
 lmon=HDMI2
 cmon=HDMI1
-
-# At startup this does not exist, and quietpc has the HDMI2 monitor.
-flag=/dev/shm/$USER/benq
+rmon=VGA
 
 setdisplay ()
 {
+    # Initialise the "monitor dmenu" to be on monitor number zero.
+    [ ! -e  "/dev/shm/$USER/mflag" ] && "echo 0 > /dev/shm/$USER/mflag"
     case "$1" in
         # Sleep the display using the keyboard or console, not the
         # mouse.
@@ -36,25 +36,39 @@ setdisplay ()
         xset s off
         xset -dpms
         ;;
-        # Assign the specified monitor to i3wm on PC 'quietpc'.
-        (quietpc)
-        ssh siro vcgencmd display_power 0
+        # Turn monitors on and off.
+        (menu)
+        mflag=$(cat "/dev/shm/$USER/mflag")
+        list="left on\nleft off\nmiddle on\nmiddle off\nright on\nright off"
+        item=$(echo -e "cancel\n${list}" | dmenu -b -fn 'pango:DejaVu Sans 11' -m "${mflag}" -p 'Monitors: ')
+        [ "${item}" != "cancel" ] && eval "$0 ${item/ /}"  # "a b" => "ab"
+        ;;
+        (lefton)
+        echo 0 > "/dev/shm/$USER/mflag"
         xrandr --output "${lmon}" --auto --left-of "${cmon}"
         xrandr --output "${lmon}" --brightness 1.0
-        rm -f "${flag}"
         ;;
-        # Assign the specified monitor to Raspberry Pi Zero W 'siro'..
-        (siro)
+        (leftoff)
+        echo 0 > "/dev/shm/$USER/mflag"
         xrandr --output "${lmon}" --off
-        ssh siro vcgencmd display_power 1
-        touch "${flag}"
         ;;
-        (toggle)
-        if [ -f "${flag}" ]; then
-            eval "$0" quietpc
-        else
-            eval "$0" siro
-        fi
+        (middleon)
+        echo 0 > "/dev/shm/$USER/mflag"
+        xrandr --output "${cmon}" --auto --rightof "${lmon}"
+        xrandr --output "${cmon}" --brightness 1.0
+        ;;
+        (middleoff)
+        echo 1 > "/dev/shm/$USER/mflag"  # Move the dmenu!
+        xrandr --output "${cmon}" --off
+        ;;
+        (righton)
+        echo 0 > "/dev/shm/$USER/mflag"
+        xrandr --output "${rmon}" --auto --right-of "${cmon}"
+        xrandr --output "${rmon}" --brightness 1.0
+        ;;
+        (rightoff)
+        echo 0 > "/dev/shm/$USER/mflag"
+        xrandr --output "${rmon}" --off
         ;;
     esac
 }
