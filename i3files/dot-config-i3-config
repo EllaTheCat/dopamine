@@ -93,17 +93,18 @@ bindsym KP_Multiply \
         exec pactl set-source-mute $analogaudiosource toggle
 
 # Subject to change: volume control of 3.5mm rear line out.
-bindsym KP_Subtract \
+# Beware! Increasing beyond 100% can damage speakers.
+bindsym Mod4+KP_Subtract \
         exec pactl set-sink-volume $analogaudiosink -10%
-bindsym KP_Add \
+bindsym Mod4+KP_Add \
         exec pactl set-sink-volume $analogaudiosink +10%
 
 # Eye candy. KP_Add increases translucency. KP_Subtract will not set
 # opacity beyond 100%, hence using keyboard autorepeat will safely
 # make the window opaque.
-bindsym Mod4+KP_Subtract \
+bindsym KP_Subtract \
         exec --no-startup-id compton-trans -c -o +10
-bindsym Mod4+KP_Add \
+bindsym KP_Add \
         exec --no-startup-id compton-trans -c -o -10
 
 # Numpad cursor controls (highly recommended).
@@ -282,7 +283,8 @@ mode "Secondary" {
 
     # Benq DVI and HDMI auto-switching to save wear & tear.
     # https://raspberrypi.stackexchange.com/a/53267
-    bindsym p $default, $i3display menu
+    # Restores default mode itself before switching.
+    bindsym p $i3display menu
 
     # Command prompt.
     bindsym Tab $default, $i3wrapper -p
@@ -290,7 +292,7 @@ mode "Secondary" {
     bindsym a $secondarynop
 
     # Complementary to the {w,e,r} keys, see above.
-    bindsym s $default, $i3display sleep
+    bindsym s  $default, $i3display sleep
     bindsym d $default, $i3mouse disable
     bindsym f $default, $i3mouse fast
 
@@ -314,8 +316,8 @@ mode "Secondary" {
     # my setup doesn't enforce this (when watching TV).
     bindsym c $default, exec --no-startup-id keyclick
 
-    bindsym v $default, $i3apps start tvheadend
-    bindsym b $default, $i3apps stop tvheadend
+    bindsym v $default, $secondarynop
+    bindsym b $default, $secondarynop
 
     # Desktop background.
     bindsym n $default, exec --no-startup-id nitrogen --restore

@@ -16,7 +16,7 @@ rmon=VGA
 setdisplay ()
 {
     # Initialise the "monitor dmenu" to be on monitor number zero.
-    [ ! -e  "/dev/shm/$USER/mflag" ] && "echo 0 > /dev/shm/$USER/mflag"
+    [ ! -e  "/dev/shm/$USER/mflag" ] && echo 0 > "/dev/shm/$USER/mflag"
     case "$1" in
         # Sleep the display using the keyboard or console, not the
         # mouse.
