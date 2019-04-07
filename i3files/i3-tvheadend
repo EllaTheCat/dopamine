@@ -14,25 +14,7 @@ tvh2omx ()
     # Convert a channel name link to a hex id link.
     # In Firefox, saving a channel creates a playlist.
     # The hex id here is the name of the playlist file.
-    #
-    # EXAMPLE, YMMV:
-    # Some HD channels in the UK plus an SD channel.
-    case "${link}" in
-        (bbc?one?hd)
-        link=fa9e3e4a56734e4e944215d4900d231e ;;
-        (bbc?two?hd)
-        link=4997718f5f51b7e4cef540692c3d557b ;;
-        (itv?hd)
-        link=66be15a254ee858a4dc8087fcaf0c983 ;;
-        (channel?4?hd)
-        link=63b5fd9b117dc5ebf0133a0be7e7659b ;;
-        (channel?5?hd)
-        link=6aa3836df35ca01fc2560e23a33c8563 ;;
-        (4seven?hd)
-        link=6bf95906c9b58a2be1f8f17c5e555e1b ;;
-        (dave)
-        link=33c575b002e6ddaa465cfbc049c77414 ;;
-    esac
+    link=$(grep "$1" ~/Videos/tvheadend-playlist-slash-channels.m3u | awk -F \" '{print $2}')
     echo "${link}"
 }
 
@@ -68,5 +50,5 @@ tvhplay ()
 tvhplay "$@"
 
 #
-# done
+# Done
 #
