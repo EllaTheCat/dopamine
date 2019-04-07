@@ -475,6 +475,15 @@ i3focuswatcher ()
 }
 
 #
+#
+#
+i3kb ()
+{
+    i3-msg [title=\"i3 key bindings\"] kill
+    xfce4-terminal -T 'i3 key bindings' -e "less /dev/shm/$USER/i3/bindings" &
+}
+
+#
 #  Provide a text entry command prompt for command aliases and command
 #  numbers.
 #
@@ -516,6 +525,7 @@ case ${XDG_CURRENT_DESKTOP} in
         (--focus-watcher)  i3focuswatcher ;;
         (--active-marks) i3am ;;
         (--unique-mark) i3um ;;
+        (--keyboard-binding-info) i3kb ;;
         # In production, do nothing here?
         (*) start "$@" ;;
     esac

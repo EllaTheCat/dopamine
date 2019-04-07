@@ -46,6 +46,9 @@ set $analogaudiosource alsa_input.pci-0000_00_1b.0.analog-stereo
 # Forward declaration because used in various bindings.
 set $i3inputfont "pango:DejaVu Sans 12"
 
+# Symlink this.
+set $i3keybindings /dev/shm/EllaTheCat/i3/bindings
+
 #
 # BINDINGS
 #
@@ -170,7 +173,9 @@ mode "Primary" {
 
     bindsym e $primarynop
     bindsym y $primarynop
-    bindsym i $primarynop
+
+    # Info on keyboard bindings.
+    bindsym i $default, $i3wrapper --keyboard-binding-info
 
     # Scratchpad (exclude the scratchpad terminal which is a special case).
     bindsym bracketleft move scratchpad

@@ -39,7 +39,7 @@ I3BIN=$(HOME)/bin
 # 4C. Grep for numpad bindsyms in default mode.
 # 5. Restore the line continuations marked with tokens.
 #
-I3BINDINGS=/tmp/i3/bindings
+I3BINDINGS=/dev/shm/$(USER)/i3/bindings
 
 # Install permissions for: directories, executables, configurations.
 DIRMODE=755
@@ -90,7 +90,7 @@ help:
     $(I3BIN)/i3-status \
     $(I3BIN)/i3-tvheadend \
     $(I3BIN)/i3-wrapper \
-     $(I3BINDINGS)
+    $(I3BINDINGS)
 
 .checks: \
     $(I3FILES)/.i3-apps.log \
@@ -159,6 +159,8 @@ $(I3BINDINGS): $(I3FILES)/dot-config-i3-config $(I3FILES)/Makefile
 	sed 's/\\@/%%%/g' | sed 's/@/\n/g' | \
 	egrep '([^.]bindsym|^mode|bindsym KP|^bindsym Mod)' | \
 	sed 's/%%%/\\\n/g'  > $(I3BINDINGS)
+	@mkdir -p /dev/shm/EllaTheCat/i3
+	@ln -sf $(I3BINDINGS) /dev/shm/EllaTheCat/i3/bindings
 
 #
 # Checks.
