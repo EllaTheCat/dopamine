@@ -2,6 +2,10 @@
 #
 # STB class media player for a tvheadend client.
 #
+# - :tvhplay:                             # Blank/Disable the HDMI.
+# - :tvhplay:none                     # Unblank/Enable the HDMI.
+# - :tvhplay:channelname        # Stream the live channel
+#
 
 
 #
@@ -26,10 +30,10 @@ tvhplay ()
         # Hardcoded path.
         # shellcheck disable=2002
         link=$(cat "${HOME}/Videos/tvheadend-playlist-slash-channels.m3u" | \
-                      grep -i "${link}" | awk -F \" '{print $2}')
+                      grep -i "${link}" | awk -F \" '{print $2}' | head -1)
         echo "->${link}<-"
         # RPI hardware supports but one instance of the player.
-        ssh "${client}" pkill -f omxplayer.bin
+        ssh "${client}" pkill -c -f omxplayer.bin
         ssh "${client}" vcgencmd display_power 1
         # Passing e.g. 'none' as the channel name stops playback and
         # unblanks the display as for a recognised channel name.
@@ -37,7 +41,7 @@ tvhplay ()
             # shellcheck disable=2029
             ssh "${client}" omxplayer --live --refresh  --hdmiclocksync \
                 --audio_queue 20 --video_queue 80 --timeout 5 \
-                "http://${server}:9981/stream/channel/${link}" &
+                "http://${server}:9981/stream/channel/${link}" > /dev/null 2>&1
         fi
     fi
 }
@@ -45,8 +49,8 @@ tvhplay ()
 #
 # Start here.
 #
-
 tvhplay "$@"
+
 
 #
 # Done
