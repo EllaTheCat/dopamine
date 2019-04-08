@@ -28,6 +28,8 @@ lmon=HDMI2
 cmon=HDMI1
 rmon=VGA1
 
+dmon=1
+
 #
 # The timeout in seconds for the main dynamic menu. Upon expiry,
 # whatever has been entered wil be treated as a command to be
@@ -191,7 +193,7 @@ i3am()
     # Strip out the double quotes, the square brackets separate.
     # shellcheck disable=2001
     text=$(echo "${text}" | sed 's/\"//g' )
-    triple=$(echo -e "cancel\n ${text}" | dmenu -b -fn 'pango:DejaVu Sans 11' -m 0 -p 'Marks: ')
+    triple=$(echo -e "cancel\n ${text}" | dmenu -b -fn 'pango:DejaVu Sans 11' -m ${dmon} -p 'Marks: ')
     # shellcheck disable=2086
     id=$(echo ${triple} | awk '{print $1}')
     if [ "${id}" != "cancel"  ]; then
@@ -491,7 +493,7 @@ dashp ()
 {
     # Apply the Return key if dmenu still running after a few seconds.
     (sleep $commandtimeout && pgrep -c -f \
-                      "dmenu -b -fn pango:DejaVu Sans 11 -m 0 -p Command:" && \
+                      "dmenu -b -fn pango:DejaVu Sans 11 -m ${dmon} -p Command:" && \
             xdotool key Return) &
     # The above timeout makes this list less useful than it might seem.
     list=$(egrep "\([a-zA-Z][a-zA-Z0-9]\)$" "$0" | sort | sed 's/[ ()]//g')
@@ -501,7 +503,7 @@ dashp ()
     # The dmenu monitor number 0 always exists; it selects the primary
     # output on my machine.
     cmd=$(echo "${list}" | sed 's/\ /\n/g' | \
-                 dmenu -b -fn 'pango:DejaVu Sans 11' -m 0 -p 'Command: ')
+                 dmenu -b -fn 'pango:DejaVu Sans 11' -m ${dmon} -p 'Command: ')
     if [ "${cmd}" != "cancel" ]; then
         echo "${cmd}" | tee "${dir}/${file}"
     fi
