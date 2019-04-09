@@ -75,6 +75,8 @@ Here's what works for me:
 - bindsym KP_Begin move up
 - bindsym KP_Next move right
 - bindsym KP_Delete focus down
+- bindsym KP_Divide focus output left
+- bindsym KP_Multiply focus output right
 
 === i3 modes
 There are now only three i3 modes: the default mode, the Primary mode, and the Secondary mode.
@@ -236,8 +238,6 @@ This was implemented for my benefit, and since I
 sometimes find it more than annoying, there is a back door.
 As described in subsection "i3-mouse", the mouse can be
 enabled again by a triple press of the Menu key.
-Emacs may not be your cup of tea so there is a runtime mechanism
-to specify another program instead.
 
 === Launch or Focus
 The i3programs function in i3-wrapper has a bash case statement that
@@ -323,6 +323,5 @@ Question detection is partly automated, For example,
 it looks for sentences that begin with
 "Who / What / Where / Which / How".
 
-The 'av' command launches a dedicated singleton workspace or focuses the existing one.
-The workspace shows the Emacs autovoice buffer alongside a Google Chrome window.
-I like to write using 'asciidoc markup', the browser shows WYSIWYG of my writing.
+The 'av' command launches or switches to a dedicated AutoVoice
+workspace that shows the Emacs autovoice buffer.

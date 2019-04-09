@@ -83,33 +83,6 @@ bindsym Control+Delete $i3wrapper dd
 # without having to precisely position the mouse on window edges.
 floating_modifier Mod4
 
-# Numpad keys that are unaffected by the NumLock state.
-# There are five: arithmetic signs / * - + and the enter key.
-# Do not rebind KP_Enter! This is a design decision.
-
-# Microphone muting (for privacy and phone conferencing).
-# The i3bar displays the status of the two microphones:
-# 0 == muted; 1 == not muted == a "hot" microphone.
-bindsym KP_Divide \
-        exec pactl set-source-mute $webcamaudiosource toggle
-bindsym KP_Multiply \
-        exec pactl set-source-mute $analogaudiosource toggle
-
-# Subject to change: volume control of 3.5mm rear line out.
-# Beware! Increasing beyond 100% can damage speakers.
-bindsym Mod4+KP_Subtract \
-        exec pactl set-sink-volume $analogaudiosink -10%
-bindsym Mod4+KP_Add \
-        exec pactl set-sink-volume $analogaudiosink +10%
-
-# Eye candy. KP_Add increases translucency. KP_Subtract will not set
-# opacity beyond 100%, hence using keyboard autorepeat will safely
-# make the window opaque.
-bindsym KP_Subtract \
-        exec --no-startup-id compton-trans -c -o +10
-bindsym KP_Add \
-        exec --no-startup-id compton-trans -c -o -10
-
 # Numpad cursor controls (highly recommended).
 # Focus up wraps around, most desktops are wide.
 # These should also be bound in Primary and Secondary modes.
@@ -124,11 +97,24 @@ bindsym KP_Begin move up
 bindsym KP_Next move right
 bindsym KP_Delete focus down
 
+# Numpad keys that are unaffected by the NumLock state.
+# There are five: arithmetic signs / * - + and the enter key.
+# Do not rebind KP_Enter! This is a design decision.
+
 # Move focus to another output.
 # Necessary because the numpad cycles workspaces on output.
 # These should also be bound in Primary and Secondary modes.
-bindsym Control+Tab focus output left
-bindsym Control+Return focus output right
+bindsym KP_Divide focus output left
+bindsym KP_Multiply focus output right
+
+# Microphone muting (for privacy and phone conferencing).
+# The i3bar displays the status of the two microphones:
+# 0 == muted; 1 == not muted == a "hot" microphone.
+# These are NOT bound in Primary or Secondary modes.
+bindsym KP_Subtract \
+        exec pactl set-source-mute $analogaudiosource toggle
+bindsym KP_Add \
+        exec pactl set-source-mute $webcamaudiosource toggle
 
 # Command prompt.
 # The numpad enters numbers during command entry.
@@ -231,12 +217,11 @@ mode "Primary" {
         -F 'move container to workspace "%s"'
 
     # Focus an unspecified window on the specified output.
-    # Used with 'move workspace to output' hence no default mode.
-    bindsym comma focus output $lmon
-    bindsym period focus output $cmon
-    bindsym slash focus output $rmon
+    bindsym comma  $default, focus output $lmon
+    bindsym period  $default, focus output $cmon
+    bindsym slash  $default, focus output $rmon
 
-    # Control-Alt-Delete is a design decision please do not change.
+    # Control-*-Delete is a design decision please do not change.
     bindsym Control+Mod1+Delete $default,kill
     bindsym Control+Mod4+Delete [workspace="__focused__"] $default,kill
 
@@ -252,9 +237,16 @@ mode "Primary" {
     bindsym KP_Next move right
     bindsym KP_Delete focus down
     bindsym KP_Insert $default, $i3wrapper -p
+    bindsym KP_Divide focus output left
+    bindsym KP_Multiply focus output right
 
-    bindsym Control+Tab focus output left
-    bindsym Control+Return focus output right
+    # Eye candy. KP_Add increases translucency. KP_Subtract will not
+    # set opacity beyond 100%, hence using keyboard autorepeat will
+    # safely make the window opaque.
+    bindsym KP_Subtract \
+            exec --no-startup-id compton-trans -c -o +10
+    bindsym KP_Add \
+            exec --no-startup-id compton-trans -c -o -10
 
     # Pressing cycles through the three modes. Pri->Sec->Def->Pri.
     bindsym Menu mode "Secondary"
@@ -337,7 +329,7 @@ mode "Secondary" {
     # File watcher stop binding is RESERVED and DEPRECATED.
     bindsym slash $secondarynop
 
-    # Control-Alt-Delete is a design decision please do not change.
+    # Control-*-Delete is a design decision please do not change.
     # Kill a window, kill a workspace, close a session.
     bindsym Control+Mod1+Delete $default,kill
     bindsym Control+Mod4+Delete [workspace="__focused__"] $default, kill
@@ -355,9 +347,15 @@ mode "Secondary" {
     bindsym KP_Next move right
     bindsym KP_Delete focus down
     bindsym KP_Insert $default, $i3wrapper -p
+    bindsym KP_Divide focus output left
+    bindsym KP_Multiply focus output right
 
-    bindsym Control+Tab focus output left
-    bindsym Control+Return focus output right
+    # Subject to change: volume control of 3.5mm rear line out.
+    # Beware! Increasing beyond 100% can damage speakers.
+    bindsym KP_Subtract \
+            exec pactl set-sink-volume $analogaudiosink -10%
+    bindsym KP_Add \
+            exec pactl set-sink-volume $analogaudiosink +10%
 
     # Pressing cycles through the three modes. Sec->Def->Pri->Sec.
     # Triple-pressing(!) in default mode enables mouse in Emacs.
