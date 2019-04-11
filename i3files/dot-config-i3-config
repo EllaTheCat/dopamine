@@ -65,6 +65,10 @@ bindsym Menu $i3mode Primary
 # This bindng may be easier even though it uses a modifier.
 bindsym Mod4+Tab $i3wrapper -p
 
+# Focus the next mark in a circular list of secondary marks.
+# There are two lists of length 3 and one list of length 4.
+bindsym Control+Tab $i3wrapper --cycle-through-marks
+
 # i3-make installs the configuration files kept under a single
 # directory under git into their runtime locations, and where
 # necessary, reloads i3 config or restarts i3. The Makefile is
@@ -131,6 +135,20 @@ bindsym KP_Insert $default, $i3wrapper -p
 
 # Primary mode.
 mode "Primary" {
+
+    # Add a single letter mark. See also secondary mode.
+    # These number bindings map to single letter marks.
+    # Consider using i3-input and typing the letter.
+    bindsym 1 $default, mark --add A
+    bindsym 2 $default, mark --add B
+    bindsym 3 $default, mark --add C
+    bindsym 4 $default, mark --add R
+    bindsym 5 $default, mark --add S
+    bindsym 6 $default, mark --add T
+    bindsym 7 $default, mark --add W
+    bindsym 8 $default, mark --add X
+    bindsym 9 $default, mark --add Y
+    bindsym 0 $default, mark --add Z
 
     # This is independent of the similarly named configuration setting.
     bindsym q $default, workspace back_and_forth
@@ -259,6 +277,25 @@ mode "Primary" {
 # Entered from primary mode using Menu.
 # Keyboard & Mouse. Display & Desktop. USB drives.
 mode "Secondary" {
+
+    # Remove a single letter mark. See also primary mode.
+    bindsym 1 $default, unmark A
+    bindsym 2 $default, unmark B
+    bindsym 3 $default, unmark C
+    bindsym 4 $default, unmark R
+    bindsym 5 $default, unmark S
+    bindsym 6 $default, unmark T
+    bindsym 7 $default, unmark W
+    bindsym 8 $default, unmark X
+    bindsym 9 $default, unmark Y
+    bindsym 0 $default, unmark Z
+    # Remove an entire group of single letter marks.
+    bindsym grave $default, \
+            unmark A, unmark B, unmark C
+    bindsym minus $default, \
+            unmark R, unmark S, unmark T
+    bindsym equal $default, \
+            unmark W, unmark X,  unmark Y, unmark Z
 
     bindsym q $default, workspace back_and_forth
 

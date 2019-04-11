@@ -27,7 +27,11 @@ file=command
 lmon=HDMI2
 cmon=HDMI1
 rmon=VGA1
-
+#
+# The monitor specified with 'dmenu -m'.  The order is 0=VGA 1=HDMI1
+# 2=HDMI2 with all three, if any are not connected, numbering remains
+# contiguous from zero, e.g. 0=HDMI1 1=HDMI2 without VGA.
+#
 dmon=1
 
 #
@@ -149,12 +153,42 @@ i3um()
         id=$(printf "%02d" "${id}")
         count=$(for m in $(i3-msg -t get_marks | sed 's/,/\ /g');
                 do echo "${m}"; done | grep -c "${id}")
-        if [ "${count}" -eq 0 ] ; then break; fi
+        if [ "${count}" -eq 0 ]; then break; fi
     done
     sleep 1 # No need for caller to wait for the window.
     windowid=$(printf "0x%x" "$(xdotool getwindowfocus)")
     i3-msg "[id=\"${windowid}\"] mark --toggle \"${id}\""
     i3-msg "[con_mark=\"${id}\"] focus"
+}
+
+#
+#  Focus the next mark in a circular list of single letter marks.
+#
+#  - There are two circular paths of length 3 and one of length 4
+#    for a total of 10 marks: (A,B,C) (R,S,T) (W,X,Y,Z).
+#
+i3cm()
+{
+    # Determine the single letter mark for the currently focused window.
+    # Brute force and ignorance (of jq) yield a letter inside double quotes.
+    mark=$(i3-msg -t get_tree | jq '.[]' | grep -B 5 '\"focused\": true' | \
+                  grep -A 5 \"marks\" | grep "\"[ABCRSTWXYZ]\"" | sed 's/^[[:blank:]]*//g')
+    echo "->${mark}<-"
+
+    case "${mark}" in
+        (\"A\") i3-msg "[ con_mark=\"B\" ] focus" ;;
+        (\"B\") i3-msg "[ con_mark=\"C\" ] focus" ;;
+        (\"C\") i3-msg "[ con_mark=\"A\" ] focus" ;;
+
+        (\"R\") i3-msg "[ con_mark=\"S\" ] focus" ;;
+        (\"S\") i3-msg "[ con_mark=\"T\" ] focus" ;;
+        (\"T\") i3-msg "[ con_mark=\"R\" ] focus" ;;
+
+        (\"W\") i3-msg "[ con_mark=\"X\" ] focus" ;;
+        (\"X\") i3-msg "[ con_mark=\"Y\" ] focus" ;;
+        (\"Y\") i3-msg "[ con_mark=\"Z\" ] focus" ;;
+        (\"Z\") i3-msg "[ con_mark=\"W\" ] focus" ;;
+    esac
 }
 
 #
@@ -294,9 +328,12 @@ i3programs ()
         i3tt && i3yy ;;
 
         # 1. Access the "Active Marks" dynamic menu.
-        # 2. Assign a unique mark. Fix missing marks.
+        # 2. Focus the next single letter mark.
+        # 3. Assign a unique mark. Fix missing marks.
         (am)
         i3am ;;
+        (cm)
+        i3cm ;;
         (um)
         i3um ;;
 
@@ -526,6 +563,7 @@ case ${XDG_CURRENT_DESKTOP} in
         (--file-watcher) i3filewatcher ;;
         (--focus-watcher)  i3focuswatcher ;;
         (--active-marks) i3am ;;
+        (--cycle-through-marks) i3cm ;;
         (--unique-mark) i3um ;;
         (--keyboard-binding-info) i3kb ;;
         # In production, do nothing here?

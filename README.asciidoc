@@ -109,7 +109,7 @@ window manager keyboard-operable. The concept was to either launch a
 program or switch to a running instance.
 This is explained in more detail in subsection "Launch or Focus" in section "i3-wrapper".
 
-=== Marks
+=== Numeric Marks
 Whenever a terminal, emacs frame, or google chrome window is created,
 a unique two digit mark is allocated and displayed on the right side of the titlebar.
 The quick-and-dirty implementation of mark assignment risks failing to terminate
@@ -124,6 +124,28 @@ The support for marks is the only use of purely numeric commands.
 In the past nine months I have experimented with assigning numbers to commands,
 which sounds promiising (the "teletext argument") but fails in practice.
 Failures are why some features of "dopamine" seem to have little or weak justification.
+
+=== Hybrid Marks
+These are the ten Emacs frame (window) marks e[0-9], and
+these are the ten Google Chrome marks g[0-9].
+They are discussed in more detail in the section "Launch or Focus".
+
+=== Single Letter Marks
+In addition to a two character mark matching "[eg0-9][0-9]",
+a single letter mark can be added or removed independently.
+There are ten such marks, which are set in Primary mode by keys 1,2,...,9,0,
+and cleared by the same keys in Secondary mode.
+The ten marks are single capital letters, two groups of three and one group of four,
+mutually non-adjacent, matching (A,B,C) (R,S,T) (W,X,Y,Z)
+
+For example, a user might edit the source for a program in one window,
+build the program in another window, and execute the program in yet
+another window.
+By marking these A,B,C respectively, the user can cycle though them
+using just one key, currently Control+Tab.
+The bindings density around my left hand is quite high,
+hence the use of a modifer rather than a mode,
+plus the homage to Alt-Tab.
 
 === i3-make
 The i3files directory contais several files, copies of which must be installed in their
