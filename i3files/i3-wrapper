@@ -306,14 +306,19 @@ i3programs ()
         # Emacs frames.
         # Use 'em' to add another frame alongside an existing one.
         (e[0-9])
-        i3emgc "${1/11/e}" 'emacs24' 'emacs24 -rv' 'emacsclient.emacs24 -c' ;;
+        i3emgc "$1" 'emacs24' 'emacs24 -rv' 'emacsclient.emacs24 -c' ;;
         (em)
         i3-msg "exec emacsclient.emacs24 -c" ;;
+        # Renaming an existing e[..] workspace to m[..] prevents the
+        # mouse being disabled by the focus watcher.  M is E rotated
+        # clockwise.
+        (m[1-9])
+        focus instance emacs24 "$1" 'none' ;;
 
         # Chrome windows.
         # Use 'gc' to add another window alongside an existing one.
         (g[0-9])
-        i3emgc "${1/22/g}" 'chrome' 'google-chrome' 'google-chrome --new-window' ;;
+        i3emgc "$1" 'chrome' 'google-chrome' 'google-chrome --new-window' ;;
         (gc)
         i3-msg "exec google-chrome --new-window" ;;
 
@@ -348,14 +353,14 @@ i3programs ()
         # Does the user want this program to launch in a dedicated
         # workspace or in the current workspace?
         (th)
-        focus title 'File Manager' 'th' ${cmon} \
+        focus title 'File Manager' 'th' ${rmon} \
               exo-open --launch FileManager "${HOME}/1/Downloads" ;;
         (tn)
         focus title 'File Manager' 'none' 'none' \
               exo-open --launch FileManager "${HOME}/1/Downloads" ;;
 
         (sk)
-        focus instance skype 'sk' ${lmon} /snap/bin/skype ;;
+        focus instance skype 'sk' ${rmon} /snap/bin/skype ;;
         (ws)
         focus instance wireshark 'ws' ${cmon} wireshark ;;
         (sy)
@@ -382,8 +387,6 @@ i3programs ()
         (os)
         focus instance openshot 'os'  ${cmon} openshot ;;
 
-        (zz)
-        i3-msg "workspace $1" ;;
         (sg)
         xfce4-screenshooter -d 2 ;;
 
@@ -400,21 +403,21 @@ i3programs ()
         i3lowerlower "$1" ;;
 
         ([0][0-9][0-9])
-        # Visit a mark. Marks are two digit numbers.
-        arg="${1:1:2}"
-        i3-msg "[con_mark=\"${arg}\"] focus" ;;
-
-        ([5][0-9][0-9])
         # Swap this container with the matching marked container.
+        # On the numpad, behave as if the prompt as a double-tap.
         arg="${1:1:2}"
         i3-msg "swap container with mark ${arg}" ;;
 
-        (0|Ping.)
-        echo "$1" ;;
-        (1|Undo.)
+        ([0-9][0-9])
+        # Visit a numeric (two digit) mark. See the swap command
+        # above.
+        arg="${1:0:2}"
+        i3-msg "[con_mark=\"${arg}\"] focus" ;;
+
+        (:undo:)
         emacsclient.emacs24 -e "(with-current-buffer \"AutoVoice\" (undo))"
         echo "$1" ;;
-        (2|Cancel.)
+        (:reject:)
         emacsclient.emacs24 -e "(with-current-buffer \"AutoVoice\" (previous-line)(kill-line))"
         echo "$1" ;;
 
@@ -425,10 +428,6 @@ i3programs ()
         echo "${*}" | xclip -selection clipboard   # emacs control y
         emacsclient.emacs24 -e "(with-current-buffer \"AutoVoice\" (yank))"
         echo "$*" ;;
-
-        (:tvhplay:*)
-        # Watch TV on an STB class media player (Raspberry Pi Zero W).
-        i3-tvheadend  "$@" ;;
 
         # Security relies on using ssh to access ${dir}/${file}.
         # Using this default is deprecated!

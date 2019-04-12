@@ -419,13 +419,13 @@ mode "OK" {
 workspace_auto_back_and_forth no
 
 # Assign workspaces to outputs.
-workspace "wm" output $lmon
-workspace "tv" output $lmon
+workspace "wm" output $rmon
+workspace "tv" output $rmon
 workspace "mp" output $lmon
 workspace "fp" output $lmon
 workspace "vp" output $lmon
 workspace "e0" output $cmon
-workspace "g0" output $cmon
+workspace "g0" output $rmon
 
 # Assign applications to workspaces.
 # Use this method when launching applications indirectly.
