@@ -27,12 +27,6 @@ file=command
 lmon=HDMI2
 cmon=HDMI1
 rmon=VGA1
-#
-# The monitor specified with 'dmenu -m'.  The order is 0=VGA 1=HDMI1
-# 2=HDMI2 with all three, if any are not connected, numbering remains
-# contiguous from zero, e.g. 0=HDMI1 1=HDMI2 without VGA.
-#
-dmon=1
 
 #
 # The timeout in seconds for the main dynamic menu. Upon expiry,
@@ -227,7 +221,7 @@ i3am()
     # Strip out the double quotes, the square brackets separate.
     # shellcheck disable=2001
     text=$(echo "${text}" | sed 's/\"//g' )
-    triple=$(echo -e "cancel\n ${text}" | dmenu -b -fn 'pango:DejaVu Sans 11' -m ${dmon} -p 'Marks: ')
+    triple=$(echo -e "cancel\n ${text}" | dmenu -b -fn 'pango:DejaVu Sans 11' -p 'Marks: ')
     # shellcheck disable=2086
     id=$(echo ${triple} | awk '{print $1}')
     if [ "${id}" != "cancel"  ]; then
@@ -527,19 +521,19 @@ i3kb ()
 #
 dashp ()
 {
+    # I know demenu has the '-m <digit>" switch but it gets messy.
+    i3-msg "focus output ${cmon}"
     # Apply the Return key if dmenu still running after a few seconds.
     (sleep $commandtimeout && pgrep -c -f \
-                      "dmenu -b -fn pango:DejaVu Sans 11 -m ${dmon} -p Command:" && \
+                      "dmenu -b -fn pango:DejaVu Sans 11 -p Command:" && \
             xdotool key Return) &
     # The above timeout makes this list less useful than it might seem.
     list=$(egrep "\([a-zA-Z][a-zA-Z0-9]\)$" "$0" | sort | sed 's/[ ()]//g')
     list="cancel ${list}"
     # Numpad enters digits.
     numlockx on
-    # The dmenu monitor number 0 always exists; it selects the primary
-    # output on my machine.
     cmd=$(echo "${list}" | sed 's/\ /\n/g' | \
-                 dmenu -b -fn 'pango:DejaVu Sans 11' -m ${dmon} -p 'Command: ')
+                 dmenu -b -fn 'pango:DejaVu Sans 11' -p 'Command: ')
     if [ "${cmd}" != "cancel" ]; then
         echo "${cmd}" | tee "${dir}/${file}"
     fi
