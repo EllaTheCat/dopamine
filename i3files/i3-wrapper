@@ -161,14 +161,15 @@ i3um()
 #  - There are two circular paths of length 3 and one of length 4
 #    for a total of 10 marks: (A,B,C) (R,S,T) (W,X,Y,Z).
 #
-i3cm()
+i3ctm()
 {
     # Determine the single letter mark for the currently focused window.
-    # Brute force and ignorance (of jq) yield a letter inside double quotes.
-    mark=$(i3-msg -t get_tree | jq '.[]' | grep -B 5 '\"focused\": true' | \
-                  grep -A 5 \"marks\" | grep "\"[ABCRSTWXYZ]\"" | sed 's/^[[:blank:]]*//g')
+    # Thanks to  u/jimbopouliot on r/i3wm (reddit) for 'jq' improvement.
+    # https://www.reddit.com/r/i3wm/comments/bcck1t/how_to_alttab_for_groups_of_windows/
+    mark=$(i3-msg -t get_tree | jq '.. | objects | select(.focused) | .marks[] | select(match("^[ABCRSTWXYZ]$"))')
     echo "->${mark}<-"
 
+    # Conveniently, the letter is enclosed by double quotes.
     case "${mark}" in
         (\"A\") i3-msg "[ con_mark=\"B\" ] focus" ;;
         (\"B\") i3-msg "[ con_mark=\"C\" ] focus" ;;
@@ -182,6 +183,21 @@ i3cm()
         (\"X\") i3-msg "[ con_mark=\"Y\" ] focus" ;;
         (\"Y\") i3-msg "[ con_mark=\"Z\" ] focus" ;;
         (\"Z\") i3-msg "[ con_mark=\"W\" ] focus" ;;
+
+        (*)
+        # If the mark is absent the window id does not change.
+        # If focus succeeds stop, else try again with the next mark.
+        id=$(xdotool getwindowfocus)
+        i3-msg "[ con_mark=\"A\" ] focus"
+        windowid=$(xdotool getwindowfocus)
+        if [ "${id}" = "${windowid}" ]; then
+            id="${windowid}"
+            i3-msg "[ con_mark=\"R\" ] focus"
+            windowid=$(xdotool getwindowfocus)
+            if [ "${id}" = "${windowid}" ]; then
+                i3-msg "[ con_mark=\"X\" ] focus"
+            fi
+        fi
     esac
 }
 
@@ -289,6 +305,31 @@ i3emgc ()
 }
 
 #
+# Toggle the name of an Emacs workspace to toggle the mouse
+# availability. Renaming to e[0-9] enables, m[0-9] disables.
+#
+# - The popup dialog is is a hack to trigger the focus watcher.
+#
+i3tem()
+{
+    cws="$(i3-msg -t get_workspaces | jq '.[] | .name,.focused' | \
+                 grep true -B1 | grep -v true)"
+    arg=${cws:1:2}
+    echo "$arg"
+    case "${arg}" in
+        (e[0-9])
+        i3-msg "rename workspace to ${arg/e/m}"
+        yad --timeout 1 --title "Mouse will be disabled"
+        ;;
+        (m[0-9])
+        i3-msg "rename workspace to ${arg/m/e}"
+        yad --timeout 1 --title "Mouse will be enabled"
+        ;;
+    esac
+}
+
+
+#
 # 1. Common programs with examples of how to integrate them.
 # 2. Terminals, editor, browser, and management of their marks.
 # 3. Support for spoken dictation of sentences.
@@ -298,16 +339,12 @@ i3programs ()
 {
     case "$1" in
         # Emacs frames.
+        # Use e[0-9] to enable the mouse, m[0-9] to disable it.
         # Use 'em' to add another frame alongside an existing one.
-        (e[0-9])
+        ([em][0-9])
         i3emgc "$1" 'emacs24' 'emacs24 -rv' 'emacsclient.emacs24 -c' ;;
         (em)
         i3-msg "exec emacsclient.emacs24 -c" ;;
-        # Renaming an existing e[..] workspace to m[..] prevents the
-        # mouse being disabled by the focus watcher.  M is E rotated
-        # clockwise.
-        (m[1-9])
-        focus instance emacs24 "$1" 'none' ;;
 
         # Chrome windows.
         # Use 'gc' to add another window alongside an existing one.
@@ -327,12 +364,9 @@ i3programs ()
         i3tt && i3yy ;;
 
         # 1. Access the "Active Marks" dynamic menu.
-        # 2. Focus the next single letter mark.
-        # 3. Assign a unique mark. Fix missing marks.
+        # 2. Assign a unique mark. Fix missing marks.
         (am)
         i3am ;;
-        (cm)
-        i3cm ;;
         (um)
         i3um ;;
 
@@ -478,8 +512,7 @@ i3filewatcher ()
 # keyboard LED 3 and disable/enable the mouse.
 #
 # - The workspace and the window must match to disable the mouse.
-# - The standard matching workspaces are e1, e2, ... e8, e9 and em.
-# - The standard exception is the workspace e0.
+# - The standard matching workspaces are m0, m1, ... m8, m9.
 # - The workspace may be renamed to disallow disabling the mouse.
 #
 i3focuswatcher ()
@@ -489,7 +522,7 @@ i3focuswatcher ()
     do
         ws=$(i3-msg -t get_workspaces | jq '.[] | .name,.focused' | grep -B1 true | grep -v true)
         case "$ws" in
-            (\"e[1-9m]\")
+            (\"m[0-9]\")
             if [ "$(echo "${line}" | grep -c -i 'emacs' )" -gt 0 ]; then
                 xset led 3 # ON
                 eval "$(dirname "$0")/i3-mouse" disable
@@ -555,9 +588,11 @@ case ${XDG_CURRENT_DESKTOP} in
         # Verbosity over obscurity, not enough single letters.
         (--file-watcher) i3filewatcher ;;
         (--focus-watcher)  i3focuswatcher ;;
+        (--toggle-emacs-mouse) i3tem ;;
         (--active-marks) i3am ;;
-        (--cycle-through-marks) i3cm ;;
+        (--cycle-through-marks) i3ctm ;;
         (--unique-mark) i3um ;;
+
         (--keyboard-binding-info) i3kb ;;
         # In production, do nothing here?
         (*) start "$@" ;;
