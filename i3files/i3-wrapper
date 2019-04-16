@@ -202,50 +202,6 @@ i3ctm()
 }
 
 #
-# Active Marks. Selecting a mark visits that mark.
-#
-# The implementation has to focus all marked windows one at a time
-# in order to gather their titles. This is visually disconcerting, so avoid
-# doing it when not necessary.
-#
-i3am()
-{
-    # Only update if the current list of marks differs from the list
-    # of marks in the first line of the file holding the last update.
-    oldmarks=$(head -n 1 "${dir}/marks")
-    newmarks="$(i3-msg -t get_marks)"
-    if [ "${newmarks}" != "${oldmarks}" ] ; then
-        echo "${newmarks}" > "${dir}/marks"
-        # Stash the active window identifier.
-        id=$(xdotool getactivewindow)
-        # 1. Replace the non-number characters with spaces.
-        # shellcheck disable=2001
-        for m in $(echo "${newmarks}" | sed 's/[],"\[]/ /g'); do
-            i3-msg --quiet "[con_mark=\"${m}\"] focus"
-            cws=$(i3-msg -t get_workspaces | jq '.[] | .name,.focused' | \
-                         grep true -B1 | grep -v true)
-            # 2. Hard double quotes enclose the usual double quotes
-            # that enclose the expression or variable. I forget why!
-            echo -e  "\"${m}\""  \""[${cws}]"\" \""$(xdotool getactivewindow getwindowname)"\" >> "${dir}/marks"
-            sleep 0.3  # Settling time.
-        done
-        # Restore the original activated window.
-        xdotool windowactivate "${id}" click --clearmodifiers --window "${id}" 1
-    fi
-    # Strip the first line containing the list of marks.
-    text=$(tail -n +2 "${dir}/marks")
-    # Strip out the double quotes, the square brackets separate.
-    # shellcheck disable=2001
-    text=$(echo "${text}" | sed 's/\"//g' )
-    triple=$(echo -e "cancel\n ${text}" | dmenu -b -fn 'pango:DejaVu Sans 11' -p 'Marks: ')
-    # shellcheck disable=2086
-    id=$(echo ${triple} | awk '{print $1}')
-    if [ "${id}" != "cancel"  ]; then
-        i3-msg "[con_mark=${id}] focus"
-    fi
-}
-
-#
 # Add a terminal and assign a mark (subroutine).
 #
 i3terminal ()
@@ -356,17 +312,13 @@ i3programs ()
         # 1. Terminal in the current workspace. Split is top-bottom.
         # 2. Terminal in the current workspace. Split is left-right.
         # 3. Two half height terminals to the right of e.g. Emacs.
+        # 4. Assign a unique mark. Fix missing marks.
         (tt)
         i3tt ;;
         (yy)
         i3yy ;;
         (ty)
         i3tt && i3yy ;;
-
-        # 1. Access the "Active Marks" dynamic menu.
-        # 2. Assign a unique mark. Fix missing marks.
-        (am)
-        i3am ;;
         (um)
         i3um ;;
 
@@ -589,7 +541,6 @@ case ${XDG_CURRENT_DESKTOP} in
         (--file-watcher) i3filewatcher ;;
         (--focus-watcher)  i3focuswatcher ;;
         (--toggle-emacs-mouse) i3tem ;;
-        (--active-marks) i3am ;;
         (--cycle-through-marks) i3ctm ;;
         (--unique-mark) i3um ;;
 

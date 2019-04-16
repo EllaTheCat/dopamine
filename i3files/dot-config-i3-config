@@ -447,7 +447,6 @@ for_window [title="Do Not Panic"] floating enable;
 for_window [title="File Operation Progress"] floating enable;
 for_window [title="Scratchpad"] floating enable;
 for_window [title="Unlock Keyring"] floating enable;
-for_window [title="Active Marks"] floating enable,sticky enable;
 
 # Mark their application windows with a number.
 # Terminals use the same pool of 100 numbers.
