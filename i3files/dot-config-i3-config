@@ -19,7 +19,6 @@ set $i3mode exec --no-startup-id ~/local/bin/i3-mode
 set $i3mouse exec --no-startup-id ~/local/bin/i3-mouse
 set $i3wrapper exec --no-startup-id ~/local/bin/i3-wrapper
 
-# These hooks are currently unused but preserved.
 set $defaultnop nop
 set $primarynop nop
 set $secondarynop nop
@@ -87,19 +86,28 @@ bindsym Control+Delete $i3wrapper dd
 # without having to precisely position the mouse on window edges.
 floating_modifier Mod4
 
+# The modifier used with the arrow keys.
+set $i3arrowmodifier Mod4
+
+# Modifiers can be the better choice sometimes. My right hand is
+# better resting by the arrows because of tremor.
+bindsym $i3arrowmodifier+Left focus left
+bindsym $i3arrowmodifier+Down focus down
+bindsym $i3arrowmodifier+Up focus up
+bindsym $i3arrowmodifier+Right focus right
+
 # Numpad cursor controls (highly recommended).
-# Focus up wraps around, most desktops are wide.
 # These should also be bound in Primary and Secondary modes.
-bindsym KP_Left focus left
-bindsym KP_Right focus right
-bindsym KP_Up focus up
-bindsym KP_Home workspace prev_on_output
-bindsym KP_Prior workspace next_on_output
+bindsym KP_Left workspace prev_on_output
+bindsym KP_Right workspace next_on_output
+bindsym KP_Up $defaultnop
+bindsym KP_Home $defaultnop
+bindsym KP_Prior $defaultnop
 bindsym KP_End move left
 bindsym KP_Down move down
 bindsym KP_Begin move up
 bindsym KP_Next move right
-bindsym KP_Delete focus down
+bindsym KP_Delete $defaultnop
 
 # Numpad keys that are unaffected by the NumLock state.
 # There are five: arithmetic signs / * - + and the enter key.
@@ -243,17 +251,22 @@ mode "Primary" {
     bindsym Control+Mod1+Delete $default,kill
     bindsym Control+Mod4+Delete [workspace="__focused__"] $default,kill
 
+    bindsym $i3arrowmodifier+Left focus left
+    bindsym $i3arrowmodifier+Down focus down
+    bindsym $i3arrowmodifier+Up focus up
+    bindsym $i3arrowmodifier+Right focus right
+
     # Numpad cursor keys copied from default mode.
-    bindsym KP_Left focus left
-    bindsym KP_Right focus right
-    bindsym KP_Up focus up
-    bindsym KP_Home workspace prev_on_output
-    bindsym KP_Prior workspace next_on_output
+    bindsym KP_Left workspace prev_on_output
+    bindsym KP_Right workspace next_on_output
+    bindsym KP_Up $primarynop
+    bindsym KP_Home $primarynop
+    bindsym KP_Prior $primarynop
     bindsym KP_End move left
     bindsym KP_Down move down
     bindsym KP_Begin move up
     bindsym KP_Next move right
-    bindsym KP_Delete focus down
+    bindsym KP_Delete $primarynop
     bindsym KP_Insert $default, $i3wrapper -p
     bindsym KP_Divide focus output left
     bindsym KP_Multiply focus output right
@@ -372,17 +385,22 @@ mode "Secondary" {
     bindsym Control+Mod4+Delete [workspace="__focused__"] $default, kill
     bindsym Control+Mod4+Mod1+Delete  $default, $i3apps stop everything
 
+    bindsym $i3arrowmodifier+Left focus left
+    bindsym $i3arrowmodifier+Down focus down
+    bindsym $i3arrowmodifier+Up focus up
+    bindsym $i3arrowmodifier+Right focus right
+
     # Numpad cursor keys copied from default mode.
-    bindsym KP_Left focus left
-    bindsym KP_Right focus right
-    bindsym KP_Up focus up
-    bindsym KP_Home workspace prev_on_output
-    bindsym KP_Prior workspace next_on_output
+    bindsym KP_Left workspace prev_on_output
+    bindsym KP_Right workspace next_on_output
+    bindsym KP_Up $secondarynop
+    bindsym KP_Home $secondarynop
+    bindsym KP_Prior $secondarynop
     bindsym KP_End move left
     bindsym KP_Down move down
     bindsym KP_Begin move up
     bindsym KP_Next move right
-    bindsym KP_Delete focus down
+    bindsym KP_Delete $secondarynop
     bindsym KP_Insert $default, $i3wrapper -p
     bindsym KP_Divide focus output left
     bindsym KP_Multiply focus output right
@@ -424,8 +442,20 @@ workspace "tv" output $rmon
 workspace "mp" output $lmon
 workspace "fp" output $lmon
 workspace "vp" output $lmon
+
 workspace "e0" output $cmon
-workspace "g0" output $rmon
+workspace "e1" output $cmon
+workspace "e4" output $lmon
+workspace "e5" output $lmon
+workspace "e8" output $rmon
+workspace "e9" output $rmon
+
+workspace "g0" output $lmon
+workspace "g1" output $lmon
+workspace "g4" output $cmon
+workspace "g5" output $cmon
+workspace "g8" output $rmon
+workspace "g9" output $rmon
 
 # Assign applications to workspaces.
 # Use this method when launching applications indirectly.

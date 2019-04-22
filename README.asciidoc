@@ -63,20 +63,27 @@ The NumLock key toggles between two sets of keys:
 the KP_0 set for numeric entry and
 the KP_Insert set for navigation.
 The arithmetic operators and KP_Enter are unaffected by NumLock.
-Here's what works for me:
+Here's what currently (2019-04) works for me:
 
-- bindsym KP_Left focus left
-- bindsym KP_Right focus right
-- bindsym KP_Up focus up
-- bindsym KP_Home workspace prev_on_output
-- bindsym KP_Prior workspace next_on_output
-- bindsym KP_End move left
-- bindsym KP_Down move down
-- bindsym KP_Begin move up
-- bindsym KP_Next move right
-- bindsym KP_Delete focus down
-- bindsym KP_Divide focus output left
-- bindsym KP_Multiply focus output right
+bindsym KP_Left workspace prev_on_output
+bindsym KP_Right workspace next_on_output
+bindsym KP_Up nop
+bindsym KP_Home nop
+bindsym KP_Prior nop
+bindsym KP_End move left
+bindsym KP_Down move down
+bindsym KP_Begin move up
+bindsym KP_Next move right
+bindsym KP_Delete nop
+
+=== Arrows
+Using the numpad for focus hasn't worked as well as anticipated.
+Here's what currently (2019-04) works for me, and yes, it uses modifiers:
+
+bindsym $i3arrowmodifier+Left focus left
+bindsym $i3arrowmodifier+Down focus down
+bindsym $i3arrowmodifier+Up focus up
+bindsym $i3arrowmodifier+Right focus right
 
 === i3 modes
 There are now only three i3 modes: the default mode, the Primary mode, and the Secondary mode.
