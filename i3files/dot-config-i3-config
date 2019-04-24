@@ -117,8 +117,8 @@ bindsym KP_Insert $default, $i3wrapper -p
 # Numpad keys that are unaffected by the NumLock state.
 # There are five: arithmetic signs / * - + and the enter key.
 # Do not rebind KP_Enter! This is a design decision.
-bindsym KP_Divide $defaultnop
-bindsym KP_Multiply $defaultnop
+bindsym KP_Divide workspace prev_on_output
+bindsym KP_Multiply workspace next_on_output
 
 # Microphone muting (for privacy and phone conferencing).
 # The i3bar displays the status of the two microphones:
@@ -267,8 +267,8 @@ mode "Primary" {
     # Numpad keys that are unaffected by the NumLock state.
     # There are five: arithmetic signs / * - + and the enter key.
     # Do not rebind KP_Enter! This is a design decision.
-    bindsym KP_Divide $primarynop
-    bindsym KP_Multiply $primarynop
+    bindsym KP_Divide workspace prev_on_output
+    bindsym KP_Multiply workspace next_on_output
 
     # Eye candy. KP_Add increases translucency. KP_Subtract will not
     # set opacity beyond 100%, hence using keyboard autorepeat will
@@ -405,8 +405,8 @@ mode "Secondary" {
     # Numpad keys that are unaffected by the NumLock state.
     # There are five: arithmetic signs / * - + and the enter key.
     # Do not rebind KP_Enter! This is a design decision.
-    bindsym KP_Divide $secondarynop
-    bindsym KP_Multiply $secondarynop
+    bindsym KP_Divide workspace prev_on_output
+    bindsym KP_Multiply workspace next_on_output
 
     # Subject to change: volume control of 3.5mm rear line out.
     # Beware! Increasing beyond 100% can damage speakers.
