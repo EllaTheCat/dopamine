@@ -98,26 +98,27 @@ bindsym $i3arrowmodifier+Right focus right
 
 # Numpad cursor controls (highly recommended).
 # These should also be bound in Primary and Secondary modes.
-bindsym KP_Left workspace prev_on_output
-bindsym KP_Right workspace next_on_output
-bindsym KP_Up $defaultnop
-bindsym KP_Home $defaultnop
-bindsym KP_Prior $defaultnop
+bindsym KP_Left focus left
+bindsym KP_Right focus right
+bindsym KP_Home focus output $lmon
+bindsym KP_Up focus output $cmon
+bindsym KP_Prior focus output $rmon
 bindsym KP_End move left
 bindsym KP_Down move down
 bindsym KP_Begin move up
 bindsym KP_Next move right
 bindsym KP_Delete $defaultnop
 
+# Command prompt.
+# The numpad enters numbers during command entry.
+# Do not rebind KP_0, KP_1 ... KP_8, KP_9, KP_Decimal.
+bindsym KP_Insert $default, $i3wrapper -p
+
 # Numpad keys that are unaffected by the NumLock state.
 # There are five: arithmetic signs / * - + and the enter key.
 # Do not rebind KP_Enter! This is a design decision.
-
-# Move focus to another output.
-# Necessary because the numpad cycles workspaces on output.
-# These should also be bound in Primary and Secondary modes.
-bindsym KP_Divide focus output left
-bindsym KP_Multiply focus output right
+bindsym KP_Divide $defaultnop
+bindsym KP_Multiply $defaultnop
 
 # Microphone muting (for privacy and phone conferencing).
 # The i3bar displays the status of the two microphones:
@@ -127,11 +128,6 @@ bindsym KP_Subtract \
         exec pactl set-source-mute $analogaudiosource toggle
 bindsym KP_Add \
         exec pactl set-source-mute $webcamaudiosource toggle
-
-# Command prompt.
-# The numpad enters numbers during command entry.
-# Do not rebind KP_0, KP_1 ... KP_8, KP_9, KP_Decimal.
-bindsym KP_Insert $default, $i3wrapper -p
 
 #
 # MODES
@@ -242,10 +238,9 @@ mode "Primary" {
         -P '(move container to workspace): ' \
         -F 'move container to workspace "%s"'
 
-    # Focus an unspecified window on the specified output.
-    bindsym comma  $default, focus output $lmon
-    bindsym period  $default, focus output $cmon
-    bindsym slash  $default, focus output $rmon
+    bindsym comma $primarynop
+    bindsym period $primarynop
+    bindsym slash $primarynop
 
     # Control-*-Delete is a design decision please do not change.
     bindsym Control+Mod1+Delete $default,kill
@@ -257,19 +252,23 @@ mode "Primary" {
     bindsym $i3arrowmodifier+Right focus right
 
     # Numpad cursor keys copied from default mode.
-    bindsym KP_Left workspace prev_on_output
-    bindsym KP_Right workspace next_on_output
-    bindsym KP_Up $primarynop
-    bindsym KP_Home $primarynop
-    bindsym KP_Prior $primarynop
+    bindsym KP_Left focus left
+    bindsym KP_Right focus right
+    bindsym KP_Home focus output $lmon
+    bindsym KP_Up focus output $cmon
+    bindsym KP_Prior focus output $rmon
     bindsym KP_End move left
     bindsym KP_Down move down
     bindsym KP_Begin move up
     bindsym KP_Next move right
     bindsym KP_Delete $primarynop
     bindsym KP_Insert $default, $i3wrapper -p
-    bindsym KP_Divide focus output left
-    bindsym KP_Multiply focus output right
+
+    # Numpad keys that are unaffected by the NumLock state.
+    # There are five: arithmetic signs / * - + and the enter key.
+    # Do not rebind KP_Enter! This is a design decision.
+    bindsym KP_Divide $primarynop
+    bindsym KP_Multiply $primarynop
 
     # Eye candy. KP_Add increases translucency. KP_Subtract will not
     # set opacity beyond 100%, hence using keyboard autorepeat will
@@ -391,19 +390,23 @@ mode "Secondary" {
     bindsym $i3arrowmodifier+Right focus right
 
     # Numpad cursor keys copied from default mode.
-    bindsym KP_Left workspace prev_on_output
-    bindsym KP_Right workspace next_on_output
-    bindsym KP_Up $secondarynop
-    bindsym KP_Home $secondarynop
-    bindsym KP_Prior $secondarynop
+    bindsym KP_Left focus left
+    bindsym KP_Right focus right
+    bindsym KP_Home focus output $lmon
+    bindsym KP_Up focus output $cmon
+    bindsym KP_Prior focus output $rmon
     bindsym KP_End move left
     bindsym KP_Down move down
     bindsym KP_Begin move up
     bindsym KP_Next move right
     bindsym KP_Delete $secondarynop
     bindsym KP_Insert $default, $i3wrapper -p
-    bindsym KP_Divide focus output left
-    bindsym KP_Multiply focus output right
+
+    # Numpad keys that are unaffected by the NumLock state.
+    # There are five: arithmetic signs / * - + and the enter key.
+    # Do not rebind KP_Enter! This is a design decision.
+    bindsym KP_Divide $secondarynop
+    bindsym KP_Multiply $secondarynop
 
     # Subject to change: volume control of 3.5mm rear line out.
     # Beware! Increasing beyond 100% can damage speakers.
