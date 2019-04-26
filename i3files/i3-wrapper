@@ -361,14 +361,16 @@ i3programs ()
         focus instance vlc 'vp' ${lmon} /snap/bin/vlc ;;
         (hb)
         focus instance handbrake 'hb' ${cmon} "handbrake-cpulimit" ;;
-
-        (vb)
-        focus title 'Oracle VM VirtualBox' 'vb' ${cmon} virtualbox ;;
         (os)
         focus instance openshot 'os'  ${cmon} openshot ;;
 
+        (vb)
+        focus title 'Oracle VM VirtualBox' 'vb' ${cmon} virtualbox ;;
+
         (sg)
         xfce4-screenshooter -d 2 ;;
+        (wc)
+        cheese ;;
 
         # Dropdown terminal.
         (dd)
