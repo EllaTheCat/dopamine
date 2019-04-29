@@ -65,16 +65,16 @@ the KP_Insert set for navigation.
 The arithmetic operators and KP_Enter are unaffected by NumLock.
 Here's what currently (2019-04) works for me:
 
-bindsym KP_Left workspace prev_on_output
-bindsym KP_Right workspace next_on_output
-bindsym KP_Up nop
-bindsym KP_Home nop
-bindsym KP_Prior nop
+bindsym KP_Left focus left
+bindsym KP_Right focus right
+bindsym KP_Home focus output $lmon
+bindsym KP_Up focus output $cmon
+bindsym KP_Prior focus output $rmon
 bindsym KP_End move left
 bindsym KP_Down move down
 bindsym KP_Begin move up
 bindsym KP_Next move right
-bindsym KP_Delete nop
+bindsym KP_Delete $defaultnop
 
 === Arrows
 Using the numpad for focus hasn't worked as well as anticipated.
@@ -150,6 +150,9 @@ build the program in another window, and execute the program in yet
 another window.
 By marking these A,B,C respectively, the user can cycle though them
 using just one key, currently Control+Tab.
+More than one letter can mark a window,
+hence toggling between two windows marked [R] and {S][T]
+works as one would want.
 The bindings density around my left hand is quite high,
 hence the use of a modifer rather than a mode,
 plus the homage to Alt-Tab.
