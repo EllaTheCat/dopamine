@@ -466,7 +466,6 @@ workspace "g9" output $rmon
 assign [instance="xfce4-terminal" title="watcher$"] wm
 assign [instance="xfce4-terminal" title="tvheadend"] tv
 assign [instance="gl" class="mpv"]  mp
-assign [class="ffplay"] fp
 assign [title="VLC media player$"] vp
 assign [title="Meld$"] md
 assign [instance="wireshark"]  ws
@@ -481,6 +480,7 @@ for_window [title="Do Not Panic"] floating enable;
 for_window [title="File Operation Progress"] floating enable;
 for_window [title="Scratchpad"] floating enable;
 for_window [title="Unlock Keyring"] floating enable;
+for_window [class="ffplay"] floating enable;
 
 # Mark their application windows with a number.
 # Terminals use the same pool of 100 numbers.
