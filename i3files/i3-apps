@@ -102,12 +102,19 @@ do
         # Rename any remaining empty workspaces.
         i3-msg "focus output \"${cmon}\", rename workspace to \"${cmon}\""
         ;;
+
         (wallpaper)
         # My current desktop wallpaper (subject to change) is cropped
-        # from a photo taken by someone else.
+        # from a photo taken by someone else. The attribution notice
+        # is displayed on the primary monitor. It is shown at startup
+        # and upon request after which events the referenced URL is
+        # available for pasting. A request is made by an i3bar mouse
+        # button binding.
+        #
         if  [ "_${verb}" = "_start" ]; then
-            i3-msg "exec (sleep 7 && xdotool key Return) &"
+            (sleep 10 && xdotool key Return) &
             url="https://commons.wikimedia.org/wiki/File:London_360%C2%B0_Panorama_from_the_London_Eye.jpg"
+            echo ${url} | xclip
             echo "Attribution:  Photo by Gregg M. Erickson, ${url}" | dmenu -b -fn 'pango:DejaVu Sans 11'
         fi
         ;;

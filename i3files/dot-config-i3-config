@@ -125,9 +125,9 @@ bindsym KP_Multiply workspace next_on_output
 # 0 == muted; 1 == not muted == a "hot" microphone.
 # These are NOT bound in Primary or Secondary modes.
 bindsym KP_Subtract \
-        exec pactl set-source-mute $analogaudiosource toggle
+        exec --no-startup-id pactl set-source-mute $analogaudiosource toggle
 bindsym KP_Add \
-        exec pactl set-source-mute $webcamaudiosource toggle
+        exec --no-startup-id pactl set-source-mute $webcamaudiosource toggle
 
 #
 # MODES
@@ -513,6 +513,8 @@ font pango:DejaVu Sans 11
 # Start i3bar to display a workspace bar (plus the system information i3status
 # finds out, if available)
 bar {
+    # Show the bar on the 1920x1080 screens but not on the 1280x1024
+    # screen for bettter alignment.
     output $lmon
     output $cmon
     i3bar_command /usr/bin/i3bar
@@ -520,8 +522,10 @@ bar {
     status_command ~/local/bin/i3-status --config ~/.config/i3status/config
     tray_output $cmon
     font pango:DejaVu Sans 11
+    # Bar related actions only please.
+    # The wallpaper attribution notice can be requested at any time.
     bindsym button2 $default, [urgent=latest] focus
-    bindsym button3 $default, $i3mouse fast
+    bindsym button3 $default, $i3apps start wallpaper
 }
 
 # Mouse behaviour wrt windows.
