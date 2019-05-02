@@ -106,16 +106,19 @@ do
         (wallpaper)
         # My current desktop wallpaper (subject to change) is cropped
         # from a photo taken by someone else. The attribution notice
-        # is displayed on the primary monitor. It is shown at startup
-        # and upon request after which events the referenced URL is
-        # available for pasting. A request is made by an i3bar mouse
-        # button binding.
+        # is self-documenting.
         #
         if  [ "_${verb}" = "_start" ]; then
-            (sleep 10 && xdotool key Return) &
+            i3-msg "focus output \"${cmon}\""
+            (sleep 5 && xdotool key Return) &
             url="https://commons.wikimedia.org/wiki/File:London_360%C2%B0_Panorama_from_the_London_Eye.jpg"
             echo ${url} | xclip
-            echo "Attribution:  Photo by Gregg M. Erickson, ${url}" | dmenu -b -fn 'pango:DejaVu Sans 11'
+            text="Attribution:  Photo by Gregg M. Erickson, ${url}"
+            echo "${text}" | dmenu -b -fn 'pango:DejaVu Sans 11'
+            (sleep 5 && xdotool key Return) &
+            text="Mouse right click the i3 status bar to show these texts again. The URL is available on the clipboard."
+            text="${text} Photo is cropped 5760x1080."
+            echo "${text}" | dmenu -b -fn 'pango:DejaVu Sans 11'
         fi
         ;;
 
