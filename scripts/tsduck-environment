@@ -1,3 +1,17 @@
-[[ ":$PATH:" != *:/mnt/94bd806f-4aa9-4514-b2fc-9688182fa571/shevek/packages/tsduck/tsduck-tsduck-d26ea0d/src/tstools/release-x86_64:* ]] && export PATH="/mnt/94bd806f-4aa9-4514-b2fc-9688182fa571/shevek/packages/tsduck/tsduck-tsduck-d26ea0d/src/tstools/release-x86_64:$PATH"
-export LD_LIBRARY_PATH="/mnt/94bd806f-4aa9-4514-b2fc-9688182fa571/shevek/packages/tsduck/tsduck-tsduck-d26ea0d/src/libtsduck/release-x86_64"
-export TSPLUGINS_PATH=/mnt/94bd806f-4aa9-4514-b2fc-9688182fa571/shevek/packages/tsduck/tsduck-tsduck-d26ea0d/src/tsplugins/release-x86_64:/mnt/94bd806f-4aa9-4514-b2fc-9688182fa571/shevek/packages/tsduck/tsduck-tsduck-d26ea0d/src/libtsduck
+#!/bin/bash
+#
+# TSDuck environment (currently 3.17+ git).
+#
+
+tsduckroot=/home/shevek/1/packages/tsduck/tsduck-tsduck-3dbf1aa
+tstoolspath=${tsduckroot}/src/tstools/release-x86_64
+tspluginspath=${tsduckroot}/src/tsplugins/release-x86_64
+PATH=${PATH}:
+
+[[ ":$PATH:" != *:${tstoolspath}:* ]] && export  PATH="${tstoolspath}:$PATH"
+export LD_LIBRARY_PATH="${tsduckroot}/src/libtsduck/release-x86_64"
+export TSPLUGINS_PATH="${tspluginspath}:${tsduckroot}/src/libtsduck"
+
+#
+# Done.
+#
