@@ -207,12 +207,14 @@ i3ctm()
 i3terminal ()
 {
     xfce4-terminal -T "xfce4-terminal" &
-    sleep 1 && i3um  # Assign a unique mark.
+    sleep 0.3 && i3um  # Assign a unique mark.
 }
 
 #
-# Create a workspace with a terminal inside if none exists, othewise
-# visit the workspace. The name of the workspace is the command alias.
+# Create a workspace with three side-by-side terminal sinside if none
+# exists, othewise visit the workspace. The name of the workspace is
+# the command alias. Inspired by:
+# https://www.reddit.com/r/i3wm/comments/bjw151/i3_reading_window/
 #
 i3lowerlower()
 {
@@ -223,6 +225,11 @@ i3lowerlower()
         i3-msg "workspace $1"
         if [ "${tws}" -eq 0 ]; then
             i3terminal
+            split v
+            i3terminal
+            split h
+            i3terminal
+            move left
         fi
     fi
 }
