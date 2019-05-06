@@ -1,15 +1,41 @@
 #!/bin/bash
 #
-# Speech synthesis from a string no longer than a sentence.
+# Speech synthesiser
 #
 
-words="$@"
+case "$1" in
+    # Command line options are packed into one argument.
+    (--help)
+    echo "Usage: $(basename $0) (play|save)-(de-DE|fr-FR|en-GB)"
+    ;;
+    # Save to WAV and then play the WAV.
+    (--play-de-DE|--play-fr-FR|--play-en-GB)
+    language=${1/--play-/}
+    words="${@:2}"
+    ;;
+    # Save to WAV but do not play the WAV.
+    (--save-de-DE|--save-fr-FR|--save-en-GB)
+    language=${1/--save-/}
+    words="${@:2}"
+    ;;
+    # Save to WAV only, in (British) English.
+    (*)
+    words="$@"
+    language=en-GB
+    ;;
+esac
+
 wav="/dev/shm/${USER}/speech-synthesis/speech.wav"
 mkdir -p $(dirname ${wav})
+pico2wave -w=${wav} -l=${language} "<volume level='50'> ${words} </volume>"
 
-# Avoid peak clipping by reducing the volume.
-# The markup is guesswork from 'http://dafpolo.free.fr/telecharger/svoxpico/SVOX_Pico_Manual.pdf'.
-pico2wave -w=${wav} -l=en-GB "<volume level='50'> ${words} </volume>" &&  mpv --no-video ${wav}
+case "$1" in
+    (--play-*)
+    mpv --no-video ${wav}
+    ;;
+    (*)
+    ;;
+esac
 
 #
 # Done.
