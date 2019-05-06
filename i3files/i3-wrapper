@@ -515,23 +515,38 @@ i3kb ()
 #
 dashp ()
 {
-    # I know demenu has the '-m <digit>" switch but it gets messy.
+    # Yes, dmenu has the '-m <digit>" switch, but it's easier to do this:
     i3-msg "focus output ${cmon}"
-    # Apply the Return key if dmenu still running after a few seconds.
-    (sleep $commandtimeout && pgrep -c -f \
-                      "dmenu -b -fn pango:DejaVu Sans 11 -p Command:" && \
-            xdotool key Return) &
-    # The above timeout makes this list less useful than it might seem.
-    list=$(egrep "\([a-zA-Z][a-zA-Z0-9]\)$" "$0" | sort | sed 's/[ ()]//g')
-    list="cancel ${list}"
+    if [ "$1" != "help" ]; then
+        # This branch is intended to be taken first.  In order to
+        # reduce manual keystrokes, the Return key is pressed
+        # automatically after three or four seconds.
+        ( sleep $commandtimeout && \
+              pgrep -c -f "dmenu -b -fn pango:DejaVu Sans 11 -p Command:" && \
+              xdotool key Return) &
+        # The menu is kept short because of the timeout. The user is
+        # expected to type commands, but menu help is available.
+        # You may prefer these menu items in the opposite order.
+        list="cancel help"
+    else
+        # This branch is taken after choosing help. The menu is
+        # displayed with a command list and does not timeout.
+        list=$(egrep "\([a-zA-Z][a-zA-Z0-9]\)$" "$0" | sort | sed 's/[ ()]//g')
+        list="cancel ${list}"
+    fi
     # Numpad enters digits.
     numlockx on
     cmd=$(echo "${list}" | sed 's/\ /\n/g' | \
                  dmenu -b -fn 'pango:DejaVu Sans 11' -p 'Command: ')
-    if [ "${cmd}" != "cancel" ]; then
+    if [ "${cmd}" = "cancel" ]; then
+        numlockx off
+    elif [ "${cmd}" = "help" ]; then
+        numlockx off
+        dashp "help"
+    else
+        numlockx off
         echo "${cmd}" | tee "${dir}/${file}"
     fi
-    numlockx off
 }
 
 #
