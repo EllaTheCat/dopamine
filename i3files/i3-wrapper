@@ -225,11 +225,8 @@ i3lowerlower()
         i3-msg "workspace $1"
         if [ "${tws}" -eq 0 ]; then
             i3terminal
-            split v
             i3terminal
-            split h
             i3terminal
-            move left
         fi
     fi
 }
@@ -309,6 +306,10 @@ i3programs ()
         (em)
         i3-msg "exec emacsclient.emacs24 -c" ;;
 
+        # Emacs buffer for the results of speech to text (AutoVoice).
+        (av)
+        i3av ;;
+
         # Chrome windows.
         # Use 'gc' to add another window alongside an existing one.
         (g[0-9])
@@ -319,18 +320,20 @@ i3programs ()
         # 1. Terminal in the current workspace. Split is top-bottom.
         # 2. Terminal in the current workspace. Split is left-right.
         # 3. Two half height terminals to the right of e.g. Emacs.
-        # 4. Assign a unique mark. Fix missing marks.
         (tt)
         i3tt ;;
         (yy)
         i3yy ;;
         (ty)
         i3tt && i3yy ;;
+
+        # Dropdown terminal.
+        (dd)
+        i3dd ;;
+
+        # Assign a unique mark. Fix missing marks.
         (um)
         i3um ;;
-
-        (av)
-        i3av ;;
 
         (ff)
         focus instance Navigator 'ff' ${cmon} firefox ;;
@@ -379,21 +382,14 @@ i3programs ()
         (wc)
         cheese ;;
 
-        # Dropdown terminal.
-        (dd)
-        i3dd ;;
-        # Move focus to another output.
-        (op)
-        i3op ;;
-
         ([a-z][a-z])
-        # Create the eponymous workspace and launch a terminal there
-        # if neither exists, otherwise visit the workspace.
+        # Visit the eponymous workspace if it exists, otherwise create
+        # the workspace and launch three side-by-side terminals there.
         i3lowerlower "$1" ;;
 
         ([0][0-9][0-9])
         # Swap this container with the matching marked container.
-        # On the numpad, behave as if the prompt as a double-tap.
+        # On the numpad, behave as if the prompt were a double-tap.
         arg="${1:1:2}"
         i3-msg "swap container with mark ${arg}" ;;
 

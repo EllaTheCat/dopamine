@@ -469,6 +469,7 @@ assign [instance="gl" class="mpv"]  mp
 assign [title="VLC media player$"] vp
 assign [title="Meld$"] md
 assign [instance="wireshark"]  ws
+assign [title="DVB Inspector"] di
 
 # Windows that look'n'feel better when floating.
 for_window [instance="dtvkit"] floating enable;
