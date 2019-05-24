@@ -39,7 +39,7 @@ setdisplay ()
         # Turn monitors on and off.
         (menu)
         mflag=$(cat "/dev/shm/$USER/mflag")
-        list="left on\nleft off\nmiddle on\nmiddle off\nright on\nright off"
+        list="left on\nleft off\nmiddle on\nmiddle off\nright on\nright off\nhdmi off\nhdmi on\n"
         item=$(echo -e "cancel\n${list}" | dmenu -b -fn 'pango:DejaVu Sans 11' -m "${mflag}" -p 'Monitors: ')
         [ "${item}" != "cancel" ] && eval "$0 ${item/ /}"  # "a b" => "ab"
         ;;
@@ -58,7 +58,8 @@ setdisplay ()
         xrandr --output "${cmon}" --brightness 1.0
         ;;
         (middleoff)
-        echo 1 > "/dev/shm/$USER/mflag"  # Move the dmenu!
+        # Move the dmenu away from the disabled monitor.
+        echo 1 > "/dev/shm/$USER/mflag"
         xrandr --output "${cmon}" --off
         ;;
         (righton)
@@ -69,6 +70,14 @@ setdisplay ()
         (rightoff)
         echo 0 > "/dev/shm/$USER/mflag"
         xrandr --output "${rmon}" --off
+        ;;
+        (hdmioff)
+        # To switch back to i3 requires that HDMI input is disabled.
+        # This command is specific to a Raspberry Pi on HDMI input.
+        ssh siro vcgencmd display_power 0
+        ;;
+        (hdmion)
+        ssh siro vcgencmd display_power 1
         ;;
     esac
 }
