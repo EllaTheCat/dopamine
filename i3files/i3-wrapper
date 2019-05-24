@@ -312,8 +312,13 @@ i3programs ()
 
         # Chrome windows.
         # Use 'gc' to add another window alongside an existing one.
-        (g[0-9])
-        i3emgc "$1" 'chrome' 'google-chrome' 'google-chrome --new-window' ;;
+        # Web content (reddit? ads?) causes 25C temperature rises!
+        (g[0-7])
+        i3emgc "$1" 'chrome' 'google-chrome' \
+               'cpulimit -l 50 -- google-chrome --new-window' ;;
+        (g[8-9])
+        i3emgc "$1" 'chrome' 'google-chrome' \
+               ' google-chrome --new-window' ;;  # no cpulimit
         (gc)
         i3-msg "exec google-chrome --new-window" ;;
 
