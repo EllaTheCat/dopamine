@@ -329,8 +329,7 @@ mode "Secondary" {
 
     # Benq DVI and HDMI auto-switching to save wear & tear.
     # https://raspberrypi.stackexchange.com/a/53267
-    # Restores default mode itself before switching.
-    bindsym p $i3display menu
+    bindsym p $default, $i3display menu
 
     # Command prompt.
     bindsym Tab $default, $i3wrapper -p
@@ -362,8 +361,8 @@ mode "Secondary" {
     # my setup doesn't enforce this (when watching TV).
     bindsym c $default, exec --no-startup-id keyclick
 
-    bindsym v $default, $secondarynop
-    bindsym b $default, $secondarynop
+    bindsym v $default,$i3mouse window
+    bindsym b $default,$i3mouse desktop
 
     # Desktop background.
     bindsym n $default, exec --no-startup-id nitrogen --restore
@@ -539,6 +538,13 @@ focus_wrapping force
 # 51' is mapped to Return to mimic the geometry of the US keyboard.
 # Stuck modifiers are cleared.
 $i3keyboard
+
+# Mouse warping default (see key bindings).
+$i3mouse window
+
+# Microphones' defaults (see key bindings). 1 = mute here.
+exec --no-startup-id pactl set-source-mute $analogaudiosource 1
+exec --no-startup-id pactl set-source-mute $webcamaudiosource 1
 
 # Put the "i3-nagbar" on the primary monitor.
 exec --no-startup-id xrandr --output $cmon --primary &
