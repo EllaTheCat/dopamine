@@ -232,6 +232,11 @@ function fingerprint
     ssh-keygen -lf $1 -E md5
 }
 
+function vp
+{
+    command vlc "$@" && sudo cpulimit -p $(pidof vlc) -l 200
+}
+
 ################################################################
 
 source tsduck-environment
