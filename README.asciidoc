@@ -65,6 +65,7 @@ the KP_Insert set for navigation.
 The arithmetic operators and KP_Enter are unaffected by NumLock.
 Here's what currently (2019-04) works for me:
 
+----
 bindsym KP_Left focus left
 bindsym KP_Right focus right
 bindsym KP_Home focus output $lmon
@@ -75,15 +76,18 @@ bindsym KP_Down move down
 bindsym KP_Begin move up
 bindsym KP_Next move right
 bindsym KP_Delete $defaultnop
+----
 
 === Arrows
 Using the numpad for focus hasn't worked as well as anticipated.
 Here's what currently (2019-04) works for me, and yes, it uses modifiers:
 
+----
 bindsym $i3arrowmodifier+Left focus left
 bindsym $i3arrowmodifier+Down focus down
 bindsym $i3arrowmodifier+Up focus up
 bindsym $i3arrowmodifier+Right focus right
+----
 
 === i3 modes
 There are now only three i3 modes: the default mode, the Primary mode, and the Secondary mode.
@@ -106,39 +110,39 @@ Entering "tt" launches a terminal, for example. Pressing backslash instead of Ta
 is slightly easier with a UK keyboard.
 
 Pressing KP_Insert shows the same dmenu. The numpad reconfigures to
-supply the numbers on keys KP_0 KP_1 ... KP_8 KP_9. Entering 3 digit
+supply the numbers on keys KP_0 KP_1 ... KP_8 KP_9. Entering 2 or 3 digit
 commands is easier via the numpad, even with my right hand tremor,
-probably due to the compact arrangement of the digits. There is just enough time
-to enter three digits before automatic evaluation as before.
+probably due to the compact arrangement of the digits.
 
 Commands are a hangover from a past attempt to make a mouse-heavy
 window manager keyboard-operable. The concept was to either launch a
 program or switch to a running instance.
 This is explained in more detail in subsection "Launch or Focus" in section "i3-wrapper".
 
+=== Numeric Commands
+In the past nine months I have experimented with assigning numbers to commands,
+which sounds promiising (the "teletext argument") but fails in practice. Dopamine is
+as much about evaluating what doesn't work as it is about what works!
+
+=== Hybrid Commands
+These are the ten Emacs frame (window) commands e[0-9], and
+the ten Google Chrome commands g[0-9].
+They are discussed in more detail in the section "Launch or Focus".
+
+== Marks
+
 === Numeric Marks
 Whenever a terminal, emacs frame, or google chrome window is created,
 a unique two digit mark is allocated and displayed on the right side of the titlebar.
 The quick-and-dirty implementation of mark assignment risks failing to terminate
 when the number of marked containers approaches 100.
-i3 has a goto-mark function bound to the 3 digit sequence 0[0-9][0-9] and a
-swap-container-with-mark function bound to the 3 digit sequence 5[0-9][0-9].
+i3 has a goto-mark function bound to the 2 digit sequence [0-9][0-9] and a
+swap-container-with-mark function bound to the 3 digit sequence 0[0-9][0-9].
 Exchanging marks can make rearranging windows easier than relying upon
 the conventional incremental movement of focus or windows alone.
 
-=== Numeric Commands
-The support for marks is the only use of purely numeric commands.
-In the past nine months I have experimented with assigning numbers to commands,
-which sounds promiising (the "teletext argument") but fails in practice.
-Failures are why some features of "dopamine" seem to have little or weak justification.
-
-=== Hybrid Marks
-These are the ten Emacs frame (window) marks e[0-9], and
-these are the ten Google Chrome marks g[0-9].
-They are discussed in more detail in the section "Launch or Focus".
-
 === Single Letter Marks
-In addition to a two character mark matching "[eg0-9][0-9]",
+In addition to a two character mark matching "[0-9][0-9]",
 a single letter mark can be added or removed independently.
 There are ten such marks, which are set in Primary mode by keys 1,2,...,9,0,
 and cleared by the same keys in Secondary mode.
