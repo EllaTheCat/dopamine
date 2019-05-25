@@ -238,9 +238,9 @@ mode "Primary" {
         -P '(move container to workspace): ' \
         -F 'move container to workspace "%s"'
 
-    bindsym comma $primarynop
-    bindsym period $primarynop
-    bindsym slash $primarynop
+    bindsym comma $default, [title="AutoVoice Options"] focus
+    bindsym period $default, move container to workspace AutoVoice
+    bindsym slash $default, workspace AutoVoice
 
     # Control-*-Delete is a design decision please do not change.
     bindsym Control+Mod1+Delete $default,kill

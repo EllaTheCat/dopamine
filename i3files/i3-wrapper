@@ -121,20 +121,6 @@ i3yy()
 }
 
 #
-# AutoVoice.
-#
-i3av()
-{
-    if [ "$(i3-msg -t get_workspaces | jq 'map(.name)' | grep -c 'AutoVoice')" -eq 0 ]; then
-        i3-msg "workspace AutoVoice"
-        sleep 0.7
-        i3-msg "exec emacsclient.emacs24 -c  -e '(switch-to-buffer \"AutoVoice\")'"
-    else
-        i3-msg "workspace AutoVoice"
-    fi
-}
-
-#
 # Assign a unique mark.
 #
 i3um()
@@ -404,11 +390,8 @@ i3programs ()
         arg="${1:0:2}"
         i3-msg "[con_mark=\"${arg}\"] focus" ;;
 
-        (:undo:)
-        emacsclient.emacs24 -e "(with-current-buffer \"AutoVoice\" (undo))"
-        echo "$1" ;;
-        (:reject:)
-        emacsclient.emacs24 -e "(with-current-buffer \"AutoVoice\" (previous-line)(kill-line))"
+        (:delete\ line:)
+        emacsclient.emacs24 -e "(with-current-buffer \"AutoVoice\" (end-of-buffer)(previous-line)(kill-line)(kill-line))"
         echo "$1" ;;
 
         ([A-Z]*)
