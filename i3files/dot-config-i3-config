@@ -540,7 +540,7 @@ focus_wrapping force
 $i3keyboard
 
 # Mouse warping default (see key bindings).
-$i3mouse window
+$i3mouse desktop
 
 # Microphones' defaults (see key bindings). 1 = mute here.
 exec --no-startup-id pactl set-source-mute $analogaudiosource 1
