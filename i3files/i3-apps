@@ -3,11 +3,8 @@
 # A script to start|stop various programs.
 #
 
+# My primary monitor, situated centrally.
 cmon=HDMI1
-# shellcheck disable=2034
-lmon=HDMI2
-# shellcheck disable=2034
-rmon=VGA1
 
 #
 # Start here.
@@ -197,17 +194,17 @@ do
         # Ensure the dialog appears on the primary monitor.
         # The watchers must be started first, the rest are optional.
         if  [ "_${verb}" = "_start" ]; then
-            i3-msg "focus output HDMI1"
+            i3-msg "focus output ${cmon}"
             xdotool mousemove --sync --clearmodifiers 2880 384; sleep 1
-            yad --title="Starting ..." --mouse --timeout=10 --timeout-indicator=top
+            yad --title="Starting in 10s ..." --mouse --timeout=10 --timeout-indicator=top
             if  [ "$?" -ne 1 ]; then
                 eval "$0 start filewatcher focuswatcher tvheadend dropbox synergy siro workspaces wallpaper"
             fi
         fi
         if  [ "_${verb}" = "_stop" ]; then
-            i3-msg "focus output HDMI1"
+            i3-msg "focus output ${cmon}"
             xdotool mousemove --sync --clearmodifiers 2880 384; sleep 1
-            yad --title="Stopping ..." --mouse --timeout=10 --timeout-indicator=top
+            yad --title="Stopping in 10s ..." --mouse --timeout=10 --timeout-indicator=top
             if  [ "$?" -ne 1 ]; then
                 eval "$0 stop VirtualBox"
                 eval "$0 stop emacs firefox chrome thunderbird"
@@ -217,9 +214,9 @@ do
                 eval "$0 stop filewatcher"
                 # To prevent spinning down the USB disks the only way
                 # is to press cancel before the short timeout expires.
-                i3-msg "focus output HDMI1"
+                i3-msg "focus output ${cmon}"
                 xdotool mousemove --sync --clearmodifiers 2880 384; sleep 1
-                yad --title="Spindown ..." --mouse --timeout=10 --timeout-indicator=top
+                yad --title="Spindown in 10s ..." --mouse --timeout=10 --timeout-indicator=top
                 if  [ "$?" -ne 1 ]; then
                     eval "$0 stop usbdisks"
                 fi
