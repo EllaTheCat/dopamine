@@ -190,9 +190,13 @@ i3ctm()
 #
 # Add a terminal and assign a mark (subroutine).
 #
+# Uses xcwd to change to the working directory of the currently
+# focused window: 'https://github.com/schischi/xcwd'.
+#
 i3terminal ()
 {
-    xfce4-terminal -T "xfce4-terminal" &
+    wd="$(xcwd)"
+    xfce4-terminal -T "xfce4-terminal" --working-directory "${wd}" &
     sleep 0.3 && i3um  # Assign a unique mark.
 }
 
