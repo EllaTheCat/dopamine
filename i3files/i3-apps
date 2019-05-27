@@ -52,7 +52,7 @@ do
         if [ "$(pgrep -c dropbox)" -eq 0 ]; then
            if [ "_${verb}" = "_start" ]; then
                # Dropbox needs to be launched with dbus.
-               dbus-launch dropbox start -i
+               (dbus-launch dropbox start -i) &
            fi
         fi
         ;;
@@ -66,7 +66,7 @@ do
         fi
         if [ "$(pgrep -c synergy)" -eq 0 ]; then
             if [ "_${verb}" = "_start" ]; then
-                synergy &
+                (synergy) &
             fi
         fi
         ;;
@@ -88,9 +88,9 @@ do
 
         (siro)
         if  [ "_${verb}" = "_stop" ]; then
-            ssh siro vcgencmd display_power 0
+            (ssh siro vcgencmd display_power 0) &
         else
-            ssh siro vcgencmd display_power 1
+            (ssh siro vcgencmd display_power 1) &
         fi
         ;;
 
