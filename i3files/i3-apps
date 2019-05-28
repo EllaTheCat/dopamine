@@ -2,6 +2,9 @@
 #
 # A script to start|stop various programs.
 #
+# - Attention bash gurus!
+# - Please tell me if using bash subshells here makes sense or not.
+#
 
 # My primary monitor, situated centrally.
 cmon=HDMI1
@@ -27,6 +30,7 @@ do
         fi
         if [ "_${verb}" = "_start" ]; then
             path=$(dirname "$0")
+            # Is the eval required?
             (eval "${path}/i3-wrapper --file-watcher") &
         fi
         ;;
@@ -38,6 +42,7 @@ do
         fi
         if [ "_${verb}" = "_start" ]; then
             path=$(dirname "$0")
+            # Is the eval required?
             (eval "${path}/i3-wrapper --focus-watcher") &
         fi
         ;;
