@@ -371,7 +371,7 @@ i3programs ()
         (sg)
         xfce4-screenshooter -d 2 ;;
         (wc)
-        cheese ;;
+        cheese >/dev/null 2>&1 ;;
 
         ([a-z][a-z])
         # Visit the eponymous workspace if it exists, otherwise create
