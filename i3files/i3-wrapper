@@ -202,7 +202,7 @@ i3terminal ()
 # the command alias. Inspired by:
 # https://www.reddit.com/r/i3wm/comments/bjw151/i3_reading_window/
 #
-i3lowerlower()
+i3_triple_terminal_workspace()
 {
     cws=$(i3-msg -t get_workspaces | jq '.[] | .name,.focused' | \
                  grep true -B1 | grep -v true)
@@ -282,13 +282,25 @@ i3tem()
 #
 i3programs ()
 {
-    # Try all subroutines irrespective of which one might contain
-    # a match. KISS: Optimisations can wait.
-    i3_lower_digit "$@"
-    i3_lower_lower "$@"
-    i3_digit_digits "$@"
-    i3_sentence "$@"
-    i3_generic "$@"
+    # KISS: Optimisations can wait.
+    case "$1" in
+        ([a-z][0-9])
+        i3_lower_digit "$@"
+        ;;
+        ([a-z][a-z])
+        i3_lower_lower_easy "$@"
+        i3_lower_lower_hard "$@"
+        ;;
+        ([0-9]*)
+        i3_digit_digits "$@"
+        ;;
+        ([A-Z]*)
+        i3_sentence "$@"
+        ;;
+        (:*)
+        i3_generic "$@"
+        ;;
+    esac
 }
 
 i3_lower_digit()
@@ -299,8 +311,6 @@ i3_lower_digit()
         # Use 'em' to add another frame alongside an existing one.
         ([em][0-9])
         i3emgc "$1" 'emacs24' 'emacs24 -rv' 'emacsclient.emacs24 -c' ;;
-        (em)
-        i3-msg "exec emacsclient.emacs24 -c" ;;
 
         # Chrome windows.
         # Use 'gc' to add another window alongside an existing one.
@@ -311,32 +321,12 @@ i3_lower_digit()
         (g[8-9])
         i3emgc "$1" 'chrome' 'google-chrome' \
                ' google-chrome --new-window' ;;  # no cpulimit
-        (gc)
-        i3-msg "exec google-chrome --new-window" ;;
     esac
 }
 
-i3_lower_lower()
+i3_lower_lower_easy()
 {
     case "$1" in
-        # 1. Terminal in the current workspace. Split is top-bottom.
-        # 2. Terminal in the current workspace. Split is left-right.
-        # 3. Two half height terminals to the right of e.g. Emacs.
-        (tt)
-        i3tt ;;
-        (yy)
-        i3yy ;;
-        (ty)
-        i3tt && i3yy ;;
-
-        # Dropdown terminal.
-        (dd)
-        i3dd ;;
-
-        # Assign a unique mark. Fix missing marks.
-        (um)
-        i3um ;;
-
         (ff)
         focus instance Navigator 'ff' ${cmon} firefox ;;
         (tb)
@@ -366,9 +356,10 @@ i3_lower_lower()
         focus title "LibreOffice Writer"  'ww' 'none'   libreoffice --writer ;;
 
         (fp)
-        focus class ffplay 'fp' ;;
+        focus class ffplay 'fp' ;;    # launched by command line.
         (mp)
-        focus class mpv 'mp' ;;
+        focus class mpv 'mp' ;;   # launched by 'tvheadend'.
+
         (vp)
         focus instance vlc 'vp' ${lmon} /snap/bin/vlc ;;
         (hb)
@@ -378,20 +369,49 @@ i3_lower_lower()
 
         (vb)
         focus title 'Oracle VM VirtualBox' 'vb' ${cmon} virtualbox ;;
+    esac
+}
+
+#
+# These commands don't quite follow the focus-else-launch pattern of
+# the commands designated 'easy'.
+i3_lower_lower_hard()
+{
+    case "$1" in
+        (em)
+        i3-msg "exec emacsclient.emacs24 -c" ;;
+        (gc)
+        i3-msg "exec google-chrome --new-window" ;;
+
+        (wc)
+        # Launch unconditionally. Something here isn't quite right.
+        eval cheese >/dev/null 2>&1 ;;
+
+        # 1. Terminal in the current workspace. Split is top-bottom.
+        # 2. Terminal in the current workspace. Split is left-right.
+        # 3. Two half height terminals to the right of e.g. Emacs.
+        (tt)
+        i3tt ;;
+        (yy)
+        i3yy ;;
+        (ty)
+        i3tt && i3yy ;;
+
+        # Dropdown terminal.
+        (dd)
+        i3dd ;;
+
+        # Assign a unique mark. Fix missing marks.
+        (um)
+        i3um ;;
 
         (sg)
         xfce4-screenshooter -d 2 ;;
-        (wc)
-        cheese >/dev/null 2>&1 ;;
-
-        (em|gc)
-        # These are in another block. Take a look there to see why.
-        false ;;
 
         ([a-z][a-z])
         # Visit the eponymous workspace if it exists, otherwise create
         # the workspace and launch three side-by-side terminals there.
-        i3lowerlower "$1" ;;
+        i3_triple_terminal_workspace "$1" ;;
     esac
 }
 
