@@ -274,6 +274,24 @@ i3tem()
     esac
 }
 
+#
+# AutoVoice workspace.
+#
+# Switch to an existing AutoVoice workspace, which may be empty, or
+# create and populate an AutoVoice workspace if none exists.
+#
+i3av()
+{
+    if [ "$(i3-msg -t get_workspaces | jq '.[] | .name' | grep -c '"av"')" -eq 1 ]; then
+        i3-msg "workspace av"
+    else
+        # https://emacs.stackexchange.com/questions/3463/
+        # open-a-frame-for-the-first-time-using-emacsclient-c-showing-other-buffer-th
+        i3-msg "focus output ${rmon}, workspace av"
+        i3-msg "exec emacsclient.emacs24 -c -e '(switch-to-buffer \"AutoVoice\")'"
+        i3-msg "exec google-chrome --new-window --url \"chrome-extension://mefllcpfdfhohmeadieejdjcdcbibeml/options.html\""
+    fi
+    }
 
 #
 # 1. Common programs with examples of how to integrate them.
@@ -404,6 +422,10 @@ i3_lower_lower_hard()
         # Assign a unique mark. Fix missing marks.
         (um)
         i3um ;;
+
+        # AutoVoice workspace.
+        (av)
+        i3av ;;
 
         (sg)
         xfce4-screenshooter -d 2 ;;
