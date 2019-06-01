@@ -320,7 +320,7 @@ i3programs ()
         ([A-Z]*)
         i3_sentence "$@"
         ;;
-        (:*)
+        (*)
         i3_generic "$@"
         ;;
     esac
@@ -486,18 +486,47 @@ i3_sentence()
 
 i3_generic()
 {
-    case "$1" in
-        # Editor commands. Colon prefix and colon suffix.
-        (:delete\ line:)
-        emacsclient.emacs24 -e "(with-current-buffer \"AutoVoice\" (end-of-buffer)(previous-line)(kill-line)(kill-line))"
-        echo "$1" ;;
-
-        (:*)
-        # Shell commands. Colon prefix but no colon suffix.
-        # This is not a default case!
+    # A command sent from tasker is a single string that may contain
+    # spaces, passed entirely within the "$1" parameter,
+    arr=($1)
+    group=${arr[0]}
+    verb=${arr[1]} ;  this=${arr[2]} ; that=${arr[3]}
+    case "${group}" in
+        # Window Management commands.
+        (i3|wm)
+        case "${verb}" in
+            (visit)
+            i3wm_visit "$that" ;;
+            (move)
+            i3wm_move "$this" "$that" ;;
+            (swap)
+            i3wm_swap "$this" "$that" ;;
+        esac
+        ;;
+        (shell)
+        # Shell commands.
         # Security relies on using ssh to access ${dir}/${file}.
-        (eval "${1/:/} ${*:2}") & ;;
+        (eval "${1/shell\ //}") &
+        ;;
     esac
+}
+
+i3wm_visit ()
+{
+    that=$1
+    echo "visit $this $that" | dmenu -b -fn 'pango:DejaVu Sans 11'
+}
+
+i3wm_move ()
+{
+   this=$1; that=$2
+   echo "move $this $that" | dmenu -b -fn 'pango:DejaVu Sans 11'
+}
+
+i3wm_swap ()
+{
+    this=$1; that=$2
+    echo "swap $this $that" | dmenu -b -fn 'pango:DejaVu Sans 11'
 }
 
 #
