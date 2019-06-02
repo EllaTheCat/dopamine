@@ -73,7 +73,7 @@ focus ()
                 i3-msg "move workspace to output $4"
                 ;;
             esac
-            sleep 1; i3um  # Assign a unique mark.
+            sleep 1; i3_unique_mark
         fi
     else
         # Focus the program i.
@@ -123,7 +123,7 @@ i3yy()
 #
 # Assign a unique mark.
 #
-i3um()
+i3_unique_mark()
 {
     # Generate a random 2 digit mark.  Reject and retry if it matches
     # an assigned mark. The retry loop takes more time as the number
@@ -147,7 +147,7 @@ i3um()
 #  - There are two circular paths of length 3 and one of length 4
 #    for a total of 10 marks: (A,B,C) (R,S,T) (W,X,Y,Z).
 #
-i3ctm()
+i3_cycle_marks()
 {
     # Determine the single letter mark for the currently focused window.
     # Thanks to  u/jimbopouliot on r/i3wm (reddit) for 'jq' improvement.
@@ -193,7 +193,7 @@ i3ctm()
 i3terminal ()
 {
     xfce4-terminal -T "xfce4-terminal" &
-    sleep 0.3 && i3um  # Assign a unique mark.
+    sleep 0.3 && i3_unique_mark
 }
 
 #
@@ -256,7 +256,7 @@ i3emgc ()
 #
 # - The popup dialog is is a hack to trigger the focus watcher.
 #
-i3tem()
+i3_toggle_emacs_mouse()
 {
     cws="$(i3-msg -t get_workspaces | jq '.[] | .name,.focused' | \
                  grep true -B1 | grep -v true)"
@@ -275,12 +275,10 @@ i3tem()
 }
 
 #
-# AutoVoice workspace.
-#
 # Switch to an existing AutoVoice workspace, which may be empty, or
 # create and populate an AutoVoice workspace if none exists.
 #
-i3av()
+i3_autovoice_workspace ()
 {
     if [ "$(i3-msg -t get_workspaces | jq '.[] | .name' | grep -c '"av"')" -eq 1 ]; then
         i3-msg "workspace av"
@@ -320,7 +318,7 @@ i3programs ()
         ([A-Z]*)
         i3_sentence "$@"
         ;;
-        (*)
+        (:*)
         i3_generic "$@"
         ;;
     esac
@@ -420,17 +418,14 @@ i3_lower_lower_hard()
         (ty)
         i3tt && i3yy ;;
 
-        # Dropdown terminal.
         (dd)
         i3dd ;;
 
-        # Assign a unique mark. Fix missing marks.
         (um)
-        i3um ;;
+        i3_unique_mark ;;
 
-        # AutoVoice workspace.
         (av)
-        i3av ;;
+        i3_autovoice_workspace  ;;
 
         (sg)
         xfce4-screenshooter -d 2 ;;
@@ -493,17 +488,15 @@ i3_generic()
     verb=${arr[1]} ;  this=${arr[2]} ; that=${arr[3]}
     case "${group}" in
         # Window Management commands.
-        (i3|wm)
+        (:i3|:wm)
         case "${verb}" in
             (visit)
-            i3wm_visit "$that" ;;
+            i3wm_visit  none "$that" ;;
             (move)
             i3wm_move "$this" "$that" ;;
-            (swap)
-            i3wm_swap "$this" "$that" ;;
         esac
         ;;
-        (shell)
+        (:shell)
         # Shell commands.
         # Security relies on using ssh to access ${dir}/${file}.
         (eval "${1/shell\ //}") &
@@ -513,20 +506,27 @@ i3_generic()
 
 i3wm_visit ()
 {
-    that=$1
-    echo "visit $this $that" | dmenu -b -fn 'pango:DejaVu Sans 11'
+    if [ "$(i3-msg -t get_workspaces | jq '.[] | .name' | grep -c "${that}")" -eq 1 ]; then
+        i3-msg "workspace \"${that}\""
+    else
+        i3-msg "[con_mark=\"${that}\"] focus"
+    fi
 }
 
 i3wm_move ()
 {
-   this=$1; that=$2
-   echo "move $this $that" | dmenu -b -fn 'pango:DejaVu Sans 11'
-}
-
-i3wm_swap ()
-{
     this=$1; that=$2
-    echo "swap $this $that" | dmenu -b -fn 'pango:DejaVu Sans 11'
+
+    if [ "$(i3-msg -t get_workspaces | jq '.[] | .name' | grep -c "${that}")" -eq 1 ]; then
+        i3-msg "[con_mark=\"${this}\"] focus"
+        i3-msg "move container to workspace \"${that}\""
+        i3-msg "workspace \"${that}\""
+    fi
+    if [ "$(i3-msg -t get_marks | grep -c "$that")" -eq 1 ]; then
+        i3-msg "[con_mark=\"${this}\"] focus"
+        i3-msg "swap container with mark \"${that}\""
+        i3-msg "[con_mark=\"${this}\"] focus"
+    fi
 }
 
 #
@@ -569,7 +569,7 @@ i3filewatcher ()
         inotify-hookable \
         --watch-files "${dir}/${file}" \
         --on-modify-command "$0 -s" &
-    sleep 1 && i3um  # Assign a unique mark.
+    sleep 1 && i3_unique_mark
 }
 
 #
@@ -668,9 +668,9 @@ case ${XDG_CURRENT_DESKTOP} in
         # Verbosity over obscurity, not enough single letters.
         (--file-watcher) i3filewatcher ;;
         (--focus-watcher)  i3focuswatcher ;;
-        (--toggle-emacs-mouse) i3tem ;;
-        (--cycle-through-marks) i3ctm ;;
-        (--unique-mark) i3um ;;
+        (--toggle-emacs-mouse) i3_toggle_emacs_mouse ;;
+        (--cycle-through-marks) i3_cycle_marks ;;
+        (--unique-mark) i3_unique_mark ;;
 
         (--keyboard-binding-info) i3kb ;;
         # In production, do nothing here?
