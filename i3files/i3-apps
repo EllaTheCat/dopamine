@@ -102,7 +102,9 @@ do
         (workspaces)
         # A subroutine to be called during i3 startup.
         # Rename any remaining empty workspaces.
-        i3-msg "focus output \"${cmon}\", rename workspace to \"${cmon}\""
+        if  [ "_${verb}" = "_start" ]; then
+            i3-msg "focus output \"${cmon}\", rename workspace to \"${cmon}\""
+        fi
         ;;
 
         (wallpaper)
@@ -121,6 +123,17 @@ do
             text="Mouse right click the i3 status bar to show these texts again. The URL is available on the clipboard."
             text="${text} Photo is cropped 5760x1080."
             echo "${text}" | dmenu -b -fn 'pango:DejaVu Sans 11'
+        fi
+        ;;
+
+        (usbdisks)
+        # Spin down USB HDDs.
+        if  [ "_${verb}" = "_start" ] || [ "_${verb}" = "_stop" ]; then
+            sudo umount /snapdisks/banana
+            sudo umount /snapdisks/tabasco
+            sleep 3
+            sudo hd-idle -t sdd  # banana
+            sudo hd-idle -t sdc  # tabasco
         fi
         ;;
 
@@ -178,21 +191,6 @@ do
         fi
         ;;
 
-        (usbdisks)
-        # Spin down USB HDDs.
-        #
-        # Do this after anything else done in this module followed
-        # only by logout and shutdown to ensure no disk spins up
-        # unrequested.
-        if  [ "_${verb}" = "_stop" ]; then
-            sudo umount /snapdisks/banana
-            sudo umount /snapdisks/tabasco
-            sleep 3
-            sudo hd-idle -t sdd  # banana
-            sudo hd-idle -t sdc  # tabasco
-        fi
-        ;;
-
         (everything)
         # Safely start or stop everything listed in proper sequence.
         # To proceed press OK or wait for the short timeout to expire.
@@ -203,7 +201,8 @@ do
             xdotool mousemove --sync --clearmodifiers 2880 384; sleep 1
             yad --title="Starting in 10s ..." --mouse --timeout=10 --timeout-indicator=top
             if  [ "$?" -ne 1 ]; then
-                eval "$0 start filewatcher focuswatcher tvheadend dropbox synergy siro workspaces wallpaper"
+                eval "$0 start filewatcher focuswatcher tvheadend dropbox synergy"
+                eval "$0 start siro workspaces wallpaper usbdisks"
             fi
         fi
         if  [ "_${verb}" = "_stop" ]; then
@@ -215,16 +214,8 @@ do
                 eval "$0 stop emacs firefox chrome thunderbird"
                 eval "$0 stop siro synergy dropbox"
                 eval "$0 stop tvheadend marks focuswatcher"
-                # Housekeeping that sweeps things under the rug.
                 eval "$0 stop filewatcher"
-                # To prevent spinning down the USB disks the only way
-                # is to press cancel before the short timeout expires.
-                i3-msg "focus output ${cmon}"
-                xdotool mousemove --sync --clearmodifiers 2880 384; sleep 1
-                yad --title="Spindown in 10s ..." --mouse --timeout=10 --timeout-indicator=top
-                if  [ "$?" -ne 1 ]; then
-                    eval "$0 stop usbdisks"
-                fi
+                eval "$0 stop usbdisks"
             fi
         fi
         ;;
