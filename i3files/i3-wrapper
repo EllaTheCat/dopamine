@@ -287,9 +287,10 @@ i3_autovoice_workspace ()
         # open-a-frame-for-the-first-time-using-emacsclient-c-showing-other-buffer-th
         i3-msg "focus output ${rmon}, workspace av"
         i3-msg "exec emacsclient.emacs24 -c -e '(switch-to-buffer \"AutoVoice\")'"
+        sleep 1 && i3um
         url='chrome-extension://mefllcpfdfhohmeadieejdjcdcbibeml/options.html'
         i3-msg "exec google-chrome --new-window --url ${url}"
-        sleep 1
+        sleep 1 && i3um
         id=$(xdotool search --onlyvisible --title "AutoVoice Options" | head -1)
         xdotool windowactivate "$id"
         xdotool key 'ctrl+r'
