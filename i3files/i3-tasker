@@ -1,0 +1,125 @@
+#!/bin/bash
+#
+
+#
+# See dot-config-i3-config and i3-wrapper.
+#
+lmon=HDMI2
+cmon=HDMI1
+rmon=VGA1
+
+i3_sentence()
+{
+    # Distinguish a sentence by the uppercase first letter. Insert
+    # into both clipboards and then paste into Emacs.
+    echo "${*}" | xclip -selection primary     # mouse button 2
+    echo "${*}" | xclip -selection clipboard   # emacs control y
+    emacsclient.emacs24 -e "(with-current-buffer \"AutoVoice\" (yank))"
+}
+
+i3_generic()
+{
+    group=$1
+    case "${group}" in
+        # Window Management commands.
+        # Use a simple fixed position parameter array.
+        (:i3|:wm)
+        verb=$2
+        this=$3
+        that=$4
+        # Debug # echo "$group $verb $this $that"
+        # Prepend a zero to single digits from Tasker because i3wm
+        # marks must adhere to the regex [0-9][0-9].
+        case "${this}" in
+            ([0-9])
+            this=0${this} ;;
+        esac
+        case "${that}" in
+            ([0-9])
+            that=0${that} ;;
+        esac
+        # Spoken commands resemble English but need not be correct
+        # English. They are designed to be recognisable and to not be
+        # misinterpreted.
+        case "${verb}" in
+            (visit)
+            i3wm_visit "$this" "$that" ;;
+            (move)
+            i3wm_move "$this" "$that" ;;
+        esac
+        ;;
+    esac
+}
+
+#
+# Visit "that" window or workspace, "that" must exist. Ignore "this"
+# dummy parameter.
+#
+i3wm_visit ()
+{
+    this=$1; that=$2
+    if [ "$(i3-msg -t get_marks | grep -c "${that}")" -eq 1 ]; then
+        # Visit "that"  window
+        i3-msg "[con_mark=\"${that}\"] focus"
+    elif [ "$(i3-msg -t get_workspaces | jq '.[] | .name' | grep -c "${that}")" -eq 1 ]; then
+        # Visit "that" workspace .
+        i3-msg "workspace \"${that}\""
+    else
+        echo "Can't find ${that}" | dmenu -b -fn 'pango:DejaVu Sans 11'
+    fi
+}
+
+#
+# Move "this" window or workspace to "that" window or workspace or
+# output, "this" and "that" must exist.
+#
+i3wm_move ()
+{
+    this=$1; that=$2
+    if [ "$(i3-msg -t get_marks | grep -c "$this")" -eq 1 ] && \
+           [ "$(i3-msg -t get_marks | grep -c "$that")" -eq 1 ];  then
+        # Move "this" window by swapping places with "that" window.
+        i3-msg "[con_mark=\"${this}\"] focus"
+        i3-msg "swap container with mark \"${that}\""
+        i3-msg "[con_mark=\"${this}\"] focus"
+    elif [ "$(i3-msg -t get_marks | grep -c "$this")" -eq 1 ] && \
+             [ "$(i3-msg -t get_workspaces | jq '.[] | .name' | grep -c "${that}")" -eq 1 ]; then
+        # Move "this" window to "that" workspace.
+        i3-msg "[con_mark=\"${this}\"] focus"
+        i3-msg "move container to workspace \"${that}\""
+        i3-msg "workspace \"${that}\""
+    elif [ "$(i3-msg -t get_marks | grep -c "$this")" -eq 1 ]; then
+       # Move "this" window to "that" (logically named) output.
+         i3-msg "[con_mark=\"${this}\"] focus"
+         case "${that}" in
+             (left)
+             i3-msg "move container to output ${lmon}" ;;
+             (middle|cent*)
+             i3-msg "move container to output ${cmon}" ;;
+             (right)
+             i3-msg "move container to output ${rmon}" ;;
+         esac
+    elif [ "$(i3-msg -t get_workspaces | jq '.[] | .name' | grep -c "${this}")" -eq 1 ]; then
+        # Move "this" workspace to "that" (logically named) output.
+        case "${that}" in
+            (left)
+            i3-msg "move workspace ${this} to output ${lmon}" ;;
+            (middle|cent*)
+            i3-msg "move workspace ${this} to output ${cmon}" ;;
+            (right)
+            i3-msg "move workspace ${this} to output ${rmon}" ;;
+        esac
+    else
+        echo "Can't find either ${this} or ${that}" | dmenu -b -fn 'pango:DejaVu Sans 11'
+    fi
+}
+
+#
+# Start here.
+#
+
+eval  "$1" "${@:2}"
+
+#
+# Done.
+#

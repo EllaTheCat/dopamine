@@ -278,6 +278,9 @@ i3_toggle_emacs_mouse()
 # Switch to an existing AutoVoice workspace, which may be empty, or
 # create and populate an AutoVoice workspace if none exists.
 #
+# Here, the user can monitor the speech-to-text results and manage the
+# options for the Chrome AutoVoice extension.
+#
 i3_autovoice_workspace ()
 {
     if [ "$(i3-msg -t get_workspaces | jq '.[] | .name' | grep -c '"av"')" -eq 1 ]; then
@@ -288,6 +291,7 @@ i3_autovoice_workspace ()
         i3-msg "focus output ${rmon}, workspace av"
         i3-msg "exec emacsclient.emacs24 -c -e '(switch-to-buffer \"AutoVoice\")'"
         sleep 1 && i3um
+
         url='chrome-extension://mefllcpfdfhohmeadieejdjcdcbibeml/options.html'
         i3-msg "exec google-chrome --new-window --url ${url}"
         sleep 1 && i3um
@@ -298,29 +302,32 @@ i3_autovoice_workspace ()
 }
 
 #
+# Commands.
+#
 # 1. Common programs with examples of how to integrate them.
 # 2. Terminals, editor, browser, and management of their marks.
 # 3. Support for spoken dictation of sentences.
+# 4. Support for spoken window manager commands.
 #
 i3programs ()
 {
     # KISS: Optimisations can wait.
     case "$1" in
         ([a-z][0-9])
-        i3_lower_digit "$@"
+        i3_lower_digit "$1"
         ;;
         ([a-z][a-z])
-        i3_lower_lower_easy "$@"
-        i3_lower_lower_hard "$@"
+        i3_lower_lower_easy "$1"
+        i3_lower_lower_hard "$1"
         ;;
         ([0-9]*)
-        i3_digit_digits "$@"
+        i3_digit_digits "$1"
         ;;
         ([A-Z]*)
-        i3_sentence "$@"
+        eval "$(dirname "$0")/i3-tasker" 'i3_sentence' "$1"
         ;;
         (:*)
-        i3_generic "$@"
+        eval "$(dirname "$0")/i3-tasker" 'i3_generic' "$*"
         ;;
     esac
 }
@@ -465,69 +472,6 @@ i3_digit_digits()
         arg="${1:0:2}"
         i3-msg "[con_mark=\"${arg}\"] focus" ;;
     esac
-}
-
-i3_sentence()
-{
-    case "$1" in
-        ([A-Z]*)
-        # Distinguish a sentence by the uppercase first letter.
-        # Insert into both clipboards and then paste into Emacs.
-        echo "${*}" | xclip -selection primary     # mouse button 2
-        echo "${*}" | xclip -selection clipboard   # emacs control y
-        emacsclient.emacs24 -e "(with-current-buffer \"AutoVoice\" (yank))"
-        echo "$*" ;;
-    esac
-}
-
-i3_generic()
-{
-    # A command sent from tasker is a single string that may contain
-    # spaces, passed entirely within the "$1" parameter,
-    arr=($1)
-    group=${arr[0]}
-    verb=${arr[1]} ;  this=${arr[2]} ; that=${arr[3]}
-    case "${group}" in
-        # Window Management commands.
-        (:i3|:wm)
-        case "${verb}" in
-            (visit)
-            i3wm_visit  none "$that" ;;
-            (move)
-            i3wm_move "$this" "$that" ;;
-        esac
-        ;;
-        (:shell)
-        # Shell commands.
-        # Security relies on using ssh to access ${dir}/${file}.
-        (eval "${1/shell\ //}") &
-        ;;
-    esac
-}
-
-i3wm_visit ()
-{
-    if [ "$(i3-msg -t get_workspaces | jq '.[] | .name' | grep -c "${that}")" -eq 1 ]; then
-        i3-msg "workspace \"${that}\""
-    else
-        i3-msg "[con_mark=\"${that}\"] focus"
-    fi
-}
-
-i3wm_move ()
-{
-    this=$1; that=$2
-
-    if [ "$(i3-msg -t get_workspaces | jq '.[] | .name' | grep -c "${that}")" -eq 1 ]; then
-        i3-msg "[con_mark=\"${this}\"] focus"
-        i3-msg "move container to workspace \"${that}\""
-        i3-msg "workspace \"${that}\""
-    fi
-    if [ "$(i3-msg -t get_marks | grep -c "$that")" -eq 1 ]; then
-        i3-msg "[con_mark=\"${this}\"] focus"
-        i3-msg "swap container with mark \"${that}\""
-        i3-msg "[con_mark=\"${this}\"] focus"
-    fi
 }
 
 #
