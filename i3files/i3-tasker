@@ -8,6 +8,43 @@ lmon=HDMI2
 cmon=HDMI1
 rmon=VGA1
 
+#
+# Switch to the AutoVoice workspace, populate where necessary.
+#
+# Here, the user can monitor the speech-to-text results and manage the
+# options for the Chrome AutoVoice extension.
+#
+i3_autovoice_workspace ()
+{
+    names=$(i3-msg -t get_tree | sed s/,/,\\n/g | grep name)
+    str0="Emacs : AutoVoice"
+    str1="AutoVoice Options - Google Chrome"
+    count0="$(echo "${names}" | grep -c "${str0}")"
+    count1="$(echo "${names}" | grep -c "${str1}")"
+
+    if  [  "$count0" -eq 1 ] && [  "$count1" -eq 1 ]; then
+        i3-msg "workspace av"
+    else
+        i3-msg "focus output ${rmon},workspace av"
+        sleep 1
+
+        if [ "$count0" -eq 0 ]; then
+            # https://emacs.stackexchange.com/questions/3463/
+            # open-a-frame-for-the-first-time-using-emacsclient-c-showing-other-buffer-th
+            i3-msg "exec emacsclient.emacs24 -c -e '(switch-to-buffer \"AutoVoice\")'"
+            sleep 1 && i3um
+        fi
+        if [ "$count1" -eq 0 ]; then
+            url='chrome-extension://mefllcpfdfhohmeadieejdjcdcbibeml/options.html'
+            i3-msg "exec google-chrome --new-window --url ${url}"
+            sleep 1 && i3um
+            id=$(xdotool search --onlyvisible --title "AutoVoice Options" | head -1)
+            xdotool windowactivate "$id"
+            xdotool key 'ctrl+r'
+        fi
+    fi
+}
+
 i3_sentence()
 {
     # Distinguish a sentence by the uppercase first letter. Insert
@@ -59,7 +96,7 @@ i3wm_visit ()
 {
     this=$1; that=$2
     if [ "$(i3-msg -t get_marks | grep -c "${that}")" -eq 1 ]; then
-        # Visit "that"  window
+        # Visit "that"  window.
         i3-msg "[con_mark=\"${that}\"] focus"
     elif [ "$(i3-msg -t get_workspaces | jq '.[] | .name' | grep -c "${that}")" -eq 1 ]; then
         # Visit "that" workspace .

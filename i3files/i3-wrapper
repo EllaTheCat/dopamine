@@ -275,33 +275,6 @@ i3_toggle_emacs_mouse()
 }
 
 #
-# Switch to an existing AutoVoice workspace, which may be empty, or
-# create and populate an AutoVoice workspace if none exists.
-#
-# Here, the user can monitor the speech-to-text results and manage the
-# options for the Chrome AutoVoice extension.
-#
-i3_autovoice_workspace ()
-{
-    if [ "$(i3-msg -t get_workspaces | jq '.[] | .name' | grep -c '"av"')" -eq 1 ]; then
-        i3-msg "workspace av"
-    else
-        # https://emacs.stackexchange.com/questions/3463/
-        # open-a-frame-for-the-first-time-using-emacsclient-c-showing-other-buffer-th
-        i3-msg "focus output ${rmon}, workspace av"
-        i3-msg "exec emacsclient.emacs24 -c -e '(switch-to-buffer \"AutoVoice\")'"
-        sleep 1 && i3um
-
-        url='chrome-extension://mefllcpfdfhohmeadieejdjcdcbibeml/options.html'
-        i3-msg "exec google-chrome --new-window --url ${url}"
-        sleep 1 && i3um
-        id=$(xdotool search --onlyvisible --title "AutoVoice Options" | head -1)
-        xdotool windowactivate "$id"
-        xdotool key 'ctrl+r'
-    fi
-}
-
-#
 # Commands.
 #
 # 1. Common programs with examples of how to integrate them.
@@ -433,7 +406,7 @@ i3_lower_lower_hard()
         i3_unique_mark ;;
 
         (av)
-        i3_autovoice_workspace  ;;
+        eval "$(dirname "$0")/i3-tasker" "i3_autovoice_workspace"  ;;
 
         (sg)
         xfce4-screenshooter -d 2 ;;
