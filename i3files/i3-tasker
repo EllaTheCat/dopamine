@@ -85,6 +85,15 @@ i3_generic()
             i3wm_move "$this" "$that" ;;
         esac
         ;;
+        # Shell commands
+        (:shell)
+        case "$2" in
+            (mpv)
+            killall mpv
+            eval "${@:2}"
+            ;;
+        esac
+        ;;
     esac
 }
 
@@ -102,6 +111,7 @@ i3wm_visit ()
         # Visit "that" workspace .
         i3-msg "workspace \"${that}\""
     else
+        ( sleep 10 && xdotool key Return ) &
         echo "Can't find ${that}" | dmenu -b -fn 'pango:DejaVu Sans 11'
     fi
 }
@@ -113,13 +123,13 @@ i3wm_visit ()
 i3wm_move ()
 {
     this=$1; that=$2
-    if [ "$(i3-msg -t get_marks | grep -c "$this")" -eq 1 ] && \
+    if [ "$(i3-msg -t get_marks | grep -c "$this")" -eq 1 ] &&
            [ "$(i3-msg -t get_marks | grep -c "$that")" -eq 1 ];  then
         # Move "this" window by swapping places with "that" window.
         i3-msg "[con_mark=\"${this}\"] focus"
         i3-msg "swap container with mark \"${that}\""
         i3-msg "[con_mark=\"${this}\"] focus"
-    elif [ "$(i3-msg -t get_marks | grep -c "$this")" -eq 1 ] && \
+    elif [ "$(i3-msg -t get_marks | grep -c "$this")" -eq 1 ] &&
              [ "$(i3-msg -t get_workspaces | jq '.[] | .name' | grep -c "${that}")" -eq 1 ]; then
         # Move "this" window to "that" workspace.
         i3-msg "[con_mark=\"${this}\"] focus"
@@ -147,6 +157,7 @@ i3wm_move ()
             i3-msg "move workspace ${this} to output ${rmon}" ;;
         esac
     else
+        ( sleep 10 && xdotool key Return ) &
         echo "Can't find either ${this} or ${that}" | dmenu -b -fn 'pango:DejaVu Sans 11'
     fi
 }

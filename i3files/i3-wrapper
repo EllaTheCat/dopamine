@@ -392,24 +392,17 @@ i3_lower_lower_hard()
         # 1. Terminal in the current workspace. Split is top-bottom.
         # 2. Terminal in the current workspace. Split is left-right.
         # 3. Two half height terminals to the right of e.g. Emacs.
-        (tt)
-        i3tt ;;
-        (yy)
-        i3yy ;;
-        (ty)
-        i3tt && i3yy ;;
+        (tt) i3tt ;;
+        (yy) i3yy ;;
+        (ty) i3tt && i3yy ;;
+        # Dropdown / Scratchpad terminal.
+        (dd) i3dd ;;
 
-        (dd)
-        i3dd ;;
+        (um) i3_unique_mark ;;
 
-        (um)
-        i3_unique_mark ;;
+        (av) eval "$(dirname "$0")/i3-tasker" "i3_autovoice_workspace"  ;;
 
-        (av)
-        eval "$(dirname "$0")/i3-tasker" "i3_autovoice_workspace"  ;;
-
-        (sg)
-        xfce4-screenshooter -d 2 ;;
+        (sg) xfce4-screenshooter -d 2 ;;
 
         ([a-z][a-z])
         # Visit the eponymous workspace if it exists, otherwise create
