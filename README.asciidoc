@@ -161,7 +161,7 @@ The bindings density around my left hand is quite high,
 hence the use of a modifer rather than a mode,
 plus the homage to Alt-Tab.
 
-=== i3-make
+== i3-make
 The i3files directory contais several files, copies of which must be installed in their
 run-time locations. Changing the i3 configuration requires that i3 reloads,
 changing the i3-status script requires that i3 restarts.
@@ -328,36 +328,39 @@ which result in bindings to bash functions that perform these operations:
 - 2 terminals opened to the right of an existing container, stacked vertically.
 - Given two terminals stacked one above the other, arrange them side-by-side.
 - Given two terminals stacked side-by-side, arrange them one above the other.
+- 3 terminals opened on an empty workspace.
 
 The hardcore i3 user might be able to split but it made my head hurt.
 These terminal commands combine the splitting and the invoking.
 
-=== AutoVoice
-My external speech to text engine is a mobile phone that can write a
-command or sentence into the file monitored by the file watcher.
+== AutoVoice
+My external speech to text engine uses the Android apps Tasker and AutoVoice.
+Tasker writes a sentence or command into the file monitored by the file watcher.
 
-The i3programs() function
-considers a string to be a command if it starts with [a-z0-9],
-and considers a string to be a sentence if it starts with [A-Z].
+The 'av' command launches or switches to a dedicated AutoVoice
+workspace that shows the Emacs autovoice buffer and the Chrome
+AutoVoice Options.
+
+=== Sentences
+A string is considered to be a sentence if it starts with [A-Z].
 
 The string is injected into an Emacs buffer if it is a sentence.
 It's rather cool that this can happen
 with neither the Emacs frame being focused nor its workspace being active.
-Injection is unconditional. Mistakes can be removed by saying
-"cancel".  Obviously recognising "cancel" is not 100% accurate.
+Injection is unconditional.  The Emacs window serves as confirmation.
+The same text is made available via both clipboards.
 
-Nevertheless the draft of an email or drafting a section in a document
-can be done more or less hands-free using speech input.
-Even with mistakes it is acceptably fast,
+Having seen the text in Emacs the user can paste it into the current application
+with confdence;  Even with mistakes it is acceptably fast,
 and can be faster than my typing one handed.
+I am able to keep up with chat in applications such as Skype,
+when formerly I had to go to voice.
+Clicking the mouse to paste is not a problem for me at the moment.
+Paste can be undone with Control+Z in most applications.
 
-Apropos of the processing done by the phone.
-if I say a sentence, it is turned into text.
-Some common words are Camel Cased or UPPER CASED,
-and a period (full stop) or question mark is appended.
-Question detection is partly automated, For example,
-it looks for sentences that begin with
-"Who / What / Where / Which / How".
+=== Commands
+A string is considered to be a command if it is prepended with
+a command identifier, which is a string prepended by a colon,
+prepended to the command but separated from it with a space.
 
-The 'av' command launches or switches to a dedicated AutoVoice
-workspace that shows the Emacs autovoice buffer.
+=== Window Manager Commands
