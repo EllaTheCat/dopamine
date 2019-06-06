@@ -482,8 +482,8 @@ for_window [title="Scratchpad"] floating enable;
 for_window [title="Unlock Keyring"] floating enable;
 for_window [class="ffplay"] floating enable;
 
-# Mark their application windows with a number.
-# Terminals use the same pool of 100 numbers.
+# Mark application windows with a 2 digit number.
+for_window [instance="xfce4-terminal"] $i3wrapper --unique-mark;
 for_window [instance="emacs"] $i3wrapper --unique-mark;
 for_window [class="Google-chrome"] $i3wrapper --unique-mark;
 
@@ -514,7 +514,7 @@ font pango:DejaVu Sans 11
 # finds out, if available)
 bar {
     # Show the bar on the 1920x1080 screens but not on the 1280x1024
-    # screen for bettter alignment.
+    # screen for better alignment.
     output $lmon
     output $cmon
     i3bar_command /usr/bin/i3bar

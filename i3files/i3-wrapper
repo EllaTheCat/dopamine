@@ -73,10 +73,9 @@ focus ()
                 i3-msg "move workspace to output $4"
                 ;;
             esac
-            sleep 1; i3_unique_mark
         fi
     else
-        # Focus the program i.
+        # Focus the program.
         i3-msg "workspace $3"
     fi
 }
@@ -108,7 +107,7 @@ i3dd()
 i3tt()
 {
     i3-msg "split h"
-    i3terminal
+    xfce4-terminal -T "xfce4-terminal" &
 }
 
 #
@@ -117,7 +116,7 @@ i3tt()
 i3yy()
 {
     i3-msg "split v"
-    i3terminal
+    xfce4-terminal -T "xfce4-terminal" &
 }
 
 #
@@ -188,15 +187,6 @@ i3_cycle_marks()
 }
 
 #
-# Add a terminal and assign a mark (subroutine).
-#
-i3terminal ()
-{
-    xfce4-terminal -T "xfce4-terminal" &
-    sleep 0.3 && i3_unique_mark
-}
-
-#
 # Create a workspace with three side-by-side terminal sinside if none
 # exists, othewise visit the workspace. The name of the workspace is
 # the command alias. Inspired by:
@@ -210,9 +200,9 @@ i3_triple_terminal_workspace()
     if [ "${cws}" != "\"$1\"" ]; then
         i3-msg "workspace $1"
         if [ "${tws}" -eq 0 ]; then
-            i3terminal
-            i3terminal
-            i3terminal
+            xfce4-terminal -T "xfce4-terminal" &
+            xfce4-terminal -T "xfce4-terminal" &
+            xfce4-terminal -T "xfce4-terminal" &
         fi
     fi
 }
@@ -480,7 +470,6 @@ i3filewatcher ()
         inotify-hookable \
         --watch-files "${dir}/${file}" \
         --on-modify-command "$0 -s" &
-    sleep 1 && i3_unique_mark
 }
 
 #
