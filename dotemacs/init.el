@@ -30,10 +30,8 @@
   (global-set-key "\C-x&"	'find-name-dired)
   (global-set-key "\C-z"	'universal-argument)
   (global-set-key "\C-\\"	'my-match-paren)
-  (global-set-key [f2]	        'undo)
-  (global-set-key [f3]	        'my-autovoice-buffer)
-  (global-set-key [f4]	        'my-scratch-buffer)
-  (global-set-key [f5]	        'compile)
+  (global-set-key [\M-f5]	        'compile)
+  (global-set-key [\M-f4]	        'my-scratch-buffer)
   (global-set-key "\C-x2"    'make-frame-command) ;  split-window-below
   (global-set-key "\C-x3"    'make-frame-command) ;  split-window-right
   )
