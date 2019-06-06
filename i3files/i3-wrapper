@@ -200,9 +200,11 @@ i3_triple_terminal_workspace()
     if [ "${cws}" != "\"$1\"" ]; then
         i3-msg "workspace $1"
         if [ "${tws}" -eq 0 ]; then
-            xfce4-terminal -T "xfce4-terminal" &
-            xfce4-terminal -T "xfce4-terminal" &
-            xfce4-terminal -T "xfce4-terminal" &
+            (xfce4-terminal -T "xfce4-terminal"
+             i3_unique_mark
+             xfce4-terminal -T "xfce4-terminal"
+             i3_unique_mark
+             xfce4-terminal -T "xfce4-terminal") &
         fi
     fi
 }
