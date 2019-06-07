@@ -187,7 +187,7 @@ i3_cycle_marks()
 }
 
 #
-# Create a workspace with three side-by-side terminal sinside if none
+# Create a workspace with three side-by-side terminals inside if none
 # exists, othewise visit the workspace. The name of the workspace is
 # the command alias. Inspired by:
 # https://www.reddit.com/r/i3wm/comments/bjw151/i3_reading_window/
@@ -200,11 +200,15 @@ i3_triple_terminal_workspace()
     if [ "${cws}" != "\"$1\"" ]; then
         i3-msg "workspace $1"
         if [ "${tws}" -eq 0 ]; then
-            (xfce4-terminal -T "xfce4-terminal"
-             i3_unique_mark
-             xfce4-terminal -T "xfce4-terminal"
-             i3_unique_mark
-             xfce4-terminal -T "xfce4-terminal") &
+            # One subshell.  The marks and the focusing are required.
+            ( xfce4-terminal -T "xfce4-terminal"
+              i3_unique_mark
+              xfce4-terminal -T "xfce4-terminal"
+              i3_unique_mark
+              xfce4-terminal -T "xfce4-terminal"
+              i3-msg "focus left"
+              i3-msg "focus left"
+            ) &
         fi
     fi
 }
@@ -262,37 +266,6 @@ i3_toggle_emacs_mouse()
         (m[0-9])
         i3-msg "rename workspace to ${arg/m/e}"
         yad --timeout 1 --title "Mouse will be enabled"
-        ;;
-    esac
-}
-
-#
-# Commands.
-#
-# 1. Common programs with examples of how to integrate them.
-# 2. Terminals, editor, browser, and management of their marks.
-# 3. Support for spoken dictation of sentences.
-# 4. Support for spoken window manager commands.
-#
-i3programs ()
-{
-    # KISS: Optimisations can wait.
-    case "$1" in
-        ([a-z][0-9])
-        i3_lower_digit "$1"
-        ;;
-        ([a-z][a-z])
-        i3_lower_lower_easy "$1"
-        i3_lower_lower_hard "$1"
-        ;;
-        ([0-9]*)
-        i3_digit_digits "$1"
-        ;;
-        ([A-Z]*)
-        eval "$(dirname "$0")/i3-tasker" 'i3_sentence' "$1"
-        ;;
-        (:*)
-        eval "$(dirname "$0")/i3-tasker" 'i3_generic' "$*"
         ;;
     esac
 }
@@ -383,15 +356,13 @@ i3_lower_lower_hard()
 
         # 1. Terminal in the current workspace. Split is top-bottom.
         # 2. Terminal in the current workspace. Split is left-right.
-        # 3. Two half height terminals to the right of e.g. Emacs.
+        # 3. Dropdown terminal (strictly: a scratchpad terminal).
         (tt) i3tt ;;
         (yy) i3yy ;;
-        (ty) i3tt && i3yy ;;
-        # Dropdown / Scratchpad terminal.
         (dd) i3dd ;;
-
+        # Manual marking for other than terminals, Emacs or Chrome.
         (um) i3_unique_mark ;;
-
+        # This uses emacsclient so needs Emacs server running.
         (av) eval "$(dirname "$0")/i3-tasker" "i3_autovoice_workspace"  ;;
 
         (sg) xfce4-screenshooter -d 2 ;;
@@ -438,7 +409,24 @@ i3_digit_digits()
 #
 start ()
 {
-    i3programs "$@"
+    case "$1" in
+        ([a-z][0-9])
+        i3_lower_digit "$1"
+        ;;
+        ([a-z][a-z])
+        i3_lower_lower_easy "$1"
+        i3_lower_lower_hard "$1"
+        ;;
+        ([0-9]*)
+        i3_digit_digits "$1"
+        ;;
+        ([A-Z]*)
+        eval "$(dirname "$0")/i3-tasker" 'i3_sentence' "$1"
+        ;;
+        (:*)
+        eval "$(dirname "$0")/i3-tasker" 'i3_generic' "$*"
+        ;;
+    esac
 }
 
 #
@@ -463,6 +451,8 @@ i3command ()
 # Create a file in shared memory, monitor it for changes, and when it
 # changes, call i3wrapper with the file contents passed as argument.
 #
+# Don't call this directly. Called from i3-apps at startup.
+#
 i3filewatcher ()
 {
     mkdir -p "${dir}"
@@ -481,6 +471,8 @@ i3filewatcher ()
 # - The workspace and the window must match to disable the mouse.
 # - The standard matching workspaces are m0, m1, ... m8, m9.
 # - The workspace may be renamed to disallow disabling the mouse.
+#
+# Don't call this directly. Called from i3-apps at startup.
 #
 i3focuswatcher ()
 {
@@ -507,10 +499,13 @@ i3focuswatcher ()
 }
 
 #
+# List all the keybindings.
 #
+# - 2019-06-07: bound to Primary+i (for info).
 #
 i3kb ()
 {
+    which i3-make && i3-make
     i3-msg [title=\"i3 key bindings\"] kill
     xfce4-terminal -T 'i3 key bindings' -e "less /dev/shm/$USER/i3/bindings" &
 }
@@ -573,7 +568,6 @@ case ${XDG_CURRENT_DESKTOP} in
         (--toggle-emacs-mouse) i3_toggle_emacs_mouse ;;
         (--cycle-through-marks) i3_cycle_marks ;;
         (--unique-mark) i3_unique_mark ;;
-
         (--keyboard-binding-info) i3kb ;;
         # In production, do nothing here?
         (*) start "$@" ;;
