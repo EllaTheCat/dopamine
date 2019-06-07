@@ -345,15 +345,6 @@ i3_lower_lower_easy()
 i3_lower_lower_hard()
 {
     case "$1" in
-        (em)
-        i3-msg "exec emacsclient.emacs24 -c" ;;
-        (gc)
-        i3-msg "exec google-chrome --new-window" ;;
-
-        (wc)
-        # Launch unconditionally. Something here isn't quite right.
-        eval cheese >/dev/null 2>&1 ;;
-
         # 1. Terminal in the current workspace. Split is top-bottom.
         # 2. Terminal in the current workspace. Split is left-right.
         # 3. Dropdown terminal (strictly: a scratchpad terminal).
@@ -363,14 +354,16 @@ i3_lower_lower_hard()
         # Manual marking for other than terminals, Emacs or Chrome.
         (um) i3_unique_mark ;;
         # This uses emacsclient so needs Emacs server running.
-        (av) eval "$(dirname "$0")/i3-tasker" "i3_autovoice_workspace"  ;;
-
+        (av) eval "$(dirname "$0")/i3-tasker" "i3_autovoice_workspace" ;;
+        # Use these to add an instance into an existing workspace.
+        (em) i3-msg "exec emacsclient.emacs24 -c" ;;
+        (gc) i3-msg "exec google-chrome --new-window" ;;
+        # These don't fit the easy launch-or-focus template.
         (sg) xfce4-screenshooter -d 2 ;;
-
-        ([a-z][a-z])
+        (wc) eval cheese >/dev/null 2>&1 ;;
         # Visit the eponymous workspace if it exists, otherwise create
         # the workspace and launch three side-by-side terminals there.
-        i3_triple_terminal_workspace "$1" ;;
+        ([a-z][a-z]) i3_triple_terminal_workspace "$1" ;;
     esac
 }
 
