@@ -65,11 +65,11 @@ focus ()
             else
                 i3-msg "workspace $3; exec ${*:5};"
             fi
+            # Change to the specified output when the window appears.
+            # Set $4 'none' to stay on current output.
             case "$4" in
                 (${lmon}|${cmon}|${rmon})
-                # Change to the specified output when window appears.
-                # Set $4 'none' to stay on current output.
-                sleep 1
+                sleep 0.3
                 i3-msg "move workspace to output $4"
                 ;;
             esac
