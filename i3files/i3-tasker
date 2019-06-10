@@ -32,12 +32,12 @@ i3_autovoice_workspace ()
             # https://emacs.stackexchange.com/questions/3463/
             # open-a-frame-for-the-first-time-using-emacsclient-c-showing-other-buffer-th
             i3-msg "exec emacsclient.emacs24 -c -e '(switch-to-buffer \"AutoVoice\")'"
-            sleep 1 && i3um
+            sleep 1
         fi
         if [ "$count1" -eq 0 ]; then
             url='chrome-extension://mefllcpfdfhohmeadieejdjcdcbibeml/options.html'
             i3-msg "exec google-chrome --new-window --url ${url}"
-            sleep 1 && i3um
+            sleep 1
             id=$(xdotool search --onlyvisible --title "AutoVoice Options" | head -1)
             xdotool windowactivate "$id"
             xdotool key 'ctrl+r'
