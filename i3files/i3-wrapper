@@ -413,9 +413,6 @@ start ()
         ([0-9]*)
         i3_digit_digits "$1"
         ;;
-        ([A-Z]*)
-        eval "$(dirname "$0")/i3-tasker" 'i3_sentence' "$1"
-        ;;
         (:*)
         eval "$(dirname "$0")/i3-tasker" 'i3_generic' "$*"
         ;;

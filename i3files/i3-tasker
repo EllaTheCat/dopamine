@@ -45,15 +45,6 @@ i3_autovoice_workspace ()
     fi
 }
 
-i3_sentence()
-{
-    # Distinguish a sentence by the uppercase first letter. Insert
-    # into both clipboards and then paste into Emacs.
-    echo "${*}" | xclip -selection primary     # mouse button 2
-    echo "${*}" | xclip -selection clipboard   # emacs control y
-    emacsclient.emacs24 -e "(with-current-buffer \"AutoVoice\" (yank))"
-}
-
 i3_generic()
 {
     group=$1
@@ -85,7 +76,7 @@ i3_generic()
             i3wm_move "$this" "$that" ;;
         esac
         ;;
-        # Shell commands
+        # Shell commands.
         (:shell)
         case "$2" in
             (mpv)
@@ -93,6 +84,14 @@ i3_generic()
             eval "${@:2}"
             ;;
         esac
+        ;;
+        # Clipboard commands.
+        (:clipboard)
+        contents="${*:2}"
+        # Insert into both clipboards and then paste into Emacs.
+        echo "${contents}" | xclip -selection primary     # mouse button 2
+        echo "${contents}" | xclip -selection clipboard   # emacs control y
+        emacsclient.emacs24 -e "(with-current-buffer \"AutoVoice\" (yank))"
         ;;
     esac
 }
