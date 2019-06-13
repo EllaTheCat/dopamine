@@ -479,6 +479,7 @@ assign [title="VLC media player$"] vp
 assign [title="Meld$"] md
 assign [instance="wireshark"]  ws
 assign [title="DVB Inspector"] di
+assign [title="Clementine"] mu
 
 # Windows that look'n'feel better when floating.
 for_window [instance="dtvkit"] floating enable;
