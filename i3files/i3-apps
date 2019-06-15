@@ -47,30 +47,13 @@ do
         fi
         ;;
 
-        (dropbox)
-        if [ "$(pgrep -c dropbox)" -ne 0 ]; then
-            if [ "_${verb}" = "_stop" ]; then
-                (dropbox stop) &
-                sleep 3
-            fi
-        fi
-        if [ "$(pgrep -c dropbox)" -eq 0 ]; then
-           if [ "_${verb}" = "_start" ]; then
-               # Dropbox needs to be launched with dbus.
-               (dbus-launch dropbox start -i) &
-           fi
-        fi
-        ;;
-
         (synergy)
         if [ "$(pgrep -c synergy)" -ne 0 ]; then
-            if  [ "_${verb}" = "_stop" ]; then
-                pkill -f synergy
-                sleep 3
-            fi
+            pkill -f synergy
+            sleep 3
         fi
-        if [ "$(pgrep -c synergy)" -eq 0 ]; then
-            if [ "_${verb}" = "_start" ]; then
+        if [ "_${verb}" = "_start" ]; then
+            if [ "$(pgrep -c synergy)" -eq 0 ]; then
                 (synergy) &
             fi
         fi
@@ -78,24 +61,14 @@ do
 
         (tvheadend)
         if [ "$(pgrep -c tvheadend)" -ne 0 ]; then
-            if  [ "_${verb}" = "_stop" ]; then
-                pkill tvheadend
-                sleep 3
-            fi
+            pkill tvheadend
+            sleep 3
         fi
-        if [ "$(pgrep -c tvheadend)" -eq 0 ]; then
-            if  [ "_${verb}" = "_start" ]; then
+        if  [ "_${verb}" = "_start" ]; then
+            if [ "$(pgrep -c tvheadend)" -eq 0 ]; then
                 # TV Headend behaves better without authentication.
                 (xfce4-terminal -T 'tvheadend' -x tvheadend --noacl) &
             fi
-        fi
-        ;;
-
-        (siro)
-        if  [ "_${verb}" = "_stop" ]; then
-            (ssh siro vcgencmd display_power 0) &
-        else
-            (ssh siro vcgencmd display_power 1) &
         fi
         ;;
 
@@ -201,9 +174,12 @@ do
             xdotool mousemove --sync --clearmodifiers 2880 384; sleep 1
             yad --title="Starting in 10s ..." --mouse --timeout=10 --timeout-indicator=top
             if  [ "$?" -ne 1 ]; then
-                eval "$0 start filewatcher focuswatcher tvheadend dropbox synergy"
-                eval "$0 start siro workspaces wallpaper usbdisks"
+                eval "$0 start filewatcher focuswatcher"
+                eval "$0 start tvheadend synergy"
+                eval "$0 start workspaces wallpaper"
+                eval "$0 stop usbdisks" # Yes, spin them down!
             fi
+	    yad --title="Starting complete." --timeout=3 --timeout-indicator=top
         fi
         if  [ "_${verb}" = "_stop" ]; then
             i3-msg "focus output ${cmon}"
@@ -212,11 +188,12 @@ do
             if  [ "$?" -ne 1 ]; then
                 eval "$0 stop VirtualBox"
                 eval "$0 stop emacs firefox chrome thunderbird"
-                eval "$0 stop siro synergy dropbox"
-                eval "$0 stop tvheadend marks focuswatcher"
-                eval "$0 stop filewatcher"
+                eval "$0 stop synergy tvheadend"
+                eval "$0 stop focuswatcher filewatcher"
+                eval "$0 stop marks" # Yes, catch-all.
                 eval "$0 stop usbdisks"
             fi
+            yad --title="Stopping complete." --timeout=3 --timeout-indicator=top
         fi
         ;;
 
