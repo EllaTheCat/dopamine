@@ -239,7 +239,8 @@ function vp
 
 ################################################################
 
-source tsduck-environment
+# TSduck installs in "${HOME}/usr/local" by default, hence this.
+[ -e  ${HOME}/Programs/scripts/tsduck-environment ] &&  source tsduck-environment
 
 ################################################################
 # Done.
