@@ -48,6 +48,11 @@ set $i3inputfont "pango:DejaVu Sans 12"
 # Symlink this.
 set $i3keybindings /dev/shm/EllaTheCat/i3/bindings
 
+# Using autologin on ansible ensured synergy communications but lacks
+# security away from the office, hence this on ansible, and hence here.
+set $i3lock exec --no-startup-id /usr/bin/i3lock  -c 000000 \
+    -i /home/shevek/Pictures/i3lockimage.png
+
 #
 # BINDINGS
 #
@@ -277,6 +282,8 @@ mode "Primary" {
             exec --no-startup-id compton-trans -c -o +10
     bindsym KP_Add \
             exec --no-startup-id compton-trans -c -o -10
+
+    bindsym Return $default, $i3lock
 
     # Pressing cycles through the three modes. Pri->Sec->Def->Pri.
     bindsym Menu mode "Secondary"
@@ -567,6 +574,11 @@ exec --no-startup-id xrandr --output $cmon --primary &
 # desktop background avoids screen corruption on my machine.
 exec --no-startup-id compton -b &
 exec --no-startup-id sleep 10s && nitrogen --restore &
+
+# Try to ensure dropbox starts cleanly without impacting anything else.
+exec --no-startup-id dropbox stop &
+exec --no-startup-id sleep 1.5 && killall --quiet dropbox &
+exec --no-startup-id sleep 3 && dbus-launch dropbox start -i &
 
 # Applications.
 # The 10 second delay ensures that the dialog appears after the
