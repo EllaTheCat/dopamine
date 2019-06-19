@@ -579,6 +579,8 @@ exec --no-startup-id sleep 10s && nitrogen --restore &
 exec --no-startup-id dropbox stop &
 exec --no-startup-id sleep 1.5 && killall --quiet dropbox &
 exec --no-startup-id sleep 3 && dbus-launch dropbox start -i &
+# Try to ensure xfce4-panel starts once only lest dialogs appear.
+exec --no-startup-id xfce4-panel
 
 # Applications.
 # The 10 second delay ensures that the dialog appears after the
