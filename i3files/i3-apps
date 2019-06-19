@@ -37,8 +37,7 @@ do
 
         (focuswatcher)
         if [ "_${verb}" = "_stop" ]; then
-            # shellcheck disable=2046
-            kill -HUP $(pgrep -f 'focus-watcher')
+            kill -HUP "$(pgrep -f 'focus-watcher')"
         fi
         if [ "_${verb}" = "_start" ]; then
             path=$(dirname "$0")
@@ -48,37 +47,39 @@ do
         ;;
 
         (synergy)
-        if [ "$(pgrep -c synergy)" -ne 0 ]; then
-            pkill -f synergy
-            sleep 3
+        if [ "_${verb}" = "_stop" ]; then
+            kill -HUP "$(pgrep -f  'synergy')"
         fi
         if [ "_${verb}" = "_start" ]; then
-            if [ "$(pgrep -c synergy)" -eq 0 ]; then
-                (synergy) &
-            fi
+            (eval synergy -f "${HOME}/.config/Synergy/Synergy.conf") &
         fi
         ;;
 
         (tvheadend)
-        if [ "$(pgrep -c tvheadend)" -ne 0 ]; then
-            pkill tvheadend
-            sleep 3
+        if [ "_${verb}" = "_stop" ]; then
+            kill -HUP "$(pgrep -f 'tvheadend')"
         fi
         if  [ "_${verb}" = "_start" ]; then
-            if [ "$(pgrep -c tvheadend)" -eq 0 ]; then
-                # TV Headend behaves better without authentication.
-                (xfce4-terminal -T 'tvheadend' -x tvheadend --noacl) &
-            fi
+            echo "TV Headend"
+            # TV Headend behaves better without authentication.
+            (eval xfce4-terminal -T 'tvheadend' -x tvheadend --noacl) &
         fi
         ;;
 
-        (workspaces)
-        # A subroutine to be called during i3 startup.
-        # Rename any remaining empty workspaces.
-        if  [ "_${verb}" = "_start" ]; then
-            i3-msg "focus output \"${cmon}\", rename workspace to \"${cmon}\""
+        (usbdisks)
+        # Spin down USB HDDs.
+        if  [ "_${verb}" = "_start" ] || [ "_${verb}" = "_stop" ]; then
+            sudo umount /snapdisks/banana
+            sudo umount /snapdisks/tabasco
+            sleep 3
+            sudo hd-idle -t sdd  # banana
+            sudo hd-idle -t sdc  # tabasco
         fi
         ;;
+
+        #
+        # Startup only.
+        #
 
         (wallpaper)
         # My current desktop wallpaper (subject to change) is cropped
@@ -96,17 +97,6 @@ do
             text="Mouse right click the i3 status bar to show these texts again. The URL is available on the clipboard."
             text="${text} Photo is cropped 5760x1080."
             echo "${text}" | dmenu -b -fn 'pango:DejaVu Sans 11'
-        fi
-        ;;
-
-        (usbdisks)
-        # Spin down USB HDDs.
-        if  [ "_${verb}" = "_start" ] || [ "_${verb}" = "_stop" ]; then
-            sudo umount /snapdisks/banana
-            sudo umount /snapdisks/tabasco
-            sleep 3
-            sudo hd-idle -t sdd  # banana
-            sudo hd-idle -t sdc  # tabasco
         fi
         ;;
 
@@ -172,19 +162,21 @@ do
         if  [ "_${verb}" = "_start" ]; then
             i3-msg "focus output ${cmon}"
             xdotool mousemove --sync --clearmodifiers 2880 384; sleep 1
-            yad --title="Starting in 10s ..." --mouse --timeout=10 --timeout-indicator=top
+            yad --title="Starting in 7s ..." --mouse --timeout=7 --timeout-indicator=top
             if  [ "$?" -ne 1 ]; then
                 eval "$0 start filewatcher focuswatcher"
                 eval "$0 start tvheadend synergy"
-                eval "$0 start workspaces wallpaper"
+                eval "$0 start wallpaper"
                 eval "$0 stop usbdisks" # Yes, spin them down!
+            else
+                exit 0
             fi
 	    yad --title="Starting complete." --timeout=3 --timeout-indicator=top
         fi
         if  [ "_${verb}" = "_stop" ]; then
             i3-msg "focus output ${cmon}"
             xdotool mousemove --sync --clearmodifiers 2880 384; sleep 1
-            yad --title="Stopping in 10s ..." --mouse --timeout=10 --timeout-indicator=top
+            yad --title="Stopping in 7s ..." --mouse --timeout=7 --timeout-indicator=top
             if  [ "$?" -ne 1 ]; then
                 eval "$0 stop VirtualBox"
                 eval "$0 stop emacs firefox chrome thunderbird"
@@ -192,8 +184,15 @@ do
                 eval "$0 stop focuswatcher filewatcher"
                 eval "$0 stop marks" # Yes, catch-all.
                 eval "$0 stop usbdisks"
+            else
+                exit 0
             fi
             yad --title="Stopping complete." --timeout=3 --timeout-indicator=top
+            if  [ "$?" -ne 1 ]; then
+                xfce4-panel --quit && sleep 0.5 && xfce4-session-logout --logout
+            else
+                exit 0
+            fi
         fi
         ;;
 
