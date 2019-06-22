@@ -83,6 +83,9 @@ i3_generic()
             killall mpv
             eval "${@:2}"
             ;;
+            (/home/shevek/*/firewall)
+            eval "${@:2}"
+            ;;
         esac
         ;;
         # Clipboard commands.
