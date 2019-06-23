@@ -26,12 +26,10 @@ tvhplay ()
     if [ -z "${link}" ]; then
         ssh "${client}" vcgencmd display_power 0
     else
-        echo "->${link}<-"
         # Hardcoded path.
         # shellcheck disable=2002
         link=$(cat "${HOME}/Videos/tvheadend-playlist-slash-channels.m3u" | \
                       grep -i "${link}" | awk -F \" '{print $2}' | head -1)
-        echo "->${link}<-"
         # RPI hardware supports but one instance of the player.
         ssh "${client}" pkill -c -f omxplayer.bin
         ssh "${client}" vcgencmd display_power 1

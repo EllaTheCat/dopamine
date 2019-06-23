@@ -15,7 +15,6 @@ cmon=HDMI1
 verb=start
 for argument in "${@}"
 do
-    echo "${argument}"
     case "${argument}" in
         # A verb argument affects all subsequent arguments up until
         # either the next verb argument or end-of-list.
@@ -46,21 +45,17 @@ do
         fi
         ;;
 
-        (synergy)
-        if [ "_${verb}" = "_stop" ]; then
-            kill -HUP "$(pgrep -f  'synergy')"
-        fi
-        if [ "_${verb}" = "_start" ]; then
-            (eval synergy -f "${HOME}/.config/Synergy/Synergy.conf") &
+        (scratchpad)
+        if  [ "_${verb}" = "_stop" ]; then
+            i3-msg --quiet "[instance=\"Scratchpad\"] kill"
         fi
         ;;
 
         (tvheadend)
         if [ "_${verb}" = "_stop" ]; then
-            kill -HUP "$(pgrep -f 'tvheadend')"
+            i3-msg --quiet '[title="tvheadend"] kill'
         fi
         if  [ "_${verb}" = "_start" ]; then
-            echo "TV Headend"
             # TV Headend behaves better without authentication.
             (eval xfce4-terminal -T 'tvheadend' -x tvheadend --noacl) &
         fi
@@ -104,30 +99,6 @@ do
         # Shutdown only.
         #
 
-        (emacs)
-        if  [ "_${verb}" = "_stop" ]; then
-            i3-msg '[title="^Emacs :"] focus'
-            emacsclient.emacs24 -e "(save-buffers-kill-emacs)"
-        fi
-        ;;
-        (firefox)
-        if  [ "_${verb}" = "_stop" ]; then
-            # Firefox treats 'kill'/'pkill' as a crash.
-            id=$(xdotool search "Mozilla Firefox" | head -1)
-            xdotool windowactivate --sync "${id}"
-            xdotool key --clearmodifiers ctrl+q
-        fi
-        ;;
-        (chrome)
-        if  [ "_${verb}" = "_stop" ]; then
-            i3-msg '[class="Google-chrome"] kill'
-        fi
-        ;;
-        (thunderbird)
-        if  [ "_${verb}" = "_stop" ]; then
-            i3-msg '[title="Mozilla Thunderbird$"] kill'
-        fi
-        ;;
         (VirtualBox)
         if  [ "_${verb}" = "_stop" ]; then
             if [ "$(VBoxManage list runningvms | wc -l)" -ne 0 ]; then
@@ -138,6 +109,39 @@ do
                 # Zero VMs running, safe to kill VirtualBox Manager.
                 i3-msg '[title="VirtualBox Manager$"] kill'
             fi
+        fi
+        ;;
+
+        (emacs)
+        if  [ "_${verb}" = "_stop" ]; then
+            i3-msg '[title="^Emacs :"] focus, kill'
+        fi
+        ;;
+
+        (thunar)
+        if  [ "_${verb}" = "_stop" ]; then
+            i3-msg --quiet '[instance="Thunar"] kill'
+        fi
+        ;;
+
+        (firefox)
+        if  [ "_${verb}" = "_stop" ]; then
+            # Firefox treats 'kill'/'pkill' as a crash.
+            id=$(xdotool search "Mozilla Firefox" | head -1)
+            xdotool windowactivate --sync "${id}"
+            xdotool key --clearmodifiers ctrl+q
+        fi
+        ;;
+
+        (chrome)
+        if  [ "_${verb}" = "_stop" ]; then
+            i3-msg  --quiet '[class="Google-chrome"] kill'
+        fi
+        ;;
+
+        (thunderbird)
+        if  [ "_${verb}" = "_stop" ]; then
+            i3-msg --quiet '[title="Mozilla Thunderbird$"] kill'
         fi
         ;;
 
@@ -165,7 +169,7 @@ do
             yad --title="Starting in 7s ..." --mouse --timeout=7 --timeout-indicator=top
             if  [ "$?" -ne 1 ]; then
                 eval "$0 start filewatcher focuswatcher"
-                eval "$0 start tvheadend synergy"
+                eval "$0 start tvheadend"
                 eval "$0 start wallpaper"
                 eval "$0 stop usbdisks" # Yes, spin them down!
             else
@@ -179,10 +183,11 @@ do
             yad --title="Stopping in 7s ..." --mouse --timeout=7 --timeout-indicator=top
             if  [ "$?" -ne 1 ]; then
                 eval "$0 stop VirtualBox"
-                eval "$0 stop emacs firefox chrome thunderbird"
-                eval "$0 stop synergy tvheadend"
+                eval "$0 stop emacs"
+                eval "$0 stop thunar firefox chrome thunderbird"
+                eval "$0 stop scratchpad marks"
+                eval "$0 stop tvheadend"
                 eval "$0 stop focuswatcher filewatcher"
-                eval "$0 stop marks" # Yes, catch-all.
                 eval "$0 stop usbdisks"
             else
                 exit 0

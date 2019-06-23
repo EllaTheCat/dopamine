@@ -5,6 +5,10 @@
 #
 # Please see http://i3wm.org/docs/userguide.html for a complete reference!
 
+set $i3lock /usr/bin/i3lock  -c 000000 \
+    -i /home/shevek/Pictures/i3lockimage.png
+exec --no-startup-id $i3lock
+
 #
 # VARIABLES
 #
@@ -47,11 +51,6 @@ set $i3inputfont "pango:DejaVu Sans 12"
 
 # Symlink this.
 set $i3keybindings /dev/shm/EllaTheCat/i3/bindings
-
-# Using autologin on ansible ensured synergy communications but lacks
-# security away from the office, hence this on ansible, and hence here.
-set $i3lock exec --no-startup-id /usr/bin/i3lock  -c 000000 \
-    -i /home/shevek/Pictures/i3lockimage.png
 
 #
 # BINDINGS
@@ -283,7 +282,7 @@ mode "Primary" {
     bindsym KP_Add \
             exec --no-startup-id compton-trans -c -o -10
 
-    bindsym Return $default, $i3lock
+    bindsym Return $default, exec --no-startup-id $i3lock
 
     # Pressing cycles through the three modes. Pri->Sec->Def->Pri.
     bindsym Menu mode "Secondary"

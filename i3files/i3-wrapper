@@ -152,7 +152,6 @@ i3_cycle_marks()
     # Thanks to  u/jimbopouliot on r/i3wm (reddit) for 'jq' improvement.
     # https://www.reddit.com/r/i3wm/comments/bcck1t/how_to_alttab_for_groups_of_windows/
     mark=$(i3-msg -t get_tree | jq '.. | objects | select(.focused) | .marks[] | select(match("^[ABCRSTWXYZ]$"))')
-    echo "->${mark}<-"
 
     # Conveniently, the letter is enclosed by double quotes.
     case "${mark}" in
@@ -257,7 +256,6 @@ i3_toggle_emacs_mouse()
     cws="$(i3-msg -t get_workspaces | jq '.[] | .name,.focused' | \
                  grep true -B1 | grep -v true)"
     arg=${cws:1:2}
-    echo "$arg"
     case "${arg}" in
         (e[0-9])
         i3-msg "rename workspace to ${arg/e/m}"
@@ -446,7 +444,7 @@ i3command ()
 i3filewatcher ()
 {
     mkdir -p "${dir}"
-    echo "--" | tee "${dir}/${file}"  # no-op
+    echo "--" > "${dir}/${file}"  # no-op
     exe=$(basename  "$0")
     xfce4-terminal -T "${exe}: file watcher" -x \
         inotify-hookable \
@@ -536,7 +534,7 @@ dashp ()
         dashp "help"
     else
         numlockx off
-        echo "${cmd}" | tee "${dir}/${file}"
+        echo "${cmd}" > "${dir}/${file}"
     fi
 }
 
