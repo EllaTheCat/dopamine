@@ -5,7 +5,9 @@
 #
 # Please see http://i3wm.org/docs/userguide.html for a complete reference!
 
-set $i3lock /usr/bin/i3lock  -c 000000 \
+set $i3lock /usr/bin/i3lock \
+    --ignore-empty-password \
+    -c 000000 \
     -i /home/shevek/Pictures/i3lockimage.png
 exec --no-startup-id $i3lock
 
