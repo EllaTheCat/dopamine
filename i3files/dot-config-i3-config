@@ -80,7 +80,7 @@ bindsym Control+Tab $i3wrapper --cycle-through-marks
 # supplied, the user modifies the example i3-make.
 bindsym Control+Menu $i3make
 
-# Control-Alt-Delete is a design decision please do not change.
+# Kill a window, kill a workspace.
 bindsym Control+Mod1+Delete kill
 bindsym Control+Mod4+Delete [workspace="__focused__"] kill
 
@@ -248,10 +248,7 @@ mode "Primary" {
     bindsym period $default, move container to workspace AutoVoice
     bindsym slash $default, workspace AutoVoice
 
-    # Control-*-Delete is a design decision please do not change.
-    bindsym Control+Mod1+Delete $default,kill
-    bindsym Control+Mod4+Delete [workspace="__focused__"] $default,kill
-
+    # Classic focus keys copied from default mode.
     bindsym $i3arrowmodifier+Left focus left
     bindsym $i3arrowmodifier+Down focus down
     bindsym $i3arrowmodifier+Up focus up
@@ -283,8 +280,6 @@ mode "Primary" {
             exec --no-startup-id compton-trans -c -o +10
     bindsym KP_Add \
             exec --no-startup-id compton-trans -c -o -10
-
-    bindsym Return $default, exec --no-startup-id $i3lock
 
     # Pressing cycles through the three modes. Pri->Sec->Def->Pri.
     bindsym Menu mode "Secondary"
@@ -359,6 +354,10 @@ mode "Secondary" {
 
     bindsym l $secondarynop
 
+    #  Lock the screen.
+    bindsym Return $default, exec --no-startup-id $i3lock
+
+    # Command prompt.
     bindsym backslash $default, $i3wrapper -p
 
     # Focus watcher start and stop.
@@ -385,12 +384,10 @@ mode "Secondary" {
     # File watcher stop binding is RESERVED and DEPRECATED.
     bindsym slash $secondarynop
 
-    # Control-*-Delete is a design decision please do not change.
-    # Kill a window, kill a workspace, close a session.
-    bindsym Control+Mod1+Delete $default,kill
-    bindsym Control+Mod4+Delete [workspace="__focused__"] $default, kill
+    # Close a session. Avoid window or workspace kill bindings here.
     bindsym Control+Mod4+Mod1+Delete  $default, $i3apps stop everything
 
+    # Classic focus keys copied from default mode.
     bindsym $i3arrowmodifier+Left focus left
     bindsym $i3arrowmodifier+Down focus down
     bindsym $i3arrowmodifier+Up focus up
