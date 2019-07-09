@@ -5,15 +5,18 @@
 #
 # Please see http://i3wm.org/docs/userguide.html for a complete reference!
 
-set $i3lock /usr/bin/i3lock \
-    --ignore-empty-password \
-    -c 000000 \
-    -i /home/shevek/Pictures/i3lockimage.png
-exec --no-startup-id $i3lock
-
 #
 # VARIABLES
 #
+
+# This is secure enough to deter casual intruders.
+set $i3lock /usr/bin/i3lock \
+    --ignore-empty-password \
+    -c 000000 \
+    -i ~/Pictures/i3lockimage.png
+# Automatic login with lightdm allows this machine to act as a PVR,
+# hence this:
+exec --no-startup-id $i3lock
 
 # Helpers. Embedding the path explicitly is belt and braces.
 set $default exec --no-startup-id ~/local/bin/i3-mode default
@@ -165,14 +168,14 @@ mode "Primary" {
 
     # (W)orkspace.
     bindsym w  \
-        $default, exec i3-input -f $i3inputfont  -l 2 \
-        -P '(workspace): ' -F 'workspace "%s"'
+            $default, exec i3-input -f $i3inputfont  -l 2 \
+            -P '(workspace): ' -F 'workspace "%s"'
 
     # (R)ename a workspace.
     bindsym r \
-        $default, exec i3-input -f $i3inputfont -l 2 \
-        -P '(rename this workspace to): ' \
-        -F 'rename workspace to "%s"'
+            $default, exec i3-input -f $i3inputfont -l 2 \
+            -P '(rename this workspace to): ' \
+            -F 'rename workspace to "%s"'
 
     # [T]abbed layout.
     bindsym t $default, layout tabbed
@@ -225,6 +228,8 @@ mode "Primary" {
     bindsym semicolon floating toggle
     bindsym apostrophe focus mode_toggle
 
+    bindsym Return $primarynop
+
     bindsym backslash $default, $i3wrapper -p
 
     # Move workspace to another output.
@@ -240,9 +245,9 @@ mode "Primary" {
 
     # (M)ove container to named workspace.
     bindsym m \
-       $default, exec i3-input -f $i3inputfont  -l 2 \
-        -P '(move container to workspace): ' \
-        -F 'move container to workspace "%s"'
+            $default, exec i3-input -f $i3inputfont  -l 2 \
+            -P '(move container to workspace): ' \
+            -F 'move container to workspace "%s"'
 
     bindsym comma $default, [title="AutoVoice Options"] focus
     bindsym period $default, move container to workspace AutoVoice
@@ -327,8 +332,9 @@ mode "Secondary" {
     # Spin both down, blue LEDs should stay dark when quietpc is off.
     bindsym u $default, $i3apps stop usbdisks
 
-    bindsym i $secondarynop
-    bindsym o $secondarynop
+    # Focus watcher start and stop.
+    bindsym i $default, $i3apps start focuswatcher
+    bindsym o $default, $i3apps stop focuswatcher
 
     # Benq DVI and HDMI auto-switching to save wear & tear.
     # https://raspberrypi.stackexchange.com/a/53267
@@ -340,7 +346,7 @@ mode "Secondary" {
     bindsym a $secondarynop
 
     # Complementary to the {w,e,r} keys, see above.
-    bindsym s  $default, $i3display sleep
+    bindsym s $default, $i3display sleep
     bindsym d $default, $i3mouse disable
     bindsym f $default, $i3mouse fast
 
@@ -349,24 +355,19 @@ mode "Secondary" {
     bindsym j $secondarynop
 
     # Set modifiers with 'xcape', set CapsLock to Control,
-    # mimic US layout on UK keyboard, but not keyclick.
+    # mimic US layout on UK keyboard.
     bindsym k $default, $i3keyboard
+    # Lock the screen.
+    bindsym l $default, exec --no-startup-id $i3lock
 
-    bindsym l $secondarynop
-
-    #  Lock the screen.
-    bindsym Return $default, exec --no-startup-id $i3lock
+    bindsym Return $secondarynop
 
     # Command prompt.
     bindsym backslash $default, $i3wrapper -p
 
-    # Focus watcher start and stop.
-    bindsym z $default, $i3apps start focuswatcher
-    bindsym x $default, $i3apps stop focuswatcher
-
-    # Audible keyclicks require audio to be routed to speakers,
-    # my setup doesn't enforce this (when watching TV).
-    bindsym c $default, exec --no-startup-id keyclick
+    bindsym z $default, focus output $lmon
+    bindsym x $default, focus output $cmon
+    bindsym c $default, focus output $rmon
 
     bindsym v $default,$i3mouse window
     bindsym b $default,$i3mouse desktop
