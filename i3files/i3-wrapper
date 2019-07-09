@@ -26,7 +26,7 @@ file=command
 #
 lmon=HDMI2
 cmon=HDMI1
-rmon=VGA1
+rmon=HDMI2 ### VGA1
 
 #
 # The timeout in seconds for the main dynamic menu. Upon expiry,
