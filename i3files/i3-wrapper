@@ -328,7 +328,8 @@ i3_lower_lower_easy()
         (vp)
         focus instance vlc 'vp' ${lmon} /snap/bin/vlc ;;
         (hb)
-        focus instance handbrake 'hb' ${cmon} "handbrake-cpulimit" ;;
+        focus instance handbrake 'hb' ${cmon} \
+              "${HOME}/Programs/scripts//handbrake-cpulimit" ;;
         (os)
         focus instance openshot 'os'  ${cmon} openshot ;;
 
