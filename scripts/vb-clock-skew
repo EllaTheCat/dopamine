@@ -5,9 +5,9 @@
 #
 
 case "$1" in
-    (ubuntu32e)
-    VBoxManage setextradata "ubuntu32e" "VBoxInternal/Devices/VMMDev/0/Config/GetHostTimeDisabled" 0
-    VBoxManage guestproperty set "ubuntu32e" "/VirtualBox/GuestAdd/VBoxService/--timesync-set-threshold" 10000
+    (dtvkit32)
+    VBoxManage setextradata "dtvkit32" "VBoxInternal/Devices/VMMDev/0/Config/GetHostTimeDisabled" 0
+    VBoxManage guestproperty set "dtvkit32" "/VirtualBox/GuestAdd/VBoxService/--timesync-set-threshold" 10000
     ;;
 esac
 
