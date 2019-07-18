@@ -94,6 +94,10 @@ case "$-" in
     ;;
 esac
 
+# Suppress completion on backups.
+chmod -x ${HOME}/Programs/scripts/*~
+chmod -x ${HOME}/Programs/scrypts/*~
+
 # Be quiet.
 # setterm -blength 0
 [ "$XDG_CURRENT_DESKTOP" = "XFCE" ] && xset b off
