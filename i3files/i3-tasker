@@ -6,7 +6,7 @@
 #
 lmon=HDMI2
 cmon=HDMI1
-rmon=VGA1
+rmon=HDMI1  # VGA1
 
 #
 # Switch to the AutoVoice workspace, populate where necessary.
@@ -51,11 +51,10 @@ i3_generic()
     case "${group}" in
         # Window Management commands.
         # Use a simple fixed position parameter array.
-        (:i3|:wm)
+        (:wm)
         verb=$2
         this=$3
         that=$4
-        # Debug # echo "$group $verb $this $that"
         # Prepend a zero to single digits from Tasker because i3wm
         # marks must adhere to the regex [0-9][0-9].
         case "${this}" in
@@ -70,10 +69,29 @@ i3_generic()
         # English. They are designed to be recognisable and to not be
         # misinterpreted.
         case "${verb}" in
-            (visit)
-            i3wm_visit "$this" "$that" ;;
-            (move)
-            i3wm_move "$this" "$that" ;;
+            (mark)  # passed
+            "${HOME}/local/bin/i3-wrapper"  --unique-mark
+            ;;
+            (visit)  # passed
+            i3wm_visit "$that"
+            ;;
+            (move)  # passed
+            # Google might have concatenated two double-digit numbers.
+            case "${that}" in
+                ([0-9][0-9][0-9][0-9])
+                this=${that:0:2}
+                that=${that:2:2}
+                ;;
+                ([0-9][0-9]?[0-9][0-9])
+                this=${that:0:2}
+                that=${that:3:2}
+                ;;
+                (*)
+                this=$1; that=$2
+                ;;
+            esac
+            i3wm_move "$this" "$that"
+            ;;
         esac
         ;;
         # Shell commands.
@@ -105,7 +123,7 @@ i3_generic()
 #
 i3wm_visit ()
 {
-    this=$1; that=$2
+    that=$1
     if [ "$(i3-msg -t get_marks | grep -c "${that}")" -eq 1 ]; then
         # Visit "that"  window.
         i3-msg "[con_mark=\"${that}\"] focus"
@@ -113,8 +131,7 @@ i3wm_visit ()
         # Visit "that" workspace .
         i3-msg "workspace \"${that}\""
     else
-        ( sleep 10 && xdotool key Return ) &
-        echo "Can't find ${that}" | dmenu -b -fn 'pango:DejaVu Sans 11'
+        notify-send "Can't find ${that}"
     fi
 }
 
@@ -124,8 +141,7 @@ i3wm_visit ()
 #
 i3wm_move ()
 {
-    this=$1; that=$2
-    if [ "$(i3-msg -t get_marks | grep -c "$this")" -eq 1 ] &&
+     if [ "$(i3-msg -t get_marks | grep -c "$this")" -eq 1 ] &&
            [ "$(i3-msg -t get_marks | grep -c "$that")" -eq 1 ];  then
         # Move "this" window by swapping places with "that" window.
         i3-msg "[con_mark=\"${this}\"] focus"
@@ -145,7 +161,7 @@ i3wm_move ()
              i3-msg "move container to output ${lmon}" ;;
              (middle|cent*)
              i3-msg "move container to output ${cmon}" ;;
-             (right)
+             (right|write|rite)
              i3-msg "move container to output ${rmon}" ;;
          esac
     elif [ "$(i3-msg -t get_workspaces | jq '.[] | .name' | grep -c "${this}")" -eq 1 ]; then
@@ -155,12 +171,11 @@ i3wm_move ()
             i3-msg "move workspace ${this} to output ${lmon}" ;;
             (middle|cent*)
             i3-msg "move workspace ${this} to output ${cmon}" ;;
-            (right)
+            (right|write|rite)  # <sigh>
             i3-msg "move workspace ${this} to output ${rmon}" ;;
         esac
     else
-        ( sleep 10 && xdotool key Return ) &
-        echo "Can't find either ${this} or ${that}" | dmenu -b -fn 'pango:DejaVu Sans 11'
+        notify-send "Can't find either ${this} or ${that}"
     fi
 }
 
