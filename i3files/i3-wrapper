@@ -350,8 +350,6 @@ i3_lower_lower_hard()
         (tt) i3tt ;;
         (yy) i3yy ;;
         (dd) i3dd ;;
-        # Manual marking for other than terminals, Emacs or Chrome.
-        (um) i3_unique_mark ;;
         # This uses emacsclient so needs Emacs server running.
         (av) eval "$(dirname "$0")/i3-tasker" "i3_autovoice_workspace" ;;
         # Use these to add an instance into an existing workspace.
