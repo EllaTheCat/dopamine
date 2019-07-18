@@ -241,7 +241,10 @@ mode "Primary" {
     bindsym v split v
     bindsym b split h
 
-    bindsym n $primarynop
+    # Place a unique two digit mark on the focused window's titlebar.
+    # [u] and [m] are already in use. The mark is a two digit [n]umber.
+    # The prompt doesn't work because it forgets where the focus was.
+    bindsym n $default, $i3wrapper --unique-mark
 
     # (M)ove container to named workspace.
     bindsym m \
