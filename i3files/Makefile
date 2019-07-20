@@ -89,7 +89,6 @@ help:
     $(I3BIN)/i3-mouse \
     $(I3BIN)/i3-status \
     $(I3BIN)/i3-tasker \
-    $(I3BIN)/i3-tvheadend \
     $(I3BIN)/i3-wrapper \
     $(I3BINDINGS)
 
@@ -101,7 +100,6 @@ help:
     $(I3FILES)/.i3-mouse.log \
     $(I3FILES)/.i3-status.log \
     $(I3FILES)/.i3-tasker.log \
-    $(I3FILES)/.i3-tvheadend.log \
     $(I3FILES)/.i3-wrapper.log
 
 $(I3CFG): $(I3FILES)/dot-config-i3-config
@@ -150,10 +148,6 @@ $(I3BIN)/i3-status: $(I3FILES)/i3-status
 $(I3BIN)/i3-tasker: $(I3FILES)/i3-tasker
 	@install -m $(DIRMODE) -d $(I3BIN)
 	@install -m $(EXEMODE) $(I3FILES)/i3-tasker $(I3BIN)
-
-$(I3BIN)/i3-tvheadend: $(I3FILES)/i3-tvheadend
-	@install -m $(DIRMODE) -d $(I3BIN)
-	@install -m $(EXEMODE) $(I3FILES)/i3-tvheadend $(I3BIN)
 
 $(I3BIN)/i3-wrapper: $(I3FILES)/i3-wrapper
 	@install -m $(DIRMODE) -d $(I3BIN)
@@ -205,11 +199,6 @@ $(I3FILES)/.i3-status.log: $(I3FILES)/i3-status
 $(I3FILES)/.i3-tasker.log: $(I3FILES)/i3-tasker
 	@rm -f $@
 	@shellcheck $(I3FILES)/i3-tasker > $<.log
-	@mv $<.log $@
-
-$(I3FILES)/.i3-tvheadend.log: $(I3FILES)/i3-tvheadend
-	@rm -f $@
-	@shellcheck $(I3FILES)/i3-tvheadend > $<.log
 	@mv $<.log $@
 
 $(I3FILES)/.i3-wrapper.log: $(I3FILES)/i3-wrapper
