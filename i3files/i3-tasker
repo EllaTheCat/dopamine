@@ -52,6 +52,7 @@ i3_generic()
         # Window Management commands.
         # Use a simple fixed position parameter array.
         (:wm)
+        # UNRELIABLE SPEECH RECOGNITION.
         verb=$2
         this=$3
         that=$4
@@ -69,20 +70,20 @@ i3_generic()
         # English. They are designed to be recognisable and to not be
         # misinterpreted.
         case "${verb}" in
-            (mark)  # passed
+            (mark)
             "${HOME}/local/bin/i3-wrapper"  --unique-mark
             ;;
-            (visit)  # passed
+            (visit)
             i3wm_visit "$that"
             ;;
-            (move)  # passed
+            (move)
             # Google might have concatenated two double-digit numbers.
             case "${that}" in
                 ([0-9][0-9][0-9][0-9])
                 this=${that:0:2}
                 that=${that:2:2}
                 ;;
-                ([0-9][0-9]?[0-9][0-9])
+                ([0-9][0-9]-[0-9][0-9]|[0-9][0-9]/[0-9][0-9])
                 this=${that:0:2}
                 that=${that:3:2}
                 ;;
@@ -108,6 +109,7 @@ i3_generic()
         ;;
         # Clipboard commands.
         (:clipboard)
+        # RELIABLE & ACCURATE SPEECH RECOGNITION.
         contents="${*:2}"
         # Insert into both clipboards and then paste into Emacs.
         echo "${contents}" | xclip -selection primary     # mouse button 2
