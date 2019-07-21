@@ -2,13 +2,6 @@
 #
 
 #
-# See dot-config-i3-config and i3-wrapper.
-#
-lmon=HDMI2
-cmon=HDMI1
-rmon=HDMI1  # VGA1
-
-#
 # Switch to the AutoVoice workspace, populate where necessary.
 #
 # Here, the user can monitor the speech-to-text results and manage the
@@ -25,7 +18,7 @@ i3_autovoice_workspace ()
     if  [  "$count0" -eq 1 ] && [  "$count1" -eq 1 ]; then
         i3-msg "workspace av"
     else
-        i3-msg "focus output ${rmon},workspace av"
+        i3-msg "workspace av"
         sleep 1
 
         if [ "$count0" -eq 0 ]; then
@@ -49,52 +42,6 @@ i3_generic()
 {
     group=$1
     case "${group}" in
-        # Window Management commands.
-        # Use a simple fixed position parameter array.
-        (:wm)
-        # UNRELIABLE SPEECH RECOGNITION.
-        verb=$2
-        this=$3
-        that=$4
-        # Prepend a zero to single digits from Tasker because i3wm
-        # marks must adhere to the regex [0-9][0-9].
-        case "${this}" in
-            ([0-9])
-            this=0${this} ;;
-        esac
-        case "${that}" in
-            ([0-9])
-            that=0${that} ;;
-        esac
-        # Spoken commands resemble English but need not be correct
-        # English. They are designed to be recognisable and to not be
-        # misinterpreted.
-        case "${verb}" in
-            (mark)
-            "${HOME}/local/bin/i3-wrapper"  --unique-mark
-            ;;
-            (visit)
-            i3wm_visit "$that"
-            ;;
-            (move)
-            # Google might have concatenated two double-digit numbers.
-            case "${that}" in
-                ([0-9][0-9][0-9][0-9])
-                this=${that:0:2}
-                that=${that:2:2}
-                ;;
-                ([0-9][0-9]-[0-9][0-9]|[0-9][0-9]/[0-9][0-9])
-                this=${that:0:2}
-                that=${that:3:2}
-                ;;
-                (*)
-                this=$1; that=$2
-                ;;
-            esac
-            i3wm_move "$this" "$that"
-            ;;
-        esac
-        ;;
         # Shell commands.
         (:shell)
         case "$2" in
@@ -109,7 +56,6 @@ i3_generic()
         ;;
         # Clipboard commands.
         (:clipboard)
-        # RELIABLE & ACCURATE SPEECH RECOGNITION.
         contents="${*:2}"
         # Insert into both clipboards and then paste into Emacs.
         echo "${contents}" | xclip -selection primary     # mouse button 2
@@ -117,68 +63,6 @@ i3_generic()
         emacsclient.emacs24 -e "(with-current-buffer \"AutoVoice\" (yank))"
         ;;
     esac
-}
-
-#
-# Visit "that" window or workspace, "that" must exist. Ignore "this"
-# dummy parameter.
-#
-i3wm_visit ()
-{
-    that=$1
-    if [ "$(i3-msg -t get_marks | grep -c "${that}")" -eq 1 ]; then
-        # Visit "that"  window.
-        i3-msg "[con_mark=\"${that}\"] focus"
-    elif [ "$(i3-msg -t get_workspaces | jq '.[] | .name' | grep -c "${that}")" -eq 1 ]; then
-        # Visit "that" workspace .
-        i3-msg "workspace \"${that}\""
-    else
-        notify-send "Can't find ${that}"
-    fi
-}
-
-#
-# Move "this" window or workspace to "that" window or workspace or
-# output, "this" and "that" must exist.
-#
-i3wm_move ()
-{
-     if [ "$(i3-msg -t get_marks | grep -c "$this")" -eq 1 ] &&
-           [ "$(i3-msg -t get_marks | grep -c "$that")" -eq 1 ];  then
-        # Move "this" window by swapping places with "that" window.
-        i3-msg "[con_mark=\"${this}\"] focus"
-        i3-msg "swap container with mark \"${that}\""
-        i3-msg "[con_mark=\"${this}\"] focus"
-    elif [ "$(i3-msg -t get_marks | grep -c "$this")" -eq 1 ] &&
-             [ "$(i3-msg -t get_workspaces | jq '.[] | .name' | grep -c "${that}")" -eq 1 ]; then
-        # Move "this" window to "that" workspace.
-        i3-msg "[con_mark=\"${this}\"] focus"
-        i3-msg "move container to workspace \"${that}\""
-        i3-msg "workspace \"${that}\""
-    elif [ "$(i3-msg -t get_marks | grep -c "$this")" -eq 1 ]; then
-       # Move "this" window to "that" (logically named) output.
-         i3-msg "[con_mark=\"${this}\"] focus"
-         case "${that}" in
-             (left)
-             i3-msg "move container to output ${lmon}" ;;
-             (middle|cent*)
-             i3-msg "move container to output ${cmon}" ;;
-             (right|write|rite)
-             i3-msg "move container to output ${rmon}" ;;
-         esac
-    elif [ "$(i3-msg -t get_workspaces | jq '.[] | .name' | grep -c "${this}")" -eq 1 ]; then
-        # Move "this" workspace to "that" (logically named) output.
-        case "${that}" in
-            (left)
-            i3-msg "move workspace ${this} to output ${lmon}" ;;
-            (middle|cent*)
-            i3-msg "move workspace ${this} to output ${cmon}" ;;
-            (right|write|rite)  # <sigh>
-            i3-msg "move workspace ${this} to output ${rmon}" ;;
-        esac
-    else
-        notify-send "Can't find either ${this} or ${that}"
-    fi
 }
 
 #
