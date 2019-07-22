@@ -98,15 +98,13 @@ floating_modifier Mod4
 # The modifier used with the arrow keys.
 set $i3arrowmodifier Mod4
 
-# Modifiers can be the better choice sometimes. My right hand is
-# better resting by the arrows because of tremor.
+# Modifiers can be the better choice sometimes.
 bindsym $i3arrowmodifier+Left focus left
 bindsym $i3arrowmodifier+Down focus down
 bindsym $i3arrowmodifier+Up focus up
 bindsym $i3arrowmodifier+Right focus right
 
 # Numpad cursor controls (highly recommended).
-# These should also be bound in Primary and Secondary modes.
 bindsym KP_Left focus left
 bindsym KP_Right focus right
 bindsym KP_Home focus output $lmon
@@ -116,12 +114,12 @@ bindsym KP_End move left
 bindsym KP_Down move down
 bindsym KP_Begin move up
 bindsym KP_Next move right
-bindsym KP_Delete $defaultnop
 
 # Command prompt.
 # The numpad enters numbers during command entry.
 # Do not rebind KP_0, KP_1 ... KP_8, KP_9, KP_Decimal.
 bindsym KP_Insert $default, $i3wrapper -p
+bindsym KP_Delete $defaultnop
 
 # Numpad keys that are unaffected by the NumLock state.
 # There are five: arithmetic signs / * - + and the enter key.
@@ -147,21 +145,31 @@ bindsym KP_Add \
 # consistency. YMMV.
 
 # Primary mode.
+# Use this mode for window management, not settings.
 mode "Primary" {
 
     # Add a single letter mark. See also secondary mode.
     # These number bindings map to single letter marks.
     # Consider using i3-input and typing the letter.
-    bindsym 1 $default, mark --add A
-    bindsym 2 $default, mark --add B
-    bindsym 3 $default, mark --add C
-    bindsym 4 $default, mark --add R
-    bindsym 5 $default, mark --add S
-    bindsym 6 $default, mark --add T
-    bindsym 7 $default, mark --add W
-    bindsym 8 $default, mark --add X
-    bindsym 9 $default, mark --add Y
-    bindsym 0 $default, mark --add Z
+    bindsym 1 $default, mark --add --toggle A
+    bindsym 2 $default, mark --add --toggle B
+    bindsym 3 $default, mark --add --toggle C
+    bindsym 4 $default, mark --add --toggle R
+    bindsym 5 $default, mark --add --toggle S
+    bindsym 6 $default, mark --add --toggle T
+    bindsym 7 $default, mark --add --toggle W
+    bindsym 8 $default, mark --add --toggle X
+    bindsym 9 $default, mark --add --toggle Y
+    bindsym 0 $default, mark --add --toggle Z
+
+    # Remove an entire group of single letter marks.
+    # These are on the same row as the digits.
+    bindsym grave $default, \
+            unmark A, unmark B, unmark C
+    bindsym minus $default, \
+            unmark R, unmark S, unmark T
+    bindsym equal $default, \
+            unmark W, unmark X, unmark Y, unmark Z
 
     # This is independent of the similarly named configuration setting.
     bindsym q $default, workspace back_and_forth
@@ -170,6 +178,7 @@ mode "Primary" {
     bindsym w  \
             $default, exec i3-input -f $i3inputfont  -l 2 \
             -P '(workspace): ' -F 'workspace "%s"'
+    bindsym e $primarynop
 
     # (R)ename a workspace.
     bindsym r \
@@ -179,20 +188,18 @@ mode "Primary" {
 
     # [T]abbed layout.
     bindsym t $default, layout tabbed
+    bindsym y $primarynop
 
     # Focus the workspace with the latest [u]rgency hint.
     bindsym u $default, [urgent=latest] focus
+
+    # Info on keyboard bindings.
+    bindsym i $default, $i3wrapper --keyboard-binding-info
 
     # Focus the child container.
     bindsym o focus child
     # Focus the (P)arent container.
     bindsym p focus parent
-
-    bindsym e $primarynop
-    bindsym y $primarynop
-
-    # Info on keyboard bindings.
-    bindsym i $default, $i3wrapper --keyboard-binding-info
 
     # Scratchpad (exclude the scratchpad terminal which is a special case).
     bindsym bracketleft move scratchpad
@@ -252,17 +259,23 @@ mode "Primary" {
             -P '(move container to workspace): ' \
             -F 'move container to workspace "%s"'
 
-    bindsym comma $primarynop
-    bindsym period $primarynop
+    # Subject to change: volume control of 3.5mm rear line out.
+    # Beware! Increasing beyond 100% can damage speakers.
+    bindsym comma \
+            exec pactl set-sink-volume $analogaudiosink -10%
+    bindsym period \
+            exec pactl set-sink-volume $analogaudiosink +10%
+
     bindsym slash $primarynop
 
-    # Classic focus keys copied from default mode.
-    bindsym $i3arrowmodifier+Left focus left
-    bindsym $i3arrowmodifier+Down focus down
-    bindsym $i3arrowmodifier+Up focus up
-    bindsym $i3arrowmodifier+Right focus right
+    # Simple focus keys similar to default mode.
+    # YMMV but I prefer to omit the i3arrowmodifier here.
+    bindsym Left focus left
+    bindsym Down focus down
+    bindsym Up focus up
+    bindsym Right focus right
 
-    # Numpad cursor keys copied from default mode.
+    # Numpad keys identical to default mode.
     bindsym KP_Left focus left
     bindsym KP_Right focus right
     bindsym KP_Home focus output $lmon
@@ -272,8 +285,8 @@ mode "Primary" {
     bindsym KP_Down move down
     bindsym KP_Begin move up
     bindsym KP_Next move right
-    bindsym KP_Delete $primarynop
     bindsym KP_Insert $default, $i3wrapper -p
+    bindsym KP_Delete $primarynop
 
     # Numpad keys that are unaffected by the NumLock state.
     # There are five: arithmetic signs / * - + and the enter key.
@@ -299,28 +312,11 @@ mode "Primary" {
 # Secondary Mode.
 # Entered from primary mode using Menu.
 # Keyboard & Mouse. Display & Desktop. USB drives.
+# Use this mode for settings, not window management.
 mode "Secondary" {
 
-    # Remove a single letter mark. See also primary mode.
-    bindsym 1 $default, unmark A
-    bindsym 2 $default, unmark B
-    bindsym 3 $default, unmark C
-    bindsym 4 $default, unmark R
-    bindsym 5 $default, unmark S
-    bindsym 6 $default, unmark T
-    bindsym 7 $default, unmark W
-    bindsym 8 $default, unmark X
-    bindsym 9 $default, unmark Y
-    bindsym 0 $default, unmark Z
-    # Remove an entire group of single letter marks.
-    bindsym grave $default, \
-            unmark A, unmark B, unmark C
-    bindsym minus $default, \
-            unmark R, unmark S, unmark T
-    bindsym equal $default, \
-            unmark W, unmark X,  unmark Y, unmark Z
-
-    bindsym q $default, workspace back_and_forth
+    # Reserved, see 'a'.
+    bindsym q $secondarynop
 
     # These {w,e,r} keys are adjacent to the complementary {s,d,f}
     # keys, and apart from 'r' match the first letter of the argument.
@@ -331,13 +327,13 @@ mode "Secondary" {
     bindsym t $secondarynop
     bindsym y $secondarynop
 
-    # My quietpc has attached USB drives 1 Tbyte & 4 Tbyte.
-    # Spin both down, blue LEDs should stay dark when quietpc is off.
+    # Spin down the USB drives attached to my desktop PC, their blue
+    # LEDs should stay dark. One drive automatically spins down, one
+    # drive only spins down when requested.
     bindsym u $default, $i3apps stop usbdisks
 
-    # Focus watcher start and stop.
-    bindsym i $default, $i3apps start focuswatcher
-    bindsym o $default, $i3apps stop focuswatcher
+    bindsym i  $secondarynop
+    bindsym o $secondarynop
 
     # Benq DVI and HDMI auto-switching to save wear & tear.
     # https://raspberrypi.stackexchange.com/a/53267
@@ -346,6 +342,7 @@ mode "Secondary" {
     # Command prompt.
     bindsym Tab $default, $i3wrapper -p
 
+    # Reserved, see 'q'.
     bindsym a $secondarynop
 
     # Complementary to the {w,e,r} keys, see above.
@@ -368,60 +365,23 @@ mode "Secondary" {
     # Command prompt.
     bindsym backslash $default, $i3wrapper -p
 
-    bindsym z $default, focus output $lmon
-    bindsym x $default, focus output $cmon
-    bindsym c $default, focus output $rmon
-
-    bindsym v $default,$i3mouse window
-    bindsym b $default,$i3mouse desktop
+    bindsym z $secondarynop
+    bindsym x $secondarynop
+    bindsym c $secondarynop
+    bindsym v $secondarynop
+    bindsym b $secondarynop
 
     # Desktop background.
     bindsym n $default, exec --no-startup-id nitrogen --restore
 
-    # File watcher start. Seldom required, crashes are extremely rare.
-    bindsym m $default, $i3apps start filewatcher
+    bindsym m $secondarynop
 
-    # Focus a window, warp the mouse inside the window, or not.
-    bindsym comma $default, $i3mouse window
-    bindsym period $default, $i3mouse desktop
-
-    # File watcher stop binding is RESERVED and DEPRECATED.
+    bindsym comma $secondarynop
+    bindsym period $secondarynop
     bindsym slash $secondarynop
 
     # Close a session. Avoid window or workspace kill bindings here.
     bindsym Control+Mod4+Mod1+Delete  $default, $i3apps stop everything
-
-    # Classic focus keys copied from default mode.
-    bindsym $i3arrowmodifier+Left focus left
-    bindsym $i3arrowmodifier+Down focus down
-    bindsym $i3arrowmodifier+Up focus up
-    bindsym $i3arrowmodifier+Right focus right
-
-    # Numpad cursor keys copied from default mode.
-    bindsym KP_Left focus left
-    bindsym KP_Right focus right
-    bindsym KP_Home focus output $lmon
-    bindsym KP_Up focus output $cmon
-    bindsym KP_Prior focus output $rmon
-    bindsym KP_End move left
-    bindsym KP_Down move down
-    bindsym KP_Begin move up
-    bindsym KP_Next move right
-    bindsym KP_Delete $secondarynop
-    bindsym KP_Insert $default, $i3wrapper -p
-
-    # Numpad keys that are unaffected by the NumLock state.
-    # There are five: arithmetic signs / * - + and the enter key.
-    # Do not rebind KP_Enter! This is a design decision.
-    bindsym KP_Divide workspace prev_on_output
-    bindsym KP_Multiply workspace next_on_output
-
-    # Subject to change: volume control of 3.5mm rear line out.
-    # Beware! Increasing beyond 100% can damage speakers.
-    bindsym KP_Subtract \
-            exec pactl set-sink-volume $analogaudiosink -10%
-    bindsym KP_Add \
-            exec pactl set-sink-volume $analogaudiosink +10%
 
     # Pressing cycles through the three modes. Sec->Def->Pri->Sec.
     # Triple-pressing(!) in default mode enables mouse in Emacs.
