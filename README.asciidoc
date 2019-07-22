@@ -15,6 +15,10 @@ I have made a post on reddit about dopamine and there's once again
 https://www.reddit.com/r/i3wm/comments/b1i2io/dopamine_using_i3_when_the_user_has_a_movement/[an
 ongoing discussion].
 
+As of 2019-07-22, I'm purging the various failed experiments and too-cute features.
+I'm finally conceding that AutoVoice-based speech recognition isn't fit for purpose,
+whether for dictation or control. The killer is latency.
+
 == How to run dopamine
 Writing INSTALL is on my ToDo list.
 
@@ -233,24 +237,8 @@ such that the left monitor source can be selected programmatically.
 This script is a straightforward wrapper round 'i3status'. It adds two things:
 
 - On/Off control and status for USB webcam microphone and analog stereo microphone.
-I need both to cover Google Search,
-Google Chrome Autovoice extension (a mission critical capability in my case),
-Skype (which actually works when installed as a snap package).
 - A list of the marks that are assigned to terminals, Emacs frames, Chrome windows.
 The utility is debatable.
-
-=== i3-tvheadend
-I have a tvheadend server on the machine I'm developing dopamine on,
-so I can watch digital TV when the PD requires that I take a break.
-
-The client is a Raspberry Pi Zero W that makes a surprisingly good attempt at
-using its Broadcom hardware accelerated media player
-to render streaming video in high resolution at 25fps (frames not fields).
-
-The i3-headend script provides the client, the i3-wrapper script recognises
-commands intended for the client and forwards them to i3-tvheadend.
-There is a command syntax convention for adding subsystems like this,
-a prefix string between colons.
 
 === i3-apps
 This script makes explicit how the applications I use should be started and stopped.
