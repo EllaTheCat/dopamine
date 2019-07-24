@@ -22,12 +22,12 @@ case "$1" in
     # The subshell is a hack, be careful with exit status.
     (pkill i3-mode) &
     ;;
-    ([A-Z][a-z]*|OK)
+    (Primary|Secondary|OK)
     i3-msg "mode \"$1\""
     # Allow this instance to be killed before it dims the display.
     sleep 1.4  # 0.7
     for output in ${outputs} ; do
-        xrandr --output "${output}" --brightness 0.5
+        xrandr --output "${output}" --brightness 0.7
     done
     ;;
 esac
