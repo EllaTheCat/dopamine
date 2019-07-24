@@ -347,20 +347,29 @@ i3_lower_lower_hard()
         # 1. Terminal in the current workspace. Split is top-bottom.
         # 2. Terminal in the current workspace. Split is left-right.
         # 3. Dropdown terminal (strictly: a scratchpad terminal).
-        (tt) i3tt ;;
-        (yy) i3yy ;;
-        (dd) i3dd ;;
+        (tt)
+        i3tt ;;
+        (yy)
+        i3yy ;;
+        (dd)
+        i3dd ;;
         # A container layout : ""tt' then 'yy' => 'ty'.
-        (ty) i3tt && sleep 2 && i3yy ;;
+        (ty)
+        i3tt && sleep 2 && i3yy ;;
         # Clipboard for future speech recognition monitoring.
         # This uses emacsclient so needs Emacs server running.
-        (cb) eval "$(dirname "$0")/i3-tasker" "i3_clipboard" ;;
+        (cb)
+        eval "$(dirname "$0")/i3-tasker" "i3_clipboard" ;;
         # Use these to add an instance into an existing workspace.
-        (em) i3-msg "exec emacsclient.emacs24 -c" ;;
-        (gc) i3-msg "exec google-chrome --new-window" ;;
+        (em)
+        i3-msg "exec emacsclient.emacs24 -c" ;;
+        (gc)
+        i3-msg "exec google-chrome --new-window" ;;
         # These don't fit the easy launch-or-focus template.
-        (sg) xfce4-screenshooter -d 2 ;;
-        (wc) eval cheese >/dev/null 2>&1 ;;
+        (sg)
+        xfce4-screenshooter -d 2 ;;
+        (wc)
+        eval cheese >/dev/null 2>&1 ;;
         # Visit the eponymous workspace if it exists, otherwise create
         # the workspace and launch three side-by-side terminals there.
         ([a-z][a-z]) i3_triple_terminal_workspace "$1" ;;
