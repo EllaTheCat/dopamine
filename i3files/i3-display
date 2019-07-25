@@ -18,66 +18,39 @@ setdisplay ()
     # Initialise the "monitor dmenu" to be on monitor number zero.
     [ ! -e  "/dev/shm/$USER/mflag" ] && echo 0 > "/dev/shm/$USER/mflag"
     case "$1" in
-        # Sleep the display using the keyboard or console, not the
-        # mouse.
-        (sleep|off)
-        xdotool mousemove --clearmodifiers 2048 128
-        i3-mouse disable
-        sleep 3s
-        xset s blank
-        xset dpms 0 0 0
-        xset dpms force off
-        ;;
-        # Wake the display using the keyboard or console, not the
-        # mouse.
-        (wake|on)
-        i3-mouse enable
-        xdotool mousemove --clearmodifiers 2048 128
-        xset s off
-        xset -dpms
-        ;;
-        # Turn monitors on and off.
         (menu)
         mflag=$(cat "/dev/shm/$USER/mflag")
-        list="left on\nleft off\nmiddle on\nmiddle off\nright on\nright off\nhdmi off\nhdmi on\n"
+        list="left on\nleft off\nmiddle on\nmiddle off\nright on\nright off\n"
         item=$(echo -e "cancel\n${list}" | dmenu -b -fn 'pango:DejaVu Sans 11' -m "${mflag}" -p 'Monitors: ')
-        [ "${item}" != "cancel" ] && eval "$0 ${item/ /}"  # "a b" => "ab"
+        [ "${item}" != "cancel" ] && eval "$0 ${item/ /-}"  # "a b" => "ab"
         ;;
-        (lefton)
+        (left-on)
         echo 0 > "/dev/shm/$USER/mflag"
         xrandr --output "${lmon}" --auto --left-of "${cmon}"
         xrandr --output "${lmon}" --brightness 1.0
         ;;
-        (leftoff)
+        (left-off)
         echo 0 > "/dev/shm/$USER/mflag"
         xrandr --output "${lmon}" --off
         ;;
-        (middleon)
+        (middle-on)
         echo 0 > "/dev/shm/$USER/mflag"
         xrandr --output "${cmon}" --auto --rightof "${lmon}"
         xrandr --output "${cmon}" --brightness 1.0
         ;;
-        (middleoff)
+        (middle-off)
         # Move the dmenu away from the disabled monitor.
         echo 1 > "/dev/shm/$USER/mflag"
         xrandr --output "${cmon}" --off
         ;;
-        (righton)
+        (right-on)
         echo 0 > "/dev/shm/$USER/mflag"
         xrandr --output "${rmon}" --auto --right-of "${cmon}"
         xrandr --output "${rmon}" --brightness 1.0
         ;;
-        (rightoff)
+        (right-off)
         echo 0 > "/dev/shm/$USER/mflag"
         xrandr --output "${rmon}" --off
-        ;;
-        (hdmioff)
-        # To switch back to i3 requires that HDMI input is disabled.
-        # This command is specific to a Raspberry Pi on HDMI input.
-        ssh siro vcgencmd display_power 0
-        ;;
-        (hdmion)
-        ssh siro vcgencmd display_power 1
         ;;
     esac
 }

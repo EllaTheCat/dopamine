@@ -40,8 +40,9 @@ setmouse ()
             xdotool mousemove $((X + WIDTH / 3)) $((Y + HEIGHT / 3))
         done
         ;;
-        (desktop)
+        (reset)
         pkill -f "$0 window"
+        xdotool mousemove 0 0
         ;;
     esac
 }

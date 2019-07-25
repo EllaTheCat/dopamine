@@ -193,12 +193,11 @@ mode "Primary" {
     # Focus the workspace with the latest [u]rgency hint.
     bindsym u $default, [urgent=latest] focus
 
-    # Info on keyboard bindings.
+    # [I]nfo on keyboard bindings.
     bindsym i $default, $i3wrapper --keyboard-binding-info
 
-    # Focus the child container.
+    # P for Parent. O for Offspring.
     bindsym o focus child
-    # Focus the (P)arent container.
     bindsym p focus parent
 
     # Scratchpad (exclude the scratchpad terminal which is a special case).
@@ -215,10 +214,10 @@ mode "Primary" {
     # S for Side by Side.
     bindsym s $default, focus down, split h, focus up, move down, move left;
 
-    # Tiled containers are the default.
+    # Tiled containers are the [d]efault.
     bindsym d $default, layout default
 
-    # Enter fullscreen mode for the focused container.
+    # Enter [f]ullscreen mode for the focused container.
     bindsym f $default, fullscreen toggle
     bindsym g $default, fullscreen toggle global
 
@@ -318,11 +317,10 @@ mode "Secondary" {
     # Reserved, see 'a'.
     bindsym q $secondarynop
 
-    # These {w,e,r} keys are adjacent to the complementary {s,d,f}
-    # keys, and apart from 'r' match the first letter of the argument.
-    bindsym w $default, $i3display wake
+    # {w,e,r} keys are paired with {s,d,f} keys.
+    bindsym w $default, $i3mouse window
     bindsym e $default, $i3mouse enable
-    bindsym r $default, $i3mouse slow
+    bindsym r $default, $i3mouse reset
 
     bindsym t $secondarynop
     bindsym y $secondarynop
@@ -345,8 +343,8 @@ mode "Secondary" {
     # Reserved, see 'q'.
     bindsym a $secondarynop
 
-    # Complementary to the {w,e,r} keys, see above.
-    bindsym s $default, $i3display sleep
+    # {s,d,f} keys are paired with {w,e,r} keys.
+    bindsym s $default, $i3mouse slow
     bindsym d $default, $i3mouse disable
     bindsym f $default, $i3mouse fast
 
@@ -478,14 +476,16 @@ for_window [title="KeyClick"] move scratchpad;
 # Windows that annoy me, that I can't fix.
 for_window [title="Add Security Exception"] kill;
 
-# Colours for windows.
-# Defaults changed to green title bar and border when focused.
+# Colours for windows. Defaults changed to better distinguish are:
+# 1. green title bar and border when focused.
+# 2. gold title bar when focused inactive,
+# 3. grey title bar otherwise.
 # class | border | background | text | indicator | child_border
 client.focused          #333333 #006600 #ffffff #2e9ef4   #185522
-client.focused_inactive #333333 #333311 #bbbbbb #484e50   #5f676a
+client.focused_inactive #333333 #444400 #bbbbbb #484e50   #5f676a
 client.unfocused        #333333 #444444 #bbbbbb #292d2e   #222222
 client.urgent           #880000 #444444 #ffffff #880000   #900000
-client.placeholder      #000000 #0c0c0c #ffffff #000000   #0c0c0c
+client.placeholder      #000000 #444444 #ffffff #000000   #0c0c0c
 
 # Font for window titles. The font for the bar is set explicitly.
 font pango:DejaVu Sans 11
@@ -510,17 +510,17 @@ bar {
 
 # Mouse behaviour wrt windows.
 focus_follows_mouse no
-# Focus Up can Focus Down because there are seldom more than three
-# windows stacked vertically.
-focus_wrapping force
+# Focus wrappping isn't as simple as I was lead to believe.
+focus_wrapping off
 
 # Additional Menu and Escape keys. US layout on UK PC105. 'keycode
 # 51' is mapped to Return to mimic the geometry of the US keyboard.
 # Stuck modifiers are cleared.
 $i3keyboard
 
-# Mouse warping default (see key bindings).
-$i3mouse desktop
+# [window] When a window obtains focus the mouse warps to a point
+# inside the window. [desktop] The mouse is not warped.
+$i3mouse window
 
 # Microphones' defaults (see key bindings). 1 = mute here.
 exec --no-startup-id pactl set-source-mute $analogaudiosource 1
