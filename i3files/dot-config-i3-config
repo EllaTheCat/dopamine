@@ -26,6 +26,7 @@ set $i3keyboard exec --no-startup-id ~/local/bin/i3-keyboard
 set $i3make exec --no-startup-id ~/local/bin/i3-make
 set $i3mode exec --no-startup-id ~/local/bin/i3-mode
 set $i3mouse exec --no-startup-id ~/local/bin/i3-mouse
+set $i3powermate exec --no-startup-id ~/local/bin/i3-powermate
 set $i3wrapper exec --no-startup-id ~/local/bin/i3-wrapper
 
 set $defaultnop nop
@@ -510,7 +511,7 @@ bar {
 
 # Mouse behaviour wrt windows.
 focus_follows_mouse no
-# Focus wrappping isn't as simple as I was lead to believe.
+# Focus wrapping isn't as simple as I was lead to believe.
 focus_wrapping off
 
 # Additional Menu and Escape keys. US layout on UK PC105. 'keycode
@@ -518,9 +519,11 @@ focus_wrapping off
 # Stuck modifiers are cleared.
 $i3keyboard
 
-# [window] When a window obtains focus the mouse warps to a point
-# inside the window. [desktop] The mouse is not warped.
-$i3mouse window
+# [reset] Mouse behaves normally. [window] Mouse warps to window.
+$i3mouse reset
+
+# Volume control knob with 160% gain.
+exec --no-startup-id $i3powermate volume
 
 # Microphones' defaults (see key bindings). 1 = mute here.
 exec --no-startup-id pactl set-source-mute $analogaudiosource 1

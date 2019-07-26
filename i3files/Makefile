@@ -87,6 +87,7 @@ help:
     $(I3BIN)/i3-keyboard \
     $(I3BIN)/i3-mode \
     $(I3BIN)/i3-mouse \
+    $(I3BIN)/i3-powermate \
     $(I3BIN)/i3-status \
     $(I3BIN)/i3-tasker \
     $(I3BIN)/i3-wrapper \
@@ -98,6 +99,7 @@ help:
     $(I3FILES)/.i3-keyboard.log \
     $(I3FILES)/.i3-mode.log \
     $(I3FILES)/.i3-mouse.log \
+    $(I3FILES)/.i3-powermate.log \
     $(I3FILES)/.i3-status.log \
     $(I3FILES)/.i3-tasker.log \
     $(I3FILES)/.i3-wrapper.log
@@ -139,6 +141,10 @@ $(I3BIN)/i3-mode: $(I3FILES)/i3-mode
 $(I3BIN)/i3-mouse: $(I3FILES)/i3-mouse
 	@install -m $(DIRMODE) -d $(I3BIN)
 	@install -m $(EXEMODE) $(I3FILES)/i3-mouse $(I3BIN)
+
+$(I3BIN)/i3-powermate: $(I3FILES)/i3-powermate
+	@install -m $(DIRMODE) -d $(I3BIN)
+	@install -m $(EXEMODE) $(I3FILES)/i3-powermate $(I3BIN)
 
 $(I3BIN)/i3-status: $(I3FILES)/i3-status
 	@install -m $(DIRMODE) -d $(I3BIN)
@@ -189,6 +195,11 @@ $(I3FILES)/.i3-mode.log: $(I3FILES)/i3-mode
 $(I3FILES)/.i3-mouse.log: $(I3FILES)/i3-mouse
 	@rm -f $@
 	@shellcheck $(I3FILES)/i3-mouse > $<.log
+	@mv $<.log $@
+
+$(I3FILES)/.i3-powermate.log: $(I3FILES)/i3-powermate
+	@rm -f $@
+	@shellcheck $(I3FILES)/i3-powermate > $<.log
 	@mv $<.log $@
 
 $(I3FILES)/.i3-status.log: $(I3FILES)/i3-status

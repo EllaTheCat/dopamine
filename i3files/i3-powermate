@@ -1,0 +1,36 @@
+#!/bin/bash
+#
+# https://github.com/stefansundin/powermate-linux
+#
+# Bind messages to the four powermate events.
+# The last message to be bound to each event wins.
+#
+# It's early days for this script.
+
+# Customise this directory where the git clone installs the package.
+dir=~/1/packages-alt/powermate/powermate-linux
+
+pkill -f "${dir}/powermate"
+
+case "${1:-volume}" in
+    (volume)
+    # Customise this pulseaudio output.
+    analogaudiosink=alsa_output.pci-0000_00_1b.0.analog-stereo
+    # The script path/filenames are fixed, their content is mutable.
+    echo -e "#!/bin/bash\npactl set-sink-mute $analogaudiosink toggle\n" > "/dev/shm/$USER/i3/pmknob"
+    echo -e "#!/bin/bash\npactl set-sink-volume $analogaudiosink 100%\n" > "/dev/shm/$USER/i3/pmlongpress"
+    echo -e "#!/bin/bash\npactl set-sink-volume $analogaudiosink +1%\n" > "/dev/shm/$USER/i3/pmincrement"
+    echo -e "#!/bin/bash\npactl set-sink-volume $analogaudiosink -1%\n" > "/dev/shm/$USER/i3/pmdecrement"
+    ;;
+esac
+
+chmod 700 "/dev/shm/$USER/i3/pmknob"
+chmod 700 "/dev/shm/$USER/i3/pmlongpress"
+chmod 700 "/dev/shm/$USER/i3/pmdecrement"
+chmod 700 "/dev/shm/$USER/i3/pmincrement"
+
+"${dir}/powermate" -c "${dir}/powermate.toml" > /dev/null 2>&1
+
+#
+# Done.
+#
