@@ -12,15 +12,19 @@ dir=~/1/packages-alt/powermate/powermate-linux
 
 pkill -f "${dir}/powermate"
 
-case "${1:-volume}" in
-    (volume)
-    # Customise this pulseaudio output.
-    analogaudiosink=alsa_output.pci-0000_00_1b.0.analog-stereo
-    # The script path/filenames are fixed, their content is mutable.
-    echo -e "#!/bin/bash\npactl set-sink-mute $analogaudiosink toggle\n" > "/dev/shm/$USER/i3/pmknob"
-    echo -e "#!/bin/bash\npactl set-sink-volume $analogaudiosink 100%\n" > "/dev/shm/$USER/i3/pmlongpress"
-    echo -e "#!/bin/bash\npactl set-sink-volume $analogaudiosink +1%\n" > "/dev/shm/$USER/i3/pmincrement"
-    echo -e "#!/bin/bash\npactl set-sink-volume $analogaudiosink -1%\n" > "/dev/shm/$USER/i3/pmdecrement"
+# Customise these pulseaudio outputs, take care to be consistent with dot-config-i3-config definitions!
+export analogaudiosink=alsa_output.pci-0000_00_1b.0.analog-stereo
+export bluetoothaudiosink=bluez_sink.00_01_01_00_12_CB
+export hdmiaudiosink=alsa_output.pci-0000_00_03.0.hdmi-stereo
+
+# The script path/filenames are fixed, but their content is mutable.
+case "$1" in
+    (analog|bluetooth|hdmi)
+    sink=$(printf "%s%s" "$1" 'audiosink')
+    echo -e "#!/bin/bash\npactl set-sink-mute    ${!sink} toggle\n" > "/dev/shm/$USER/i3/pmknob"
+    echo -e "#!/bin/bash\npactl set-sink-volume ${!sink} 100%\n" > "/dev/shm/$USER/i3/pmlongpress"
+    echo -e "#!/bin/bash\npactl set-sink-volume ${!sink} +1%\n" > "/dev/shm/$USER/i3/pmincrement"
+    echo -e "#!/bin/bash\npactl set-sink-volume ${!sink} -1%\n" > "/dev/shm/$USER/i3/pmdecrement"
     ;;
 esac
 

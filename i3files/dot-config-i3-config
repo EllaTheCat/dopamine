@@ -45,6 +45,7 @@ set $rmon VGA1
 # cable from PC to monitor, it carries only video. To get audio the
 # simplest method is to use the rear headphone jack.
 set $analogaudiosink alsa_output.pci-0000_00_1b.0.analog-stereo
+set $bluetoothaudiosink bluez_sink.00_01_01_00_12_CB
 set $hdmiaudiosink alsa_output.pci-0000_00_03.0.hdmi-stereo
 # Type 'pacmd list sources' to list audio inputs. One microphone
 # lives in my webcam, the other in my headset / headphones.
@@ -315,7 +316,6 @@ mode "Primary" {
 # Use this mode for settings, not window management.
 mode "Secondary" {
 
-    # Reserved, see 'a'.
     bindsym q $secondarynop
 
     # {w,e,r} keys are paired with {s,d,f} keys.
@@ -331,7 +331,7 @@ mode "Secondary" {
     # drive only spins down when requested.
     bindsym u $default, $i3apps stop usbdisks
 
-    bindsym i  $secondarynop
+    bindsym i $secondarynop
     bindsym o $secondarynop
 
     # Benq DVI and HDMI auto-switching to save wear & tear.
@@ -341,8 +341,10 @@ mode "Secondary" {
     # Command prompt.
     bindsym Tab $default, $i3wrapper -p
 
-    # Reserved, see 'q'.
-    bindsym a $secondarynop
+    # USB volume control.
+    bindsym a $default, $i3powermate analog
+    bindsym h $default, $i3powermate hdmi
+    bindsym b $default, $i3powermate bluetooth
 
     # {s,d,f} keys are paired with {w,e,r} keys.
     bindsym s $default, $i3mouse slow
@@ -350,12 +352,12 @@ mode "Secondary" {
     bindsym f $default, $i3mouse fast
 
     bindsym g $secondarynop
-    bindsym h $secondarynop
     bindsym j $secondarynop
 
     # Set modifiers with 'xcape', set CapsLock to Control,
     # mimic US layout on UK keyboard.
     bindsym k $default, $i3keyboard
+
     # Lock the screen.
     bindsym l $default, exec --no-startup-id $i3lock
 
@@ -368,7 +370,6 @@ mode "Secondary" {
     bindsym x $secondarynop
     bindsym c $secondarynop
     bindsym v $secondarynop
-    bindsym b $secondarynop
 
     # Desktop background.
     bindsym n $default, exec --no-startup-id nitrogen --restore
@@ -521,9 +522,6 @@ $i3keyboard
 
 # [reset] Mouse behaves normally. [window] Mouse warps to window.
 $i3mouse reset
-
-# Volume control knob with 160% gain.
-exec --no-startup-id $i3powermate volume
 
 # Microphones' defaults (see key bindings). 1 = mute here.
 exec --no-startup-id pactl set-source-mute $analogaudiosource 1
