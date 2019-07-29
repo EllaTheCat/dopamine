@@ -341,10 +341,13 @@ mode "Secondary" {
     # Command prompt.
     bindsym Tab $default, $i3wrapper -p
 
-    # USB volume control.
-    bindsym a $default, $i3powermate analog
-    bindsym h $default, $i3powermate hdmi
-    bindsym b $default, $i3powermate bluetooth
+    # Select an audio output and reconfigure the volume control.
+    bindsym a $default, exec pactl move-sink-input \
+            "$(pactl list short sink-inputs | awk '{print $1}')" $analogaudiosink, $i3powermate analog
+    bindsym h $default, exec pactl move-sink-input \
+            "$(pactl list short sink-inputs | awk '{print $1}')" $hdmiaudiosink, $i3powermate hdmi
+    bindsym b $default, exec pactl move-sink-input \
+            "$(pactl list short sink-inputs | awk '{print $1}')" $bluetoothaudiosink, $i3powermate bluetooth
 
     # {s,d,f} keys are paired with {w,e,r} keys.
     bindsym s $default, $i3mouse slow
