@@ -7,7 +7,7 @@ reset ()
         while read -r line
     do
         cmd=$(echo $line | \
-            awk '{print "sudo ${HOME}/scripts/usbreset /dev/bus/usb/" $2 "/" $4}' | sed 's/://g')
+            awk '{print "sudo ${HOME}/Programs/scripts/usbreset /dev/bus/usb/" $2 "/" $4}' | sed 's/://g')
         echo "${lineno} ${cmd}"
         if [ "${lineno}" = "$2" ] || [ "$2" = "0" ] ; then
             eval ${cmd}
@@ -27,6 +27,9 @@ start ()
         (m|mouse)
         sleep 3
         reset 'Microsoft Corp. Basic Optical Mouse v2.0'  0
+        ;;
+        (p|powermate)
+        reset 'Griffin Technology PowerMate' 0
         ;;
         (dvbs)
         reset 'TBS Technologies China'  0
