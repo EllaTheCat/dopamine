@@ -372,7 +372,9 @@ mode "Secondary" {
     bindsym z $secondarynop
     bindsym x $secondarynop
     bindsym c $secondarynop
-    bindsym v $secondarynop
+
+    # Volume Control (alias "pavucontrol", "Sound Settings..."),
+    bindsym v $default, exec --no-startup-id pavucontrol
 
     # Desktop background.
     bindsym n $default, exec --no-startup-id nitrogen --restore
@@ -464,6 +466,8 @@ for_window [title="File Operation Progress"] floating enable;
 for_window [title="Scratchpad"] floating enable;
 for_window [title="Unlock Keyring"] floating enable;
 for_window [class="ffplay"] floating enable;
+
+for_window [title="Volume Control"] floating enable, move absolute position 2400 48, resize set 50 ppt 80 ppt;
 
 # Mark application windows with a 2 digit number.
 for_window [instance="xfce4-terminal"] $i3wrapper --unique-mark;
