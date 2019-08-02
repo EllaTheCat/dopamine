@@ -447,6 +447,7 @@ workspace "g7" output $cmon
 # Use this method when launching applications indirectly.
 # For example tvheadend calls mpv automatically.
 assign [instance="xfce4-terminal" title="watcher$"] wm
+assign [instance="xfce4-terminal" title="SoundWireServer"] wm
 assign [instance="xfce4-terminal" title="tvheadend"] tv
 assign [instance="gl" class="mpv"]  mp
 assign [title="VLC media player$"] vp

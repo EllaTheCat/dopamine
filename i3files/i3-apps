@@ -51,6 +51,12 @@ do
         fi
         ;;
 
+        (soundwire)
+        if [ "_${verb}" = "_start" ] || [ "_${verb}" = "_stop" ]; then
+            (eval "${HOME}/Programs/scripts/soundwire" "${verb}") &
+        fi
+        ;;
+
         (tvheadend)
         if [ "_${verb}" = "_stop" ]; then
             i3-msg --quiet '[title="tvheadend"] kill'

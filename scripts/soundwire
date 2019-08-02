@@ -1,0 +1,22 @@
+#!/bin/bash
+#
+#
+
+case "$1" in
+    (start)
+    if [ $(pgrep -c SoundWireServer) -eq 0 ]; then
+       cd /mnt/94bd806f-4aa9-4514-b2fc-9688182fa571/${USER}/packages/SoundWireServer
+       xfce4-terminal -T SoundWireServer -e "./SoundWireServer -nogui &"
+    fi
+    ;;
+    (stop)
+    pkill -f SoundWireServer
+    ;;
+    (status)
+    echo "$(basename $0) status $(pgrep -c SoundWireServer)"
+    ;;
+esac
+
+#
+# Done.
+#
