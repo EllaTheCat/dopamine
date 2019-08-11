@@ -369,9 +369,11 @@ mode "Secondary" {
     # Command prompt.
     bindsym backslash $default, $i3wrapper -p
 
-    bindsym z $secondarynop
-    bindsym x $secondarynop
-    bindsym c $secondarynop
+    # Focus is on output P, output Q shows workspace W, focus Q,
+    # switch to Primary mode ready to move W to P using {z,x,c}.
+    bindsym z focus output $lmon, mode Primary;
+    bindsym x focus output $cmon, mode Primary;
+    bindsym c focus output $rmon, mode Primary;
 
     # Volume Control (alias "pavucontrol", "Sound Settings..."),
     bindsym v $default, exec --no-startup-id pavucontrol
