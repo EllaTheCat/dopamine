@@ -378,6 +378,11 @@ i3_lower_lower_hard()
         (wc)
         eval cheese >/dev/null 2>&1 ;;
 
+        # Eye candy. Reveal background. KISS.
+        (zz) i3-msg "focus output \"${lmon}\", workspace \"$1\"" ;;
+        (xx) i3-msg "focus output \"${cmon}\", workspace \"$1\"" ;;
+        (cc) i3-msg "focus output \"${rmon}\", workspace \"$1\"" ;;
+
         # Visit the eponymous workspace if it exists, otherwise create
         # the workspace and launch three side-by-side terminals there.
         ([a-z][a-z]) i3_triple_terminal_workspace "$1" ;;
