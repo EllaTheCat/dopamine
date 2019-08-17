@@ -133,6 +133,7 @@ do
         (firefox)
         if  [ "_${verb}" = "_stop" ]; then
             # Firefox treats 'kill'/'pkill' as a crash.
+            i3-msg [instance="Navigator"] focus
             id=$(xdotool search "Mozilla Firefox" | head -1)
             xdotool windowactivate --sync "${id}"
             xdotool key --clearmodifiers ctrl+q
@@ -190,7 +191,8 @@ do
             if  [ "$?" -ne 1 ]; then
                 eval "$0 stop VirtualBox"
                 eval "$0 stop emacs"
-                eval "$0 stop thunar firefox chrome thunderbird"
+                eval "$0 stop firefox chrome"
+                eval "$0 stop thunar thunderbird"
                 eval "$0 stop scratchpad marks"
                 eval "$0 stop tvheadend soundwire"
                 eval "$0 stop focuswatcher filewatcher"
