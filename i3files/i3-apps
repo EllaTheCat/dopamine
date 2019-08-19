@@ -133,10 +133,11 @@ do
         (firefox)
         if  [ "_${verb}" = "_stop" ]; then
             # Firefox treats 'kill'/'pkill' as a crash.
-            i3-msg [instance="Navigator"] focus
-            id=$(xdotool search "Mozilla Firefox" | head -1)
-            xdotool windowactivate --sync "${id}"
-            xdotool key --clearmodifiers ctrl+q
+            if [ "$(pgrep -c -f firefox)" -gt 1 ]; then
+                i3-msg "workspace ff"
+                xdotool key --clearmodifiers ctrl+q
+                exit 0
+            fi
         fi
         ;;
 
