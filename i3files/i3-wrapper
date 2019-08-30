@@ -295,6 +295,11 @@ i3_lower_digit()
         (y[0-9])
         i3_lower_digit "e${1:1}" && sleep 0.8 && i3_lower_lower_hard 'ty' ;;
 
+        # Create a workspace with an Emacs frame and a Google Chrome
+        # window.  The workspace name will match e[0-9].  The letter 'w'
+        # has no obvious mnemonic. The delay is a safety net.
+        (w[0-9])
+        i3_lower_digit "e${1:1}" && sleep 2.4 && google-chrome --new-window ;;
     esac
 }
 
