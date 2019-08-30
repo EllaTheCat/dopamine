@@ -530,6 +530,11 @@ focus_wrapping off
 # Stuck modifiers are cleared.
 $i3keyboard
 
+# I'm not pressing keys hard enough to register. This script makes an
+# IBM PC clicky sound as feedback. It's in the dopamine (my git repo)
+# scripts folder.
+exec --no-startup-id  keyclick &
+
 # [reset] Mouse behaves normally. [window] Mouse warps to window.
 $i3mouse reset
 
