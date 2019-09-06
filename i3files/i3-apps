@@ -177,7 +177,7 @@ do
             yad --title="Starting in 7s ..." --mouse --timeout=7 --timeout-indicator=top
             if  [ "$?" -ne 1 ]; then
                 eval "$0 start filewatcher focuswatcher"
-                eval "$0 start tvheadend soundwire"
+                eval "$0 start tvheadend"
                 eval "$0 start wallpaper"
                 eval "$0 stop usbdisks" # Yes, spin them down!
             else
