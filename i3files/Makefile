@@ -10,7 +10,8 @@
 #
 
 # Local git repo directory.
-I3FILES=$(shell  readlink -f `pwd`)
+I3FILES=$(shell  readlink -f "../i3files")
+SCRIPTS=$(shell readlink -f "../scripts")
 
 # The i3 config file to be installed.
 I3CFG=$(HOME)/.config/i3/config
@@ -64,6 +65,7 @@ all:  .configured .checks .install .restart .reload .done
 help:
 	@echo "Please read the Makefile."
 	@echo I3FILES=$(I3FILES)
+	@echo SCRIPTS=$(SCRIPTS)
 	@echo I3CFG=$(I3CFG)
 	@echo I3ALTCFG=$(I3ALTCFG)
 	@echo I3STATUSCFG=$(I3STATUSCFG)
@@ -85,6 +87,7 @@ help:
     $(I3BIN)/i3-apps \
     $(I3BIN)/i3-display \
     $(I3BIN)/i3-keyboard \
+    $(I3BIN)/i3-keyclick \
     $(I3BIN)/i3-mode \
     $(I3BIN)/i3-mouse \
     $(I3BIN)/i3-powermate \
@@ -133,6 +136,12 @@ $(I3BIN)/i3-display: $(I3FILES)/i3-display
 $(I3BIN)/i3-keyboard: $(I3FILES)/i3-keyboard
 	@install -m $(DIRMODE) -d $(I3BIN)
 	@install -m $(EXEMODE) $(I3FILES)/i3-keyboard $(I3BIN)
+
+$(I3BIN)/i3-keyclick: $(SCRIPTS)/keyclick
+	@install -m $(DIRMODE) -d $(I3BIN)
+	@install -m $(EXEMODE) $(SCRIPTS)/keyclick $(I3BIN)
+	@install -m $(CFGMODE) $(SCRIPTS)/keyclick.wav $(I3BIN)
+	@mv  $(I3BIN)/keyclick $(I3BIN)/i3-keyclick
 
 $(I3BIN)/i3-mode: $(I3FILES)/i3-mode
 	@install -m $(DIRMODE) -d $(I3BIN)

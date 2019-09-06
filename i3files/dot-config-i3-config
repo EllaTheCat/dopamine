@@ -23,6 +23,7 @@ set $default exec --no-startup-id ~/local/bin/i3-mode default
 set $i3apps exec --no-startup-id ~/local/bin/i3-apps
 set $i3display exec --no-startup-id ~/local/bin/i3-display
 set $i3keyboard exec --no-startup-id ~/local/bin/i3-keyboard
+set $i3keyclick exec --no-startup-id ~/local/bin/i3-keyclick
 set $i3make exec --no-startup-id ~/local/bin/i3-make
 set $i3mode exec --no-startup-id ~/local/bin/i3-mode
 set $i3mouse exec --no-startup-id ~/local/bin/i3-mouse
@@ -533,7 +534,7 @@ $i3keyboard
 # I'm not pressing keys hard enough to register. This script makes an
 # IBM PC clicky sound as feedback. It's in the dopamine (my git repo)
 # scripts folder.
-exec --no-startup-id  keyclick &
+$i3keyclick
 
 # [reset] Mouse behaves normally. [window] Mouse warps to window.
 $i3mouse reset
