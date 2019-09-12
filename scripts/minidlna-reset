@@ -1,0 +1,22 @@
+#!//bin/bash
+#
+# Use this after editing "/etc/minidlna.conf" to refresh.
+# - https://stackoverflow.com/questions/5180409/why-is-the-minidlna-database-not-being-refreshed/23507297
+#
+
+case "$1" in
+    (localhost)
+    sudo minidlnad -R
+    sudo service minidlna restart
+    ;;
+    (quietpc)
+    ssh -t "$1" 'sudo minidlnad -R && sudo service minidlna restart'
+    ;;
+    (*)
+    echo "Usage: $(basename "$0") localhost | [server]"
+    ;;
+esac
+
+#
+# Done.
+#
