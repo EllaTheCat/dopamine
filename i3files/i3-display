@@ -52,6 +52,12 @@ setdisplay ()
         echo 0 > "/dev/shm/$USER/mflag"
         xrandr --output "${rmon}" --off
         ;;
+        (siro-off)
+        ssh siro vcgencmd display_power 0
+        ;;
+        (siro-on)
+        ssh siro vcgencmd display_power 1
+        ;;
     esac
 }
 
