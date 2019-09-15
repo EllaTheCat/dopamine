@@ -424,27 +424,16 @@ workspace "mp" output $lmon
 workspace "fp" output $lmon
 workspace "vp" output $lmon
 
-# Emacs and Chrome on complementary outputs.
+# Emacs and Chrome.
 workspace "e0" output $cmon
 workspace "e1" output $cmon
 workspace "e2" output $cmon
 workspace "e3" output $cmon
 
-workspace "g0" output $lmon
-workspace "g1" output $lmon
-workspace "g2" output $lmon
-workspace "g3" output $lmon
-
-# As above for [0:3] but swapped for [4:7].
-workspace "e4" output $lmon
-workspace "e5" output $lmon
-workspace "e6" output $lmon
-workspace "e7" output $lmon
-
-workspace "g4" output $cmon
-workspace "g5" output $cmon
-workspace "g6" output $cmon
-workspace "g7" output $cmon
+workspace "g0" output $cmon
+workspace "g1" output $cmon
+workspace "g2" output $cmon
+workspace "g3" output $cmon
 
 # Assign applications to workspaces.
 # Use this method when launching applications indirectly.
