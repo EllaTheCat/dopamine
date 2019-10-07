@@ -333,7 +333,10 @@ mode "Secondary" {
     bindsym u $default, $i3apps stop usbdisks
 
     bindsym i $secondarynop
-    bindsym o $secondarynop
+
+    # All monitors turn OFF after a delay that allows enough time to
+    # lock the screen first.
+    bindsym o $default, exec sleep 10 && xset dpms force off;
 
     # Benq DVI and HDMI auto-switching to save wear & tear.
     # https://raspberrypi.stackexchange.com/a/53267
