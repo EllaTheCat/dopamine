@@ -349,6 +349,9 @@ i3_lower_lower_easy()
         (os)
         focus instance openshot 'os'  ${cmon} openshot ;;
 
+        (mu)
+        focus class 'Spotify'  'mu' ${lmon} /snap/bin/spotify ;;
+
         (vb)
         focus title 'Oracle VM VirtualBox' 'vb' ${cmon} virtualbox ;;
     esac
