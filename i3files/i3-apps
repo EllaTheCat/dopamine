@@ -34,17 +34,6 @@ do
         fi
         ;;
 
-        (focuswatcher)
-        if [ "_${verb}" = "_stop" ]; then
-            kill -HUP "$(pgrep -f 'focus-watcher')"
-        fi
-        if [ "_${verb}" = "_start" ]; then
-            path=$(dirname "$0")
-            # Is the eval required?
-            (eval "${path}/i3-wrapper --focus-watcher") &
-        fi
-        ;;
-
         (scratchpad)
         if  [ "_${verb}" = "_stop" ]; then
             i3-msg --quiet "[instance=\"Scratchpad\"] kill"
@@ -170,13 +159,13 @@ do
         # Safely start or stop everything listed in proper sequence.
         # To proceed press OK or wait for the short timeout to expire.
         # Ensure the dialog appears on the primary monitor.
-        # The watchers must be started first, the rest are optional.
+        # The file watcher must be started first, the rest are optional.
         if  [ "_${verb}" = "_start" ]; then
             i3-msg "focus output ${cmon}"
             xdotool mousemove --sync --clearmodifiers 2880 384; sleep 1
             yad --title="Starting in 7s ..." --mouse --timeout=7 --timeout-indicator=top
             if  [ "$?" -ne 1 ]; then
-                eval "$0 start filewatcher focuswatcher"
+                eval "$0 start filewatcher"
                 eval "$0 start tvheadend"
                 eval "$0 start wallpaper"
                 eval "$0 stop usbdisks" # Yes, spin them down!
@@ -196,7 +185,7 @@ do
                 eval "$0 stop thunar thunderbird"
                 eval "$0 stop scratchpad marks"
                 eval "$0 stop tvheadend soundwire"
-                eval "$0 stop focuswatcher filewatcher"
+                eval "$0 stop filewatcher"
                 eval "$0 stop usbdisks"
             else
                 exit 0
