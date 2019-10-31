@@ -358,8 +358,11 @@ mode "Secondary" {
     bindsym d $default, $i3mouse disable
     bindsym f $default, $i3mouse fast
 
+    # I'm not pressing keys hard enough to register. This script makes
+    # an IBM PC clicky sound as feedback. It's in the dopamine (my git
+    # repo) scripts folder.
     bindsym g $secondarynop
-    bindsym j $secondarynop
+    bindsym j $default, $i3keyclick
 
     # Set modifiers with 'xcape', set CapsLock to Control,
     # mimic US layout on UK keyboard.
@@ -469,10 +472,11 @@ for_window [title="Volume Control"] floating enable, move absolute position 2400
 for_window [instance="xfce4-terminal"] $i3wrapper --unique-mark;
 for_window [instance="emacs"] $i3wrapper --unique-mark;
 for_window [class="Google-chrome"] $i3wrapper --unique-mark;
+for_window [class="scrcpy"] $i3wrapper --unique-mark;
 
 # VirtualBox windows assume full screen dimensions.
 for_window [title="VirtualBox Manager"] layout tabbed;
-for_window [title="Software Updater"] fullscreen enable;
+for_window [title="Software Updater"] layout tabbed;
 for_window [title="Meld$"] layout tabbed;
 for_window [title="Spotify"] layout tabbed;
 for_window [title="Clementine"] layout tabbed;
@@ -524,11 +528,6 @@ focus_wrapping off
 # 51' is mapped to Return to mimic the geometry of the US keyboard.
 # Stuck modifiers are cleared.
 $i3keyboard
-
-# I'm not pressing keys hard enough to register. This script makes an
-# IBM PC clicky sound as feedback. It's in the dopamine (my git repo)
-# scripts folder.
-$i3keyclick
 
 # [reset] Mouse behaves normally. [window] Mouse warps to window.
 $i3mouse reset
