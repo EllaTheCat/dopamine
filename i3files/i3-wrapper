@@ -255,10 +255,7 @@ i3_lower_digit()
 
         # Chrome windows.
         # Use 'gc' to add another window alongside an existing one.
-        (g[0-7])
-        i3emgc "$1" 'chrome' 'google-chrome' \
-               'cpulimit -l 50 -- google-chrome --new-window' ;;
-        (g[8-9])
+        (g[0-9])
         i3emgc "$1" 'chrome' 'google-chrome' \
                ' google-chrome --new-window' ;;  # no cpulimit
 
@@ -277,6 +274,12 @@ i3_lower_digit()
         i3_lower_digit "e${1:1}"
         sleep 3
         google-chrome --new-window ;;
+
+        # Samsung phone.
+        (s7)
+        focus title "SM-G930F" 's7' ${lmon} xfce4-terminal -T "SM-G930F" ;;
+
+
     esac
 }
 
@@ -294,7 +297,7 @@ i3_lower_lower_easy()
         focus title 'File Manager' 'th' ${rmon} \
               exo-open --launch FileManager "${HOME}/1/Downloads" ;;
         (tn)
-        focus title 'File Manager' 'none' 'none' \
+        focus title 'File Manager' 'tn' 'none' \
               exo-open --launch FileManager "${HOME}/1/Downloads" ;;
 
         (sk)
@@ -377,15 +380,14 @@ i3_lower_lower_hard()
 i3_digit_digits()
 {
     case "$1" in
-        ([0][0-9][0-9])
+        ([05][0-9][0-9])
         # Swap this container with the matching marked container.
-        # On the numpad, behave as if the prompt were a double-tap.
+        # Prefix is 0 for numpad or 5 for voice, then two-digit mark.
         arg="${1:1:2}"
         i3-msg "swap container with mark ${arg}" ;;
 
         ([0-9][0-9])
-        # Visit a numeric (two digit) mark. See the swap command
-        # above.
+        # Visit a two-digit mark using numpad or voice.
         arg="${1:0:2}"
         i3-msg "[con_mark=\"${arg}\"] focus" ;;
     esac
