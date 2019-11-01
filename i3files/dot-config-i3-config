@@ -472,6 +472,7 @@ for_window [title="Volume Control"] floating enable, move absolute position 2400
 for_window [instance="xfce4-terminal"] $i3wrapper --unique-mark;
 for_window [instance="emacs"] $i3wrapper --unique-mark;
 for_window [class="Google-chrome"] $i3wrapper --unique-mark;
+for_window [instance="gl" class="mpv"] $i3wrapper --unique-mark;
 for_window [class="scrcpy"] $i3wrapper --unique-mark;
 
 # VirtualBox windows assume full screen dimensions.
