@@ -388,7 +388,7 @@ i3_digit_digits()
         x=$((${1:1:1} * 200 + 60))
         y=$((${1:2:1} * 200 + 40))
         x=$((w * 1920 + x))
-        i3-msg "exec --no-startup-id xdotool mousemove $x $y"
+        i3-msg "exec --no-startup-id xdotool mousemove $x $y click 1"
         say "${x} by ${y}"
         ;;
         ([05][0-9][0-9])
