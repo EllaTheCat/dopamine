@@ -380,17 +380,6 @@ i3_lower_lower_hard()
 i3_digit_digits()
 {
     case "$1" in
-        ([123][0-9][0-5])
-        # Move the mouse with resolution approximately 10 percent
-        # (200px) of the indicated screen width (1920px) then click
-        # mouse button 1.
-        w=$((${1:0:1} - 1))              # ${lmon}=1 ${cmon}=2, ...
-        x=$((${1:1:1} * 200 + 60))
-        y=$((${1:2:1} * 200 + 40))
-        x=$((w * 1920 + x))
-        i3-msg "exec --no-startup-id xdotool mousemove $x $y click 1"
-        say "${x} by ${y}"
-        ;;
         ([05][0-9][0-9])
         # Swap this container with the matching marked container.
         # Prefix is 0 for numpad or 5 for voice, then two-digit mark.
