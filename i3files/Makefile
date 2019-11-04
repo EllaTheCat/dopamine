@@ -94,6 +94,7 @@ help:
     $(I3BIN)/i3-status \
     $(I3BIN)/i3-tasker \
     $(I3BIN)/i3-wrapper \
+    $(I3BIN)/speech-synthesis \
     $(I3BINDINGS)
 
 .checks: \
@@ -167,6 +168,10 @@ $(I3BIN)/i3-tasker: $(I3FILES)/i3-tasker
 $(I3BIN)/i3-wrapper: $(I3FILES)/i3-wrapper
 	@install -m $(DIRMODE) -d $(I3BIN)
 	@install -m $(EXEMODE) $(I3FILES)/i3-wrapper $(I3BIN)
+
+$(I3BIN)/speech-synthesis: $(SCRIPTS)/speech-synthesis
+	@install -m $(DIRMODE) -d $(I3BIN)
+	@install -m $(EXEMODE) $(SCRIPTS)/speech-synthesis $(I3BIN)
 
 $(I3BINDINGS): $(I3FILES)/dot-config-i3-config $(I3FILES)/Makefile
 	@mkdir -p `dirname $(I3BINDINGS)`

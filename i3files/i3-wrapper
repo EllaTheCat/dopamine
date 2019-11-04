@@ -384,13 +384,25 @@ i3_digit_digits()
         # Swap this container with the matching marked container.
         # Prefix is 0 for numpad or 5 for voice, then two-digit mark.
         arg="${1:1:2}"
-        i3-msg "swap container with mark ${arg}" ;;
-
+        i3-msg "swap container with mark ${arg}"
+        say "swap with mark ${arg}"
+        ;;
         ([0-9][0-9])
         # Visit a two-digit mark using numpad or voice.
         arg="${1:0:2}"
-        i3-msg "[con_mark=\"${arg}\"] focus" ;;
+        i3-msg "[con_mark=\"${arg}\"] focus"
+        say "focus mark ${arg}"
+        ;;
     esac
+}
+
+#
+# As of 2019-11-03, reliable numeric voice commands are a thing so we
+# can have some fun.
+#
+say()
+{
+    "${HOME}/local/bin/speech-synthesis"  --play-en-GB "$1"
 }
 
 #
