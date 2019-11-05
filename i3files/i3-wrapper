@@ -377,9 +377,20 @@ i3_lower_lower_hard()
     esac
 }
 
+#
+# 1. Manage containers with marks. 2. Manage headphone volumes.
+#
 i3_digit_digits()
 {
     case "$1" in
+        ([2][0-9][0-9])
+        arg="${1:1:2}"  # Bluetooth volume as a percentage.
+        pactl set-sink-volume bluez_sink.00_01_01_00_12_CB "${arg}%"
+        ;;
+        ([1][0-9][0-9])
+        arg="${1:1:2}"  # USB volume as a percentage.
+        pactl set-sink-volume alsa_output.usb-C-Media_Electronics_Inc._USB_Audio_Device-00.analog-stereo "${arg}%"
+        ;;
         ([05][0-9][0-9])
         # Swap this container with the matching marked container.
         # Prefix is 0 for numpad or 5 for voice, then two-digit mark.
@@ -389,6 +400,7 @@ i3_digit_digits()
         ;;
         ([0-9][0-9])
         # Visit a two-digit mark using numpad or voice.
+        # This case must come after all the three-digit cases.
         arg="${1:0:2}"
         i3-msg "[con_mark=\"${arg}\"] focus"
         say "focus mark ${arg}"

@@ -264,13 +264,8 @@ mode "Primary" {
             -P '(move container to workspace): ' \
             -F 'move container to workspace "%s"'
 
-    # Subject to change: volume control of 3.5mm rear line out.
-    # Beware! Increasing beyond 100% can damage speakers.
-    bindsym comma \
-            exec pactl set-sink-volume $analogaudiosink -10%
-    bindsym period \
-            exec pactl set-sink-volume $analogaudiosink +10%
-
+    bindsym comma $primarynop
+    bindsym period $primarynop
     bindsym slash $primarynop
 
     # Simple focus keys similar to default mode.
@@ -348,13 +343,13 @@ mode "Secondary" {
 
     # Select an audio output and reconfigure the volume control.
     bindsym a $default, exec pactl move-sink-input \
-            "$(pactl list short sink-inputs | awk '{print $1}')" $analogaudiosink, $i3powermate analog;
+            "$(pactl list short sink-inputs | awk '{print $1}')" $analogaudiosink;
     bindsym h $default, exec pactl move-sink-input \
-            "$(pactl list short sink-inputs | awk '{print $1}')" $hdmiaudiosink, $i3powermate hdmi;
+            "$(pactl list short sink-inputs | awk '{print $1}')" $hdmiaudiosink;
     bindsym b $default, exec pactl move-sink-input \
-            "$(pactl list short sink-inputs | awk '{print $1}')" $bluetoothaudiosink, $i3powermate bluetooth;
+            "$(pactl list short sink-inputs | awk '{print $1}')" $bluetoothaudiosink;
     bindsym u $default, exec pactl move-sink-input \
-            "$(pactl list short sink-inputs | awk '{print $1}')" $usbaudiosink, $i3powermate usb;
+            "$(pactl list short sink-inputs | awk '{print $1}')" $usbaudiosink;
 
     # {s,d,f} keys are paired with {w,e,r} keys.
     bindsym s $default, $i3mouse slow
