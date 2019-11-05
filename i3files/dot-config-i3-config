@@ -48,10 +48,12 @@ set $rmon VGA1
 set $analogaudiosink alsa_output.pci-0000_00_1b.0.analog-stereo
 set $bluetoothaudiosink bluez_sink.00_01_01_00_12_CB
 set $hdmiaudiosink alsa_output.pci-0000_00_03.0.hdmi-stereo
+set $usbaudiosink alsa_output.usb-C-Media_Electronics_Inc._USB_Audio_Device-00.analog-stereo
 # Type 'pacmd list sources' to list audio inputs. One microphone
 # lives in my webcam, the other in my headset / headphones.
 set $webcamaudiosource alsa_input.usb-Alcor_Micro__Corp._TeckNet-02.analog-mono
 set $analogaudiosource alsa_input.pci-0000_00_1b.0.analog-stereo
+set $usbaudiosource alsa_input.usb-C-Media_Electronics_Inc._USB_Audio_Device-00.analog-mono
 
 # The font used in i3-input prompt+command boxes.
 # Forward declaration because used in various bindings.
@@ -122,7 +124,6 @@ bindsym KP_Next move right
 # The numpad enters numbers during command entry.
 # Do not rebind KP_0, KP_1 ... KP_8, KP_9, KP_Decimal.
 bindsym KP_Insert $default, $i3wrapper -p
-bindsym KP_Delete $defaultnop
 
 # Numpad keys that are unaffected by the NumLock state.
 # There are five: arithmetic signs / * - + and the enter key.
@@ -138,6 +139,8 @@ bindsym KP_Subtract \
         exec --no-startup-id pactl set-source-mute $analogaudiosource toggle
 bindsym KP_Add \
         exec --no-startup-id pactl set-source-mute $webcamaudiosource toggle
+bindsym KP_Delete \
+        exec --no-startup-id pactl set-source-mute $usbaudiosource toggle
 
 #
 # MODES
