@@ -333,9 +333,7 @@ mode "Secondary" {
     # Spin down the USB drives attached to my desktop PC, their blue
     # LEDs should stay dark. One drive automatically spins down, one
     # drive only spins down when requested.
-    bindsym u $default, $i3apps stop usbdisks
-
-    bindsym i $secondarynop
+    bindsym i $default, $i3apps stop usbdisks
 
     # All monitors turn OFF after a delay that allows enough time to
     # lock the screen first.
@@ -350,11 +348,13 @@ mode "Secondary" {
 
     # Select an audio output and reconfigure the volume control.
     bindsym a $default, exec pactl move-sink-input \
-            "$(pactl list short sink-inputs | awk '{print $1}')" $analogaudiosink, $i3powermate analog
+            "$(pactl list short sink-inputs | awk '{print $1}')" $analogaudiosink, $i3powermate analog;
     bindsym h $default, exec pactl move-sink-input \
-            "$(pactl list short sink-inputs | awk '{print $1}')" $hdmiaudiosink, $i3powermate hdmi
+            "$(pactl list short sink-inputs | awk '{print $1}')" $hdmiaudiosink, $i3powermate hdmi;
     bindsym b $default, exec pactl move-sink-input \
-            "$(pactl list short sink-inputs | awk '{print $1}')" $bluetoothaudiosink, $i3powermate bluetooth
+            "$(pactl list short sink-inputs | awk '{print $1}')" $bluetoothaudiosink, $i3powermate bluetooth;
+    bindsym u $default, exec pactl move-sink-input \
+            "$(pactl list short sink-inputs | awk '{print $1}')" $usbaudiosink, $i3powermate usb;
 
     # {s,d,f} keys are paired with {w,e,r} keys.
     bindsym s $default, $i3mouse slow
