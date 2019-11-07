@@ -341,15 +341,11 @@ mode "Secondary" {
     # Command prompt.
     bindsym Tab $default, $i3wrapper -p
 
-    # Select an audio output and reconfigure the volume control.
-    bindsym a $default, exec pactl move-sink-input \
-            "$(pactl list short sink-inputs | awk '{print $1}')" $analogaudiosink;
-    bindsym h $default, exec pactl move-sink-input \
-            "$(pactl list short sink-inputs | awk '{print $1}')" $hdmiaudiosink;
-    bindsym b $default, exec pactl move-sink-input \
-            "$(pactl list short sink-inputs | awk '{print $1}')" $bluetoothaudiosink;
-    bindsym u $default, exec pactl move-sink-input \
-            "$(pactl list short sink-inputs | awk '{print $1}')" $usbaudiosink;
+    # Select an audio output.
+    bindsym a exec pactl move-sink-input "$(pactl list short sink-inputs | awk '{print $1}')" $analogaudiosink ;
+    bindsym h exec pactl move-sink-input "$(pactl list short sink-inputs | awk '{print $1}')" $hdmiaudiosink ;
+    bindsym b exec pactl move-sink-input "$(pactl list short sink-inputs | awk '{print $1}')" $bluetoothaudiosink ;
+    bindsym u exec pactl move-sink-input "$(pactl list short sink-inputs | awk '{print $1}')" $usbaudiosink ;
 
     # {s,d,f} keys are paired with {w,e,r} keys.
     bindsym s $default, $i3mouse slow
@@ -466,11 +462,8 @@ for_window [class="ffplay"] floating enable;
 for_window [title="Volume Control"] \
            floating enable, move absolute position 2400 48, resize set 50 ppt 80 ppt;
 
-# Mark application windows with a 2 digit number.
-for_window [instance="xfce4-terminal"] $i3wrapper --unique-mark;
-for_window [instance="emacs"] $i3wrapper --unique-mark;
-for_window [class="Google-chrome"] $i3wrapper --unique-mark;
-for_window [class="scrcpy"] $i3wrapper --unique-mark;
+# Application windows.
+for_window [instance="gl" class="mpv"] $i3wrapper --unique-mark;
 
 # VirtualBox windows assume full screen dimensions.
 for_window [title="VirtualBox Manager"] layout tabbed;
@@ -531,6 +524,7 @@ $i3keyboard
 $i3mouse reset
 
 # Microphones' defaults (see key bindings). 1 = mute here.
+exec --no-startup-id pactl set-source-mute $usbaudiosource 1
 exec --no-startup-id pactl set-source-mute $analogaudiosource 1
 exec --no-startup-id pactl set-source-mute $webcamaudiosource 1
 
