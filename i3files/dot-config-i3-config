@@ -463,6 +463,9 @@ for_window [title="Volume Control"] \
            floating enable, move absolute position 2400 48, resize set 50 ppt 80 ppt;
 
 # Application windows.
+for_window [instance="xfce4-terminal"] $i3wrapper --unique-mark;
+for_window [instance="emacs24"] $i3wrapper --unique-mark;
+for_window [instance="google-chrome"] $i3wrapper --unique-mark;
 for_window [instance="gl" class="mpv"] $i3wrapper --unique-mark;
 
 # VirtualBox windows assume full screen dimensions.

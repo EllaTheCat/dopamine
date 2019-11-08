@@ -65,7 +65,6 @@ focus ()
             else
                 i3-msg "workspace $3; exec ${*:5};"
             fi
-            i3_unique_mark
             # Change to the specified output when the window appears.
             # Set $4 'none' to stay on current output.
             case "$4" in
@@ -109,7 +108,6 @@ i3tt()
 {
     i3-msg "split h"
     xfce4-terminal -T "xfce4-terminal" &
-    i3_unique_mark
 }
 
 #
@@ -119,7 +117,6 @@ i3yy()
 {
     i3-msg "split v"
     xfce4-terminal -T "xfce4-terminal" &
-    i3_unique_mark
 }
 
 #
@@ -203,9 +200,9 @@ i3_triple_terminal_workspace()
         i3-msg "workspace $1"
         if [ "${tws}" -eq 0 ]; then
             # One subshell.  The marks and the focusing are required.
-            ( xfce4-terminal -T "xfce4-terminal" && i3_unique_mark
-              xfce4-terminal -T "xfce4-terminal" && i3_unique_mark
-              xfce4-terminal -T "xfce4-terminal" && i3_unique_mark
+            ( xfce4-terminal -T "xfce4-terminal"
+              xfce4-terminal -T "xfce4-terminal"
+              xfce4-terminal -T "xfce4-terminal"
               i3-msg "focus left"
               i3-msg "focus left"
             ) &
@@ -253,23 +250,22 @@ i3_lower_digit()
         # Use 'em' to add another frame alongside an existing one.
         (e[0-9])
         i3emgc "$1" 'emacs24' 'emacs24 -rv' 'emacsclient.emacs24 -c'
-        sleep 0.7 && i3_unique_mark ;;
-
+        ;;
         # Chrome windows.
         # Use 'gc' to add another window alongside an existing one.
         (g[0-9])
         i3emgc "$1" 'chrome' 'google-chrome' \
                ' google-chrome --new-window'
-        sleep 0.7 && i3_unique_mark ;;
-
+        ;;
         # Create a workspace with an Emacs frame and one or two
         # terminals.  The workspace name will match e[0-9].
         # Examples: t5 == e5 then tt.  y3 == e3 then tt then yy.
         (t[0-9])
-        i3_lower_digit "e${1:1}" && sleep 0.8 && i3_lower_lower_hard 'tt' ;;
+        i3_lower_digit "e${1:1}" && sleep 0.8 && i3_lower_lower_hard 'tt'
+        ;;
         (y[0-9])
-        i3_lower_digit "e${1:1}" && sleep 0.8 && i3_lower_lower_hard 'ty' ;;
-
+        i3_lower_digit "e${1:1}" && sleep 0.8 && i3_lower_lower_hard 'ty'
+        ;;
         # Create a workspace with an Emacs frame and a Google Chrome
         # window.  The workspace name will match e[0-9].  The letter 'w'
         # has 'www' mnemonic. The delay is a safety net.
@@ -277,11 +273,11 @@ i3_lower_digit()
         i3_lower_digit "e${1:1}"
         sleep 3
         google-chrome --new-window
-        sleep 0.7 && i3_unique_mark ;;
-
+        ;;
         # Samsung phone.
         (s7)
-        focus title "SM-G930F" 's7' ${lmon} xfce4-terminal -T "SM-G930F" ;;
+        focus title "SM-G930F" 's7' ${lmon} xfce4-terminal -T "SM-G930F"
+        ;;
     esac
 }
 
@@ -359,9 +355,9 @@ i3_lower_lower_hard()
 
         # Use these to add an instance into an existing workspace.
         (em)
-        i3-msg "exec emacsclient.emacs24 -c" && sleep 0.7 && i3_unique_mark ;;
+        i3-msg "exec emacsclient.emacs24 -c" ;;
         (gc)
-        i3-msg "exec google-chrome --new-window" && sleep 0.7 && i3_unique_mark ;;
+        i3-msg "exec google-chrome --new-window" ;;
 
         # These simply don't fit the easy launch-or-focus template.
         (sg)
