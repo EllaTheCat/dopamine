@@ -22,11 +22,13 @@ whether for dictation or control. The killer is latency.
 == How to run dopamine
 Writing INSTALL is on my ToDo list.
 
-Consider evaluating dopamine on a VM so you minimise the risk of breaking your current install,
-and because
-http://feeblenerd.blogspot.com/2015/11/pretty-i3-with-xfce.html[dopamine is running on i3 on Xubuntu 16.04 LTS].
-Symlink the dotfiles and scripts to their runtime locations,
-use i3-make to install the i3 related files.
+Consider evaluating dopamine on a VirtualBox VM because (1) you minimise the risk of
+breaking your current install, and because (2)
+http://feeblenerd.blogspot.com/2015/11/pretty-i3-with-xfce.html[dopamine
+is running on Xubuntu 16.04/18.04 LTS].
+
+Symlink the dotfiles and scripts to their runtime locations, use
+i3-make to install the i3 related files.
 
 == Scope
 
@@ -68,7 +70,6 @@ the KP_0 set for numeric entry and
 the KP_Insert set for navigation.
 The arithmetic operators and KP_Enter are unaffected by NumLock.
 Here's what currently (2019-04) works for me:
-
 ----
 bindsym KP_Left focus left
 bindsym KP_Right focus right
@@ -79,7 +80,7 @@ bindsym KP_End move left
 bindsym KP_Down move down
 bindsym KP_Begin move up
 bindsym KP_Next move right
-bindsym KP_Delete $defaultnop
+bindsym KP_Delete (reserved)
 ----
 
 === Arrows
@@ -124,9 +125,15 @@ program or switch to a running instance.
 This is explained in more detail in subsection "Launch or Focus" in section "i3-wrapper".
 
 === Numeric Commands
-In the past nine months I have experimented with assigning numbers to commands,
-which sounds promiising (the "teletext argument") but fails in practice. Dopamine is
+2019-04: In the past nine months I have experimented with assigning numbers to commands,
+which sounds promiising (the "teletext argument") but fails in practice.
+
+Dopamine is
 as much about evaluating what doesn't work as it is about what works!
+
+2019-11: I have found a reliable method of saying two or three digit numbers that Google does not mess with.
+To issue the command "42", say "42 dollars", Google returns "$42", strip the dollar sign, apply a leading zero
+for values less than 10, and we have a two digit number.
 
 === Hybrid Commands
 These are the ten Emacs frame (window) commands e[0-9], and
@@ -165,6 +172,9 @@ The bindings density around my left hand is quite high,
 hence the use of a modifer rather than a mode,
 plus the homage to Alt-Tab.
 
+2019-11: This works, but has been seldom used.
+It does no harm at present so there is no reason to remove it.
+
 == i3-make
 The i3files directory contais several files, copies of which must be installed in their
 run-time locations. Changing the i3 configuration requires that i3 reloads,
@@ -200,7 +210,7 @@ https://github.com/alols/xcape[xcape] to define how modifier keys work when pres
 - Warp the mouse to follow window focus changes and
 reduce the overall manual mouse movement distance.
 
-The mouse will automatically disable the mouse inside any Emacs window inside
+2019:04: The mouse will automatically disable the mouse inside any Emacs window inside
 any of the standard Emacs workspaces e[0-9] and em.
 This is a deliberate decision, to encourage keyboard use and discourage mouse use.
 To prevent the mouse being disabled for the session,
@@ -218,7 +228,7 @@ Using the mouse to focus a window with a single click highlights the
 region between the mouse click point and the keyboard focus point. Using
 a slow double-click instead leaves no highlight.
 
-These latter two trick modes are mutually exclusive in my opinion, use one or none.
+2019-11: Both of these have been unused, and have been removed.
 
 === i3-display
 I simply don't like automatic display blanking, but because
@@ -233,12 +243,17 @@ I wish to avoid selecting inputs with buttons on the left monitor.
 Keybindings can use this script to send commands to both sources
 such that the left monitor source can be selected programmatically.
 
-=== i3-status
-This script is a straightforward wrapper round 'i3status'. It adds two things:
+2019-11: This works, but has been seldom used because my monitors have been
+configured to disable automatic HDMI switching.
+It does no harm at present so there is no reason to remove it.
 
-- On/Off control and status for USB webcam microphone and analog stereo microphone.
-- A list of the marks that are assigned to terminals, Emacs frames, Chrome windows.
-The utility is debatable.
+=== i3-status
+This script is a straightforward wrapper round 'i3status'. It adds several things:
+
+- Status of a firewall rule
+- On/Off control and status for USB audio dongle microphone, USB webcam microphone and analog stereo microphone.
+- Webcam device file owner (lsof).
+- A list of the marks that are assigned to terminals, Emacs frames, Chrome windows, and certain other windows.
 
 === i3-apps
 This script makes explicit how the applications I use should be started and stopped.
@@ -263,8 +278,10 @@ sometimes find it more than annoying, there is a back door.
 As described in subsection "i3-mouse", the mouse can be
 enabled again by a triple press of the Menu key.
 
+2019-11: Focus watcher has been removed.
+
 === Launch or Focus
-The i3programs function in i3-wrapper has a bash case statement that
+The focus function in i3-wrapper has a bash case statement that
 accepts commands to launch or focus a program using the aforementioned
 focus function:
 
@@ -325,30 +342,5 @@ These terminal commands combine the splitting and the invoking.
 My external speech to text engine uses the Android apps Tasker and AutoVoice.
 Tasker writes a sentence or command into the file monitored by the file watcher.
 
-The 'av' command launches or switches to a dedicated AutoVoice
-workspace that shows the Emacs autovoice buffer and the Chrome
-AutoVoice Options.
-
-=== Sentences
-A string is considered to be a sentence if it starts with [A-Z].
-
-The string is injected into an Emacs buffer if it is a sentence.
-It's rather cool that this can happen
-with neither the Emacs frame being focused nor its workspace being active.
-Injection is unconditional.  The Emacs window serves as confirmation.
-The same text is made available via both clipboards.
-
-Having seen the text in Emacs the user can paste it into the current application
-with confdence;  Even with mistakes it is acceptably fast,
-and can be faster than my typing one handed.
-I am able to keep up with chat in applications such as Skype,
-when formerly I had to go to voice.
-Clicking the mouse to paste is not a problem for me at the moment.
-Paste can be undone with Control+Z in most applications.
-
-=== Commands
-A string is considered to be a command if it is prepended with
-a command identifier, which is a string prepended by a colon,
-prepended to the command but separated from it with a space.
-
-=== Window Manager Commands
+This is currently in flux. Some code is not being called pending review.
+Currently I'm working on numeric commands version two.
