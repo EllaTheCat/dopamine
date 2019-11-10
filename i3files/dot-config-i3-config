@@ -286,6 +286,7 @@ mode "Primary" {
     bindsym KP_Begin move up
     bindsym KP_Next move right
     bindsym KP_Insert $default, $i3wrapper -p
+    # Except for this.
     bindsym KP_Delete $primarynop
 
     # Numpad keys that are unaffected by the NumLock state.
@@ -315,9 +316,12 @@ mode "Primary" {
 # Use this mode for settings, not window management.
 mode "Secondary" {
 
-    bindsym q $secondarynop
+    # I'm not pressing keys hard enough to register. This script makes
+    # an IBM PC clicky sound as feedback. It's in the dopamine (my git
+    # repo) scripts folder. Mnemonic q often sounds like k.
+    bindsym q $default, $i3keyclick
 
-    # {w,e,r} keys are paired with {s,d,f} keys.
+    # {w,e,r} {s,d,f} keys.
     bindsym w $default, $i3mouse window
     bindsym e $default, $i3mouse enable
     bindsym r $default, $i3mouse reset
@@ -347,16 +351,13 @@ mode "Secondary" {
     bindsym b exec pactl move-sink-input "$(pactl list short sink-inputs | awk '{print $1}')" $bluetoothaudiosink ;
     bindsym u exec pactl move-sink-input "$(pactl list short sink-inputs | awk '{print $1}')" $usbaudiosink ;
 
-    # {s,d,f} keys are paired with {w,e,r} keys.
+    # {s,d,f} {w,e,r} keys.
     bindsym s $default, $i3mouse slow
     bindsym d $default, $i3mouse disable
     bindsym f $default, $i3mouse fast
 
-    # I'm not pressing keys hard enough to register. This script makes
-    # an IBM PC clicky sound as feedback. It's in the dopamine (my git
-    # repo) scripts folder.
     bindsym g $secondarynop
-    bindsym j $default, $i3keyclick
+    bindsym j $secondarynop
 
     # Set modifiers with 'xcape', set CapsLock to Control,
     # mimic US layout on UK keyboard.
