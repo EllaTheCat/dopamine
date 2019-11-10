@@ -65,6 +65,9 @@ focus ()
             else
                 i3-msg "workspace $3; exec ${*:5};"
             fi
+            # Marks are typically allocated with "for_window", but
+            # here is easier.
+            i3_unique_mark
             # Change to the specified output when the window appears.
             # Set $4 'none' to stay on current output.
             case "$4" in
