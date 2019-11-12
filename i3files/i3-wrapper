@@ -385,6 +385,10 @@ i3_lower_lower_hard()
 i3_digit_digits()
 {
     case "$1" in
+        ([4][0-9][0-9])
+        arg="${1:1:2}"  # Green jack volume as a percentage.
+        pactl set-sink-volume alsa_output.pci-0000_00_1b.0.analog-stereo "${arg}%"
+        ;;
         ([2][0-9][0-9])
         arg="${1:1:2}"  # Bluetooth volume as a percentage.
         pactl set-sink-volume bluez_sink.00_01_01_00_12_CB "${arg}%"
