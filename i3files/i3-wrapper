@@ -29,6 +29,20 @@ cmon=HDMI1
 rmon=HDMI2 ### VGA1
 
 #
+# Pulseaudio sinks (outputs) and sources ((inputs).
+#
+# - See dot-config-i3-config for the matching i3 variables.
+#
+analogaudiosink=alsa_output.pci-0000_00_1b.0.analog-stereo
+bluetoothaudiosink=bluez_sink.00_01_01_00_12_CB
+hdmiaudiosink=alsa_output.pci-0000_00_03.0.hdmi-stereo
+usbaudiosink=alsa_output.usb-C-Media_Electronics_Inc._USB_Audio_Device-00.analog-stereo
+#
+export webcamaudiosource=alsa_input.usb-Alcor_Micro__Corp._TeckNet-02.analog-mono
+export analogaudiosource=alsa_input.pci-0000_00_1b.0.analog-stereo
+export usbaudiosource=alsa_input.usb-C-Media_Electronics_Inc._USB_Audio_Device-00.analog-mono
+
+#
 # The timeout in seconds for the main dynamic menu. Upon expiry,
 # whatever has been entered wil be treated as a command to be
 # executed. Try to reduce the timeout duration such that user has no
@@ -369,9 +383,12 @@ i3_lower_lower_hard()
         eval cheese >/dev/null 2>&1 ;;
 
         # Eye candy. Reveal background. KISS.
-        (zz) i3-msg "focus output \"${lmon}\", workspace \"$1\"" ;;
-        (xx) i3-msg "focus output \"${cmon}\", workspace \"$1\"" ;;
-        (cc) i3-msg "focus output \"${rmon}\", workspace \"$1\"" ;;
+        (zz)
+        i3-msg "focus output \"${lmon}\", workspace \"$1\"" ;;
+        (xx)
+        i3-msg "focus output \"${cmon}\", workspace \"$1\"" ;;
+        (cc)
+        i3-msg "focus output \"${rmon}\", workspace \"$1\"" ;;
 
         # Visit the eponymous workspace if it exists, otherwise create
         # the workspace and launch three side-by-side terminals there.
@@ -385,17 +402,24 @@ i3_lower_lower_hard()
 i3_digit_digits()
 {
     case "$1" in
+        ([9][0-9][0-9])
+        i3_nine_hundreds "$1"  # Delegate these for a tidy function.
+        ;;
         ([4][0-9][0-9])
         arg="${1:1:2}"  # Green jack volume as a percentage.
-        pactl set-sink-volume alsa_output.pci-0000_00_1b.0.analog-stereo "${arg}%"
+        pactl set-sink-volume  ${analogaudiosink} "${arg}%"
+        ;;
+        ([3][0-9][0-9])
+        arg="${1:1:2}"  # HDMI volume as a percentage.
+        pactl set-sink-volume  ${hdmiaudiosink} "${arg}%"
         ;;
         ([2][0-9][0-9])
         arg="${1:1:2}"  # Bluetooth volume as a percentage.
-        pactl set-sink-volume bluez_sink.00_01_01_00_12_CB "${arg}%"
+        pactl set-sink-volume  ${bluetoothaudiosink} "${arg}%"
         ;;
         ([1][0-9][0-9])
         arg="${1:1:2}"  # USB volume as a percentage.
-        pactl set-sink-volume alsa_output.usb-C-Media_Electronics_Inc._USB_Audio_Device-00.analog-stereo "${arg}%"
+        pactl set-sink-volume "${usbaudiosink}%"
         ;;
         ([05][0-9][0-9])
         # Swap this container with the matching marked container.
@@ -410,6 +434,24 @@ i3_digit_digits()
         arg="${1:0:2}"
         i3-msg "[con_mark=\"${arg}\"] focus"
         say "focus mark ${arg}"
+        ;;
+    esac
+}
+
+#
+# A very small set of relevant numeric commands. Prefer mnemonic
+# values for voice commands over ease of typing.
+#
+i3_nine_hundreds()
+{
+    case "$1" in
+        (999)
+        i3_unique_mark  # Apply a mark.
+        ;;
+        (911|910)
+        # 1/0 = Stop/Start AutoVoice = Mute/Unmute  USB  microphone.
+        # Audio stream bitrate should decrease by 128kps when muted.
+        pactl set-source-mute $usbaudiosource "${1:2:1}"
         ;;
     esac
 }
@@ -441,7 +483,7 @@ start ()
         i3_digit_digits "$1"
         ;;
         (:*)
-        eval "$(dirname "$0")/i3-tasker" 'i3_generic' "$*"
+        eval "${HOME}/local/bin/i3-tasker" 'i3_generic' "$*"
         ;;
     esac
 }
