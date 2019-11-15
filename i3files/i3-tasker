@@ -26,12 +26,14 @@ i3_generic()
 {
     group=$1
     case "${group}" in
-        # Shell commands.
+        # Shell commands. These are reserved for apps like tvheadend.
         (:shell)
         case "$2" in
             (mpv)
             killall mpv
             eval "${@:2}"
+            i3-msg "[workspace=\"mp\" title=\"mpv\"] focus"
+            eval "${HOME}/local/bin/i3-wrapper --unique-mark"
             ;;
             (/home/shevek/*/firewall)
             eval "${@:2}"
