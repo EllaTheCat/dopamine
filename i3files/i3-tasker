@@ -31,9 +31,17 @@ i3_generic()
         case "$2" in
             (mpv)
             killall mpv
+            # Brute force to ensure that the 'mp' workspace appears,
+            # that the video window opens inside it, that the window
+            # has focus, and that ithe mark is set on its titlebar.
+            i3-msg "focus output HDMI2"
+            i3-msg "workspace \"zz\""
+            i3-msg "workspace \"mp\""
             eval "${@:2}"
-            i3-msg "[workspace=\"mp\" title=\"mpv\"] focus"
-            eval "${HOME}/local/bin/i3-wrapper --unique-mark"
+            sleep 3
+            # The current key binding to apply a unique mark.
+            i3-msg "mode Primary"
+            sleep 2 && xdotool key n
             ;;
             (/home/shevek/*/firewall)
             eval "${@:2}"
