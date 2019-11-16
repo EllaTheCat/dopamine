@@ -463,7 +463,10 @@ i3_nine_hundreds()
 #
 say()
 {
-    "${HOME}/local/bin/speech-synthesis"  --play-en-GB "$1"
+    # Add the "Acknowledge" prefix to all responses. It is recognised
+    # by AutoVoice and the implied command is discarded in order to
+    # prevent feedback loops.
+    "${HOME}/local/bin/speech-synthesis"  --play-en-GB "Acknowledge $1"
 }
 
 #
