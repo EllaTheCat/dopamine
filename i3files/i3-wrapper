@@ -454,6 +454,10 @@ i3_nine_hundreds()
         # Audio stream bitrate should decrease by 128kps when muted.
         pactl set-source-mute $usbaudiosource "${1:2:1}"
         ;;
+        (900)
+        # The buffer that holds AutoVoice No Match :clipboard content.
+        emacsclient.emacs24 -e "(switch-to-buffer \"Clipboard\" )"
+        ;;
     esac
 }
 
