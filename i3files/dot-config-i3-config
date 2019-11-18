@@ -514,7 +514,7 @@ bar {
 }
 
 # Mouse behaviour wrt windows.
-focus_follows_mouse no
+focus_follows_mouse yes
 # Focus wrapping isn't as simple as I was lead to believe.
 focus_wrapping off
 
