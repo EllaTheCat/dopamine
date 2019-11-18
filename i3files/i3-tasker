@@ -24,8 +24,7 @@ i3_clipboard()
 #
 i3_generic()
 {
-    group=$1
-    case "${group}" in
+    case "$1" in
         # Shell commands. These are reserved for apps like tvheadend.
         (:shell)
         case "$2" in
@@ -46,8 +45,11 @@ i3_generic()
             ;;
         esac
         ;;
-        # Clipboard commands.
+        # Clipboard commands. The buffer doesn't have to be the
+        # current buffer.
         (:clipboard)
+        # This assignment could be replaced with a script to process
+        # the 'all lower case' text sent from AutoVoice.
         contents="${*:2}"
         # Insert into both clipboards and then paste into Emacs.
         echo "${contents}" | xclip -selection primary     # mouse button 2
