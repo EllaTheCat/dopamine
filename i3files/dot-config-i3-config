@@ -96,6 +96,9 @@ bindsym Control+Mod4+Delete [workspace="__focused__"] kill
 # This key chord works for my right hand.
 bindsym Control+Delete $i3wrapper dd
 
+# Disable DPMS with a safe key.
+bindsym Pause exec --no-startup-id xset -dpms
+
 # In default mode, this facilitates move and resize using the mouse
 # without having to precisely position the mouse on window edges.
 floating_modifier Mod4
@@ -332,11 +335,8 @@ mode "Secondary" {
     # Spin down the USB drives attached to my desktop PC, their blue
     # LEDs should stay dark. One drive automatically spins down, one
     # drive only spins down when requested.
-    bindsym i $default, $i3apps stop usbdisks
-
-    # All monitors turn OFF after a delay that allows enough time to
-    # lock the screen first.
-    bindsym o $default, $i3display dpms-off
+    bindsym i $secondarynop
+    bindsym o $default, $i3apps stop usbdisks
 
     # Benq DVI and HDMI auto-switching to save wear & tear.
     # https://raspberrypi.stackexchange.com/a/53267
@@ -362,9 +362,7 @@ mode "Secondary" {
     # Set modifiers with 'xcape', set CapsLock to Control,
     # mimic US layout on UK keyboard.
     bindsym k $default, $i3keyboard
-
-    # Lock the screen.
-    bindsym l $default, exec --no-startup-id $i3lock
+    bindsym l $secondarynop
 
     bindsym Return $secondarynop
 
@@ -388,6 +386,9 @@ mode "Secondary" {
     bindsym comma $secondarynop
     bindsym period $secondarynop
     bindsym slash $secondarynop
+
+    # All monitors turn OFF.
+    bindsym Pause $default, $i3display off
 
     # Close a session. Avoid window or workspace kill bindings here.
     bindsym Control+Mod4+Mod1+Delete  $default, $i3apps stop everything
@@ -461,7 +462,8 @@ for_window [title="Scratchpad"] floating enable;
 for_window [title="Unlock Keyring"] floating enable;
 for_window [class="ffplay"] floating enable;
 for_window [title="Volume Control"] \
-           floating enable, move absolute position 2400 48, resize set 50 ppt 80 ppt;
+           floating enable, move absolute position 2400 48, \
+           resize set 50 ppt 80 ppt;
 
 # Application windows.
 for_window [instance="xfce4-terminal"] $i3wrapper --unique-mark;
@@ -513,8 +515,8 @@ bar {
     bindsym button3 $default, $i3apps start wallpaper
 }
 
-# Mouse behaviour wrt windows.
-focus_follows_mouse yes
+# Mouse behaviour wrt windows. Prefer click-to-focus, default is no.
+focus_follows_mouse no
 # Focus wrapping isn't as simple as I was lead to believe.
 focus_wrapping off
 

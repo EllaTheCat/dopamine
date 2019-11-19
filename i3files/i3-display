@@ -58,10 +58,12 @@ setdisplay ()
         (siro-on)
         ssh siro vcgencmd display_power 1
         ;;
-        (dpms-off)
+        (off)
+        # As a precaution, and as a policy, mute the microphone used
+        # by contnuous speech recognition when turning off monitors.
         usbaudiosource="alsa_input.usb-C-Media_Electronics_Inc._USB_Audio_Device-00.analog-mono"
         pactl set-source-mute $usbaudiosource 1
-        sleep 10  # Enough tine to invoke i3-lock.
+        sleep 2
         xset dpms force off
         ;;
     esac
