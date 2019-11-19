@@ -29,7 +29,10 @@ i3_generic()
         (:shell)
         case "$2" in
             (mpv)
-            killall mpv
+            # The subshell allows this script to continue on error
+            # should nothing match. The pattern isn't watertight but
+            # it only matches the newest instance, so good enough.
+            (pkill -n -f 'mpv http') &
             # Brute force to ensure that the 'mp' workspace appears,
             # that the video window opens inside it, that the window
             # has focus, and that the mark is set on its titlebar.
