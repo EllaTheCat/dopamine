@@ -19,16 +19,18 @@ As of 2019-07-22, I'm purging the various failed experiments and too-cute featur
 I'm finally conceding that AutoVoice-based speech recognition isn't fit for purpose,
 whether for dictation or control. The killer is latency.
 
+As of 2019-11-16, I've been too hard on myself,
+as i realised after using the speech recognition in Google Docs.
+six of one, half a dozen of the other.
+
 == How to run dopamine
-Writing INSTALL is on my ToDo list.
+I'd like to know if anyone tries or wants to try, but it's a mess.  I'll help you.
 
-Consider evaluating dopamine on a VirtualBox VM because (1) you minimise the risk of
-breaking your current install, and because (2)
-http://feeblenerd.blogspot.com/2015/11/pretty-i3-with-xfce.html[dopamine
-is running on Xubuntu 16.04/18.04 LTS].
+Consider evaluating dopamine on a VirtualBox VM because
+(1) you minimise the risk ofbreaking your current install, and because
+(2) dopamne is running on Xubuntu 16.04/18.04 LTS].
 
-Symlink the dotfiles and scripts to their runtime locations, use
-i3-make to install the i3 related files.
+http://feeblenerd.blogspot.com/2015/11/pretty-i3-with-xfce.html
 
 == Scope
 
@@ -152,6 +154,8 @@ swap-container-with-mark function bound to the 3 digit sequence 0[0-9][0-9].
 Exchanging marks can make rearranging windows easier than relying upon
 the conventional incremental movement of focus or windows alone.
 
+2019-11: Marks are awesome. I mark everything I can now.
+
 === Single Letter Marks
 In addition to a two character mark matching "[0-9][0-9]",
 a single letter mark can be added or removed independently.
@@ -205,7 +209,9 @@ https://github.com/alols/xcape[xcape] to define how modifier keys work when pres
 
 === i3-mouse
 
-- Disable the mouse to prevent accidental waking up of the display when the desk is jolted.
+2019-11:  The ideas in this section didn't work out for me and have been removed,
+but should not be forgotten.
+
 - Disable the mouse when (for example) Emacs has focus, in order to encourage keyboard use.
 - Warp the mouse to follow window focus changes and
 reduce the overall manual mouse movement distance.
@@ -219,7 +225,7 @@ To enable the mouse for just long enough to escape such a mousetrap
 press Menu at least once, until default mode is reactivated.
 There is no need to restart the focus watcher.
 
-A recent useful idea from reddit is
+2019:04: A recent useful idea from reddit is
 https://www.reddit.com/r/i3wm/comments/b0lj73/where_focus_goes_mouse_follows/["mouse follows focus"]:
 When the keyboard is used to focus a window, the mouse is warped into
 the window, to a point offset from the top left corner
@@ -227,8 +233,6 @@ by one-third of the window width and one-third of the window height.
 Using the mouse to focus a window with a single click highlights the
 region between the mouse click point and the keyboard focus point. Using
 a slow double-click instead leaves no highlight.
-
-2019-11: Both of these have been unused, and have been removed.
 
 === i3-display
 I simply don't like automatic display blanking, but because
@@ -268,8 +272,10 @@ forwarded to the i3programs() function in i3-wrapper for evaluation.
 The focus watcher  started out as a joke and programming challenge:
 to light a keyboard LED when Emacs had focus.
 The implementation was a hack.
+
 Since then, i3 4.16 has provided "i3-msg -t subscribe -m ..." which subscribes to events,
 in particular  the window (changed) event.
+
 The implementation is no longer a gimmick. The "Emacs LED" remains,
 but now this indicates that the mouse is disabled when Emacs has focus.
 This is done to encourage using the keyboard and discourage using the mouse.
@@ -279,6 +285,7 @@ As described in subsection "i3-mouse", the mouse can be
 enabled again by a triple press of the Menu key.
 
 2019-11: Focus watcher has been removed.
+The 'i3-msg -t subscribe ...' feature is neverheless cool.
 
 === Launch or Focus
 The focus function in i3-wrapper has a bash case statement that
@@ -342,5 +349,13 @@ These terminal commands combine the splitting and the invoking.
 My external speech to text engine uses the Android apps Tasker and AutoVoice.
 Tasker writes a sentence or command into the file monitored by the file watcher.
 
-This is currently in flux. Some code is not being called pending review.
-Currently I'm working on numeric commands version two.
+My frontend for speeech to text is the AutoVoice for Chrome extension.
+It provides continuous listening without hotphrases such as "OK Google" or "Alexa".
+This requires streaming audio out of the machine at roughly 128 kbps,
+so be careful if your broadband is metered, or if you wish to keep secrets.
+Muting the microphone input stops this stream, it's effectively the on/off switch.
+
+2019-11:  To have Autovoice recognise a number and give a result with only digits
+was a stumbling block that has been overcome.
+The trick is to say the number followed by the word "dollars",
+which presumably works with similar quantifiers.
