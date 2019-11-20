@@ -98,6 +98,8 @@ bindsym Control+Delete $i3wrapper dd
 
 # Disable DPMS with a safe key.
 bindsym Pause exec --no-startup-id xset -dpms
+# Facilitate marking windows.
+bindsym Print $i3wrapper --unique-mark
 
 # In default mode, this facilitates move and resize using the mouse
 # without having to precisely position the mouse on window edges.
