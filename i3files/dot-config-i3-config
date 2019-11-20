@@ -488,8 +488,8 @@ for_window [title="Add Security Exception"] kill;
 # 2. gold title bar when focused inactive,
 # 3. grey title bar otherwise.
 # class | border | background | text | indicator | child_border
-client.focused          #333333 #006600 #ffffff #2e9ef4   #185522
-client.focused_inactive #333333 #444400 #bbbbbb #484e50   #5f676a
+client.focused          #333333 #008800 #ffffff #2e9ef4   #185522
+client.focused_inactive #333333 #666600 #dddddd #484e50   #5f676a
 client.unfocused        #333333 #444444 #bbbbbb #292d2e   #222222
 client.urgent           #880000 #444444 #ffffff #880000   #900000
 client.placeholder      #000000 #444444 #ffffff #000000   #0c0c0c
