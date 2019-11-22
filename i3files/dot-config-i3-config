@@ -189,7 +189,11 @@ mode "Primary" {
     bindsym w  \
             $default, exec i3-input -f $i3inputfont  -l 2 \
             -P '(workspace): ' -F 'workspace "%s"'
-    bindsym e $primarynop
+
+    # A dmenu showing window titles and their associatef marks.
+    # The use case is finding the title a mark is associated with.
+    # Selecting an item visits the mark.
+    bindsym e $default, $i3wrapper --visit-mark
 
     # (R)ename a workspace.
     bindsym r \

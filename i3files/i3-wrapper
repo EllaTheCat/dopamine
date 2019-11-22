@@ -204,6 +204,30 @@ i3_cycle_marks()
 }
 
 #
+# Display the title and the mark for all marked windows inside a
+# dmenu; selecting visits the window.
+#
+# - This is effectively a popup side scrolling taskbar.
+#
+i3_visit_mark()
+{
+    # I must do better with 'jq', the following code was crufted up on
+    # the command line to extract text blocks like this from the jq:
+    #
+    # "reddit: the front page of the internet - Google Chrome"
+    # [
+    #   "36"
+    # ]
+    menu="$(i3-msg -t get_tree | jq '.. | objects | .name,.marks' | \
+                  grep -B1 -A1 [[] | tr -d \\n[  | sed 's/--/\n/g')"
+    pair=$(echo  "${menu}" | dmenu -b  -fn 'pango:DejaVu Sans 11')
+    # The list item format is ->"string1" "string2"<- e.g. the above
+    # becomes: "reddit...Google Chrome" "36"
+    for s in ${pair}; do mark=$s; done
+    i3-msg "[ con_mark=${mark} ] focus"
+}
+
+#
 # Create a workspace with three side-by-side terminals inside if none
 # exists, othewise visit the workspace. The name of the workspace is
 # the command alias. Inspired by:
@@ -420,7 +444,7 @@ i3_digit_digits()
         ;;
         ([1][0-9][0-9])
         arg="${1:1:2}"  # USB volume as a percentage.
-        pactl set-sink-volume "${usbaudiosink}%"
+        pactl set-sink-volume "${usbaudiosink} ${arg}%"
         ;;
         ([05][0-9][0-9])
         # Swap this container with the matching marked container.
@@ -600,6 +624,7 @@ case ${XDG_CURRENT_DESKTOP} in
         (--cycle-through-marks) i3_cycle_marks ;;
         (--unique-mark) i3_unique_mark ;;
         (--keyboard-binding-info) i3kb ;;
+        (--visit-mark) i3_visit_mark ;;
         # In production, do nothing here?
         (*) start "$@" ;;
     esac
