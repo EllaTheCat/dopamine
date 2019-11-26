@@ -352,10 +352,14 @@ mode "Secondary" {
     bindsym Tab $default, $i3wrapper -p
 
     # Select an audio output.
-    bindsym a exec pactl move-sink-input "$(pactl list short sink-inputs | awk '{print $1}')" $analogaudiosink ;
-    bindsym h exec pactl move-sink-input "$(pactl list short sink-inputs | awk '{print $1}')" $hdmiaudiosink ;
-    bindsym b exec pactl move-sink-input "$(pactl list short sink-inputs | awk '{print $1}')" $bluetoothaudiosink ;
-    bindsym u exec pactl move-sink-input "$(pactl list short sink-inputs | awk '{print $1}')" $usbaudiosink ;
+    bindsym a  $default, exec pactl move-sink-input \
+            "$(pactl list short sink-inputs | awk '{print $1}')" $analogaudiosink ;
+    bindsym h  $default, exec pactl move-sink-input \
+            "$(pactl list short sink-inputs | awk '{print $1}')" $hdmiaudiosink ;
+    bindsym b  $default, exec pactl move-sink-input \
+            "$(pactl list short sink-inputs | awk '{print $1}')" $bluetoothaudiosink ;
+    bindsym u  $default, exec pactl move-sink-input \
+            "$(pactl list short sink-inputs | awk '{print $1}')" $usbaudiosink ;
 
     # {s,d,f} {w,e,r} keys.
     bindsym s $default, $i3mouse slow
