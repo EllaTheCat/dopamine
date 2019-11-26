@@ -449,7 +449,7 @@ workspace "g3" output $cmon
 assign [instance="xfce4-terminal" title="watcher$"] wm
 assign [instance="xfce4-terminal" title="SoundWireServer"] wm
 assign [instance="xfce4-terminal" title="tvheadend"] tv
-assign [instance="gl" class="mpv"]  mp
+assign [class="mpv"]  mp
 assign [title="VLC media player$"] vp
 assign [title="Meld$"] md
 assign [instance="wireshark"]  ws
@@ -475,6 +475,7 @@ for_window [title="Volume Control"] \
 for_window [instance="xfce4-terminal"] $i3wrapper --unique-mark;
 for_window [instance="emacs24"] $i3wrapper --unique-mark;
 for_window [instance="google-chrome"] $i3wrapper --unique-mark;
+for_window [instance="gl" class="mpv"] $i3wrapper --unique-mark;
 
 # VirtualBox windows assume full screen dimensions.
 for_window [title="VirtualBox Manager"] layout tabbed;
