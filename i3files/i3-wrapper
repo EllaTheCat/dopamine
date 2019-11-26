@@ -444,7 +444,7 @@ i3_digit_digits()
         ;;
         ([1][0-9][0-9])
         arg="${1:1:2}"  # USB volume as a percentage.
-        pactl set-sink-volume "${usbaudiosink} ${arg}%"
+        pactl set-sink-volume ${usbaudiosink} "${arg}%"
         ;;
         ([05][0-9][0-9])
         # Swap this container with the matching marked container.
