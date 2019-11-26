@@ -1,27 +1,21 @@
 = "dopamine"
 
-== Introduction
-Nine months ago (as of 2019-03-16)
+== ##Introduction
+Some time ago
 https://www.reddit.com/r/i3wm/comments/8h2961/using_i3_for_better_accessibility_with_parkinsons/[I posted on reddit],
 saying that the i3 window manager was very well suited to my needs
-as someone living with Parkinson's Disease (PD).
+as someone living with Parkinson's Disease,
+a condition that arises when https://en.wikipedia.org/wiki/Dopamine[dopamine]
+producing neurons in the brain start dying.
 
 You are currently reading the README for the github repository https://github.com/EllaTheCat/dopamine[dopamine],
-a tidied up direct descendant of i3-parkinson that I'm using and actively working on.
-I chose the name to be short and memorable.
-(PD happens when https://en.wikipedia.org/wiki/Dopamine[dopamine]
-producing neurons in the brain start dying.)
-I have made a post on reddit about dopamine and there's once again
+that I'm using and actively working on. I chose the name dopamine to be short and memorable.
+
+I made a follow-up post on reddit about the dopamine project and there was once again
 https://www.reddit.com/r/i3wm/comments/b1i2io/dopamine_using_i3_when_the_user_has_a_movement/[an
 ongoing discussion].
 
-As of 2019-07-22, I'm purging the various failed experiments and too-cute features.
-I'm finally conceding that AutoVoice-based speech recognition isn't fit for purpose,
-whether for dictation or control. The killer is latency.
-
-As of 2019-11-16, I've been too hard on myself,
-as i realised after using the speech recognition in Google Docs.
-six of one, half a dozen of the other.
+Dopamine is as much about evaluating what doesn't work as it is about what works!
 
 == How to run dopamine
 I'd like to know if anyone tries or wants to try, but it's a mess.  I'll help you.
@@ -60,18 +54,18 @@ The files here are the ones I use. Nothing here is installed by the Makefile in 
 == Ergonomics
 
 === Numpad
-Nine months ago I thought modes would replace modifiers in my way of working.
+At first I thought modes would replace modifiers in my way of working.
 I've realised that there are some i3 commands that don't suit modes,
 but modifiers don't suit me.
 The compromise is to use the numeric keypad, alias the numpad,
 as found on the far right of full-size keyboards.
-Separate USB numpads are available for laptop users and left handed users.
+Separate USB numpads are available for on-the-move  laptop users and left handed users.
 
 The NumLock key toggles between two sets of keys:
 the KP_0 set for numeric entry and
 the KP_Insert set for navigation.
 The arithmetic operators and KP_Enter are unaffected by NumLock.
-Here's what currently (2019-04) works for me:
+Here's what works for me:
 ----
 bindsym KP_Left focus left
 bindsym KP_Right focus right
@@ -87,7 +81,7 @@ bindsym KP_Delete (reserved)
 
 === Arrows
 Using the numpad for focus hasn't worked as well as anticipated.
-Here's what currently (2019-04) works for me, and yes, it uses modifiers:
+Here's what works for me, and yes, it uses modifiers:
 
 ----
 bindsym $i3arrowmodifier+Left focus left
@@ -97,16 +91,17 @@ bindsym $i3arrowmodifier+Right focus right
 ----
 
 === i3 modes
+
 There are now only three i3 modes: the default mode, the Primary mode, and the Secondary mode.
 The Menu key cycles through these modes, the space key returns to default mode from the other two.
 The screen will dim when in Primary or Secondary mode.
 If a Primary or Secondary mode binding returns to default mode automatically, the screen will dim momentarily.
 
 - Primary mode contains my most often used bindings after the numpad ones.
-- Secondary mode contains bindings that are useful but aren't used often.
-- OK mode is a blatant hack to provide a visual bell for i3-make (q.v.).
-It can't be hidden, so it is ignored when we say there are three modes.
-It may occasionally get confused, pressing the Menu key a few times resets it.
+- Secondary mode contains bindings to less-used functions such as settings.
+
+- OK mode is a hack to provide a visual bell for i3-make (q.v.).
+- OK mode doesn't count when we say there are three modes.
 
 === Commands
 
@@ -127,15 +122,12 @@ program or switch to a running instance.
 This is explained in more detail in subsection "Launch or Focus" in section "i3-wrapper".
 
 === Numeric Commands
-2019-04: In the past nine months I have experimented with assigning numbers to commands,
-which sounds promiising (the "teletext argument") but fails in practice.
 
-Dopamine is
-as much about evaluating what doesn't work as it is about what works!
-
-2019-11: I have found a reliable method of saying two or three digit numbers that Google does not mess with.
+I have only recently found a reliable method of saying two or three digit numbers
+that returns consistently formatted values.
 To issue the command "42", say "42 dollars", Google returns "$42", strip the dollar sign, apply a leading zero
 for values less than 10, and we have a two digit number.
+Previously results could be mixed format (one,1) or homophones (for/four/4).
 
 === Hybrid Commands
 These are the ten Emacs frame (window) commands e[0-9], and
@@ -149,12 +141,11 @@ Whenever a terminal, emacs frame, or google chrome window is created,
 a unique two digit mark is allocated and displayed on the right side of the titlebar.
 The quick-and-dirty implementation of mark assignment risks failing to terminate
 when the number of marked containers approaches 100.
+
 i3 has a goto-mark function bound to the 2 digit sequence [0-9][0-9] and a
-swap-container-with-mark function bound to the 3 digit sequence 0[0-9][0-9].
+swap-container-with-mark function bound to the 3 digit sequence 5[0-9][0-9].
 Exchanging marks can make rearranging windows easier than relying upon
 the conventional incremental movement of focus or windows alone.
-
-2019-11: Marks are awesome. I mark everything I can now.
 
 === Single Letter Marks
 In addition to a two character mark matching "[0-9][0-9]",
@@ -176,7 +167,7 @@ The bindings density around my left hand is quite high,
 hence the use of a modifer rather than a mode,
 plus the homage to Alt-Tab.
 
-2019-11: This works, but has been seldom used.
+This all works, but has been seldom used.
 It does no harm at present so there is no reason to remove it.
 
 == i3-make
@@ -208,24 +199,7 @@ https://github.com/alols/xcape[xcape] to define how modifier keys work when pres
     - k3='ISO_Level3_Shift=Escape'
 
 === i3-mouse
-
-2019-11:  The ideas in this section didn't work out for me and have been removed,
-but should not be forgotten.
-
-- Disable the mouse when (for example) Emacs has focus, in order to encourage keyboard use.
-- Warp the mouse to follow window focus changes and
-reduce the overall manual mouse movement distance.
-
-2019:04: The mouse will automatically disable the mouse inside any Emacs window inside
-any of the standard Emacs workspaces e[0-9] and em.
-This is a deliberate decision, to encourage keyboard use and discourage mouse use.
-To prevent the mouse being disabled for the session,
-either move the window or rename the workspace.
-To enable the mouse for just long enough to escape such a mousetrap
-press Menu at least once, until default mode is reactivated.
-There is no need to restart the focus watcher.
-
-2019:04: A recent useful idea from reddit is
+A recent useful idea from reddit is
 https://www.reddit.com/r/i3wm/comments/b0lj73/where_focus_goes_mouse_follows/["mouse follows focus"]:
 When the keyboard is used to focus a window, the mouse is warped into
 the window, to a point offset from the top left corner
@@ -234,6 +208,18 @@ Using the mouse to focus a window with a single click highlights the
 region between the mouse click point and the keyboard focus point. Using
 a slow double-click instead leaves no highlight.
 
+The following ideas didn't work out for me and have been removed,
+but should not be forgotten.
+
+ The mouse will automatically disable the mouse inside any Emacs window inside
+any of the standard Emacs workspaces e[0-9] and em.
+This is a deliberate decision, to encourage keyboard use and discourage mouse use.
+To prevent the mouse being disabled for the session,
+either move the window or rename the workspace.
+To enable the mouse for just long enough to escape such a mousetrap
+press Menu at least once, until default mode is reactivated.
+There is no need to restart the focus watcher.
+
 === i3-display
 I simply don't like automatic display blanking, but because
 my tremor would easily disturb the mouse
@@ -241,13 +227,12 @@ I can't allow automatic display unblanking.
 Keybindings can use this script request that the display sleeps or wakes up.
 
 I have two monitors driven from my PC, and I hope to have three again in future.
-The left monitor can be driven from other sources, typically the other source is a
-Raspberry Pi Zero W that streams video.
+The left monitor can be driven from other sources, Fire Stick, NowTV STB, Raspberry Pi, ...
 I wish to avoid selecting inputs with buttons on the left monitor.
 Keybindings can use this script to send commands to both sources
 such that the left monitor source can be selected programmatically.
 
-2019-11: This works, but has been seldom used because my monitors have been
+This works, but has been seldom used because my monitors have been
 configured to disable automatic HDMI switching.
 It does no harm at present so there is no reason to remove it.
 
@@ -267,25 +252,6 @@ This script makes explicit how the applications I use should be started and stop
 The file watcher monitors a file in shared memory, using
 inotify-hookable.  When a command is written to this file, it is
 forwarded to the i3programs() function in i3-wrapper for evaluation.
-
-=== Focus Watcher
-The focus watcher  started out as a joke and programming challenge:
-to light a keyboard LED when Emacs had focus.
-The implementation was a hack.
-
-Since then, i3 4.16 has provided "i3-msg -t subscribe -m ..." which subscribes to events,
-in particular  the window (changed) event.
-
-The implementation is no longer a gimmick. The "Emacs LED" remains,
-but now this indicates that the mouse is disabled when Emacs has focus.
-This is done to encourage using the keyboard and discourage using the mouse.
-This was implemented for my benefit, and since I
-sometimes find it more than annoying, there is a back door.
-As described in subsection "i3-mouse", the mouse can be
-enabled again by a triple press of the Menu key.
-
-2019-11: Focus watcher has been removed.
-The 'i3-msg -t subscribe ...' feature is neverheless cool.
 
 === Launch or Focus
 The focus function in i3-wrapper has a bash case statement that
@@ -332,7 +298,7 @@ relies on the space between the two key clusters to the left of the numpad
 to rest my fingers and steady my hand.
 
 === Tiled Terminals
-I  use tiled terminals laid out in a limited number of different arrangements,
+I use tiled terminals laid out in a limited number of different arrangements,
 which result in bindings to bash functions that perform these operations:
 
 - 1 terminal opened to the right of an existing container.
@@ -353,9 +319,10 @@ My frontend for speeech to text is the AutoVoice for Chrome extension.
 It provides continuous listening without hotphrases such as "OK Google" or "Alexa".
 This requires streaming audio out of the machine at roughly 128 kbps,
 so be careful if your broadband is metered, or if you wish to keep secrets.
-Muting the microphone input stops this stream, it's effectively the on/off switch.
+The extension has an on/off switch but I do not know how to toggle it programmatically.
+Muting the microphone input reduces the upstream bandwidth significantly
+and serves as an on/off switch.
 
-2019-11:  To have Autovoice recognise a number and give a result with only digits
-was a stumbling block that has been overcome.
-The trick is to say the number followed by the word "dollars",
-which presumably works with similar quantifiers.
+= Summary
+:
+-)
