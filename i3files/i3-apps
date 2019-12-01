@@ -9,6 +9,7 @@
 # My primary monitor, situated centrally.
 cmon=HDMI1
 
+
 #
 # Start here.
 #
@@ -22,6 +23,10 @@ do
         verb=${argument}
         ;;
 
+        #
+        # Startup and Shutdown.
+        #
+
         (filewatcher)
         if [ "_${verb}" = "_stop" ]; then
             # shellcheck disable=2046
@@ -34,19 +39,7 @@ do
         fi
         ;;
 
-        (scratchpad)
-        if  [ "_${verb}" = "_stop" ]; then
-            i3-msg --quiet "[instance=\"Scratchpad\"] kill"
-        fi
-        ;;
-
-        (soundwire)
-        if [ "_${verb}" = "_start" ] || [ "_${verb}" = "_stop" ]; then
-            (eval "${HOME}/Programs/scripts/soundwire" "${verb}") &
-        fi
-        ;;
-
-        (tvheadend)
+       (tvheadend)
         if [ "_${verb}" = "_stop" ]; then
             i3-msg --quiet '[title="tvheadend"] kill'
         fi
@@ -57,7 +50,6 @@ do
         ;;
 
         (usbdisks)
-        # Spin down USB HDDs.
         if  [ "_${verb}" = "_start" ] || [ "_${verb}" = "_stop" ]; then
             sudo umount /snapdisks/banana
             sudo umount /snapdisks/tabasco
@@ -107,41 +99,6 @@ do
         fi
         ;;
 
-        (emacs)
-        if  [ "_${verb}" = "_stop" ]; then
-            i3-msg '[title="^Emacs :"] focus, kill'
-        fi
-        ;;
-
-        (thunar)
-        if  [ "_${verb}" = "_stop" ]; then
-            i3-msg --quiet '[instance="Thunar"] kill'
-        fi
-        ;;
-
-        (firefox)
-        if  [ "_${verb}" = "_stop" ]; then
-            # Firefox treats 'kill'/'pkill' as a crash.
-            if [ "$(pgrep -c -f firefox)" -gt 1 ]; then
-                i3-msg "workspace ff"
-                xdotool key --clearmodifiers ctrl+q
-                exit 0
-            fi
-        fi
-        ;;
-
-        (chrome)
-        if  [ "_${verb}" = "_stop" ]; then
-            i3-msg  --quiet '[class="Google-chrome"] kill'
-        fi
-        ;;
-
-        (thunderbird)
-        if  [ "_${verb}" = "_stop" ]; then
-            i3-msg --quiet '[title="Mozilla Thunderbird$"] kill'
-        fi
-        ;;
-
         (marks)
         # Stop anything with a mark. This is gentle but there is no
         # housekeeping and data could be lost.
@@ -163,34 +120,31 @@ do
         if  [ "_${verb}" = "_start" ]; then
             i3-msg "focus output ${cmon}"
             xdotool mousemove --sync --clearmodifiers 2880 384; sleep 1
-            yad --title="Starting in 7s ..." --mouse --timeout=7 --timeout-indicator=top
+            yad --title="Startup in 7s ..." --mouse --timeout=7 --timeout-indicator=top
             if  [ "$?" -ne 1 ]; then
                 eval "$0 start filewatcher"
                 eval "$0 start tvheadend"
-                eval "$0 start wallpaper"
                 eval "$0 stop usbdisks" # Yes, spin them down!
+                eval "$0 start wallpaper"
             else
                 exit 0
             fi
-	    yad --title="Starting complete." --timeout=3 --timeout-indicator=top
+	    yad --title="Startup complete." --timeout=3 --timeout-indicator=top
         fi
         if  [ "_${verb}" = "_stop" ]; then
             i3-msg "focus output ${cmon}"
             xdotool mousemove --sync --clearmodifiers 2880 384; sleep 1
-            yad --title="Stopping in 7s ..." --mouse --timeout=7 --timeout-indicator=top
+            yad --title="Shutdown in 7s ..." --mouse --timeout=7 --timeout-indicator=top
             if  [ "$?" -ne 1 ]; then
                 eval "$0 stop VirtualBox"
-                eval "$0 stop emacs"
-                eval "$0 stop firefox chrome"
-                eval "$0 stop thunar thunderbird"
-                eval "$0 stop scratchpad marks"
-                eval "$0 stop tvheadend soundwire"
+                eval "$0 stop tvheadend"
+                eval "$0 stop marks"
                 eval "$0 stop filewatcher"
                 eval "$0 stop usbdisks"
             else
                 exit 0
             fi
-            yad --title="Stopping complete." --timeout=3 --timeout-indicator=top
+            yad --title="Shudown complete." --timeout=3 --timeout-indicator=top
             if  [ "$?" -ne 1 ]; then
                 xfce4-panel --quit && sleep 0.5 && xfce4-session-logout --logout
             else
