@@ -28,6 +28,7 @@ set $i3make exec --no-startup-id ~/local/bin/i3-make
 set $i3mode exec --no-startup-id ~/local/bin/i3-mode
 set $i3mouse exec --no-startup-id ~/local/bin/i3-mouse
 set $i3powermate exec --no-startup-id ~/local/bin/i3-powermate
+set $i3tasker exec --no-startup-id ~/local/bin/i3-tasker
 set $i3wrapper exec --no-startup-id ~/local/bin/i3-wrapper
 
 set $defaultnop nop
@@ -137,15 +138,18 @@ bindsym KP_Divide workspace prev_on_output
 bindsym KP_Multiply workspace next_on_output
 
 # Microphone muting (for privacy and phone conferencing).
-# The i3bar displays the status of the two microphones:
+# The i3bar displays the status of three or fewer microphones:
 # 0 == muted; 1 == not muted == a "hot" microphone.
 # These are NOT bound in Primary or Secondary modes.
 bindsym KP_Subtract \
         exec --no-startup-id pactl set-source-mute $analogaudiosource toggle
 bindsym KP_Add \
-        exec --no-startup-id pactl set-source-mute $webcamaudiosource toggle
-bindsym KP_Delete \
         exec --no-startup-id pactl set-source-mute $usbaudiosource toggle
+
+# Currently, I have 2 microphones, so can repurpose this key to
+# toggle the AutoVoice for Chrome extension on-off.
+bindsym KP_Delete \
+        $i3tasker "i3_generic :autovoice continuous ${lmon}"
 
 #
 # MODES

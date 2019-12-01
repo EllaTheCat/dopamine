@@ -1,6 +1,26 @@
 #!/bin/bash
 #
 
+export lmon=HDMI2
+export cmon=HDMI1
+
+#
+# Enable or disable AutoVoice for Chrome (lAutoInput style).
+# chrome://extensions/?id=mefllcpfdfhohmeadieejdjcdcbibeml
+#
+i3_autovoice()
+{
+    case "$1" in
+        (continuous)
+        i3-msg "workspace g9"
+        sleep 1
+        i3-msg "move workspace to output ${cmon}"
+        sleep  1
+        i3-msg "exec xdotool mousemove  3180 285 click 1"
+        ;;
+    esac
+}
+
 #
 # Monitor the speech-to-text clipboard in a dedicated Emacs buffer.
 #
@@ -36,7 +56,7 @@ i3_generic()
             # Brute force to ensure that the 'mp' workspace appears,
             # that the video window opens inside it, that the window
             # has focus, and that the mark is set on its titlebar.
-            i3-msg "focus output HDMI2"
+            i3-msg "focus output ${lmon}"
             i3-msg "workspace \"zz\""
             i3-msg "workspace \"mp\""
             i3-msg "exec ${*:2}"
@@ -47,6 +67,10 @@ i3_generic()
             eval "${@:2}"
             ;;
         esac
+        ;;
+        # Autovoice for Chrome.
+        (:autovoice)
+        i3_autovoice "${*:2}"
         ;;
         # Clipboard commands. The buffer doesn't have to be the
         # current buffer.
