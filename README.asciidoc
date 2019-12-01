@@ -319,10 +319,18 @@ My frontend for speeech to text is the AutoVoice for Chrome extension.
 It provides continuous listening without hotphrases such as "OK Google" or "Alexa".
 This requires streaming audio out of the machine at roughly 128 kbps,
 so be careful if your broadband is metered, or if you wish to keep secrets.
-The extension has an on/off switch but I do not know how to toggle it programmatically.
-Muting the microphone input reduces the upstream bandwidth significantly
-and serves as an on/off switch.
+
+The i3-tasker function i3-autovoice uses xdotool to toggle AutoVoice
+on/off on the extension's webpage chrome://extensions/?id=... (not the
+Options page) as of Chrome Version 77.0.3865.90 (Official Build)
+(64-bit). I hope it stays available.  This is the better choice to
+serve as an on/off switch provided that the user accepts the
+implementation (c.f. the Tasker plugin AutoInput).
+
+Muting the microphone input to the AutoVoice for Chrome extension
+reduces the upstream bandwidth significantly and serves as an
+alternative and effective on/off switch.
 
 = Summary
-:
--)
+
+:-)
