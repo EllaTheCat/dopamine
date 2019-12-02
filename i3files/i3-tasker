@@ -12,35 +12,21 @@ i3_autovoice()
 {
     case "$1" in
         (continuous)
+        # Start at one second, be careful with a smaller value.
+        delay=0.33
         i3-msg "workspace g9"
-        sleep 1
+        sleep "${delay}"
         i3-msg "move workspace to output ${cmon}"
-        sleep  1
+        sleep  "${delay}"
         i3-msg "exec xdotool mousemove  3180 285 click 1"
+        sleep "${delay}"
+        i3-msg "workspace back_and_forth"
         ;;
     esac
 }
 
 #
-# Monitor the speech-to-text clipboard in a dedicated Emacs buffer.
-#
-i3_clipboard()
-{
-    i3-msg "workspace cb"
-    sleep 1
-    names=$(i3-msg -t get_tree | sed s/,/,\\n/g | grep name)
-    str0="Emacs : Clipboard"
-    count0="$(echo "${names}" | grep -c "${str0}")"
-    if [ "$count0" -eq 0 ]; then
-        # https://emacs.stackexchange.com/questions/3463/
-        # open-a-frame-for-the-first-time-using-emacsclient-c-showing-other-buffer-th
-        i3-msg "exec emacsclient.emacs24 -c -e '(switch-to-buffer \"Clipboard\")'"
-        sleep 1
-    fi
-}
-
-#
-#  Shell commands. Clipboard monitoring.
+#  Shell commands. AutoVoice on/off. Clipboard.
 #
 i3_generic()
 {
@@ -60,7 +46,7 @@ i3_generic()
             i3-msg "workspace \"zz\""
             i3-msg "workspace \"mp\""
             i3-msg "exec ${*:2}"
-            sleep 10  # Better late than never.
+            sleep 10  # Better late than never, unobtrusive.
             i3-msg "exec ${HOME}/local/bin/i3-wrapper  --unique-mark"
             ;;
             (/home/shevek/*/firewall)
