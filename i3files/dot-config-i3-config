@@ -205,9 +205,9 @@ mode "Primary" {
             -P '(rename this workspace to): ' \
             -F 'rename workspace to "%s"'
 
-    # [T]abbed layout.
-    bindsym t $default, layout tabbed
-    bindsym y $primarynop
+    # Launch a terminal. The 'tt' and 'yy' commands are deprecated.
+    bindsym t $default, split h, exec xfce4-terminal -T "xfce4-terminal" &
+    bindsym y $default, split v, exec xfce4-terminal -T "xfce4-terminal" &
 
     # Focus the workspace with the latest [u]rgency hint.
     bindsym u $default, [urgent=latest] focus
@@ -339,7 +339,8 @@ mode "Secondary" {
     bindsym e $default, $i3mouse enable
     bindsym r $default, $i3mouse reset
 
-    bindsym t $secondarynop
+    # [T]abbed layout.
+    bindsym t $default, layout tabbed
     bindsym y $secondarynop
 
     # Spin down the USB drives attached to my desktop PC, their blue

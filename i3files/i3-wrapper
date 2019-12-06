@@ -120,24 +120,6 @@ i3dd()
 }
 
 #
-# Add a terminal (split h, side-by-side).
-#
-i3tt()
-{
-    i3-msg "split h"
-    xfce4-terminal -T "xfce4-terminal" &
-}
-
-#
-# Add a terminal (split v, stacked).
-#
-i3yy()
-{
-    i3-msg "split v"
-    xfce4-terminal -T "xfce4-terminal" &
-}
-
-#
 # Assign a unique mark.
 #
 i3_unique_mark()
