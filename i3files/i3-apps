@@ -144,7 +144,7 @@ do
             else
                 exit 0
             fi
-            yad --title="Shudown complete." --timeout=3 --timeout-indicator=top
+            yad --title="Shutdown complete." --timeout=3 --timeout-indicator=top
             if  [ "$?" -ne 1 ]; then
                 xfce4-panel --quit && sleep 0.5 && xfce4-session-logout --logout
             else
