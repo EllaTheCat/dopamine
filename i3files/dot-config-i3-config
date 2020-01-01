@@ -544,6 +544,9 @@ $i3keyboard
 # [reset] Mouse behaves normally. [window] Mouse warps to window.
 $i3mouse reset
 
+# AutoVoice Clipboard emacs buffer backing file.
+exec --no-startup-id /usr/bin/touch /dev/shm/shevek/i3/Clipboard
+
 # Microphones' defaults (see key bindings). 1 = mute here.
 exec --no-startup-id pactl set-source-mute $usbaudiosource 1
 exec --no-startup-id pactl set-source-mute $analogaudiosource 1
