@@ -363,19 +363,9 @@ i3_lower_lower_easy()
 i3_lower_lower_hard()
 {
     case "$1" in
-        # 1. Terminal in the current workspace. Split is top-bottom.
-        # 2. Terminal in the current workspace. Split is left-right.
-        # 3. Dropdown terminal (strictly: a scratchpad terminal).
-        (tt)
-        i3tt ;;
-        (yy)
-        i3yy ;;
+        # Dropdown terminal (strictly: a scratchpad terminal).
         (dd)
         i3dd ;;
-
-        # A container layout : ""tt' then 'yy' => 'ty'.
-        (ty)
-        i3tt && sleep 2 && i3yy ;;
 
         # Use these to add an instance into an existing workspace.
         (em)

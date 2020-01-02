@@ -108,7 +108,7 @@ If a Primary or Secondary mode binding returns to default mode automatically, th
 Press Menu followed by Tab to show a dmenu with a "Command:" prompt.
 There is just enough time to enter two or three characters before the dmenu
 is automatically dismissed. Whatever has been entered is evaluated as a command.
-Entering "tt" launches a terminal, for example. Pressing backslash instead of Tab
+Pressing backslash instead of Tab
 is slightly easier with a UK keyboard.
 
 Pressing KP_Insert shows the same dmenu. The numpad reconfigures to
