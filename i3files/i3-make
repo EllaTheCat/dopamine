@@ -3,7 +3,7 @@
 # i3-make
 #
 
-I3FILES=$(readlink -f ~/Programs/i3files)
+I3FILES=$(readlink -f ${HOME}/1/EllaTheCat/github/dopamine/i3files)
 cd ${I3FILES}
 make \
     CONFIGURED=true I3BIN="${HOME}/local/bin" \
