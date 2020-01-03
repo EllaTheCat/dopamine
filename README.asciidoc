@@ -1,38 +1,57 @@
 = "dopamine"
 
-== ##Introduction
+== Introduction
+=== Background
 Some time ago
 https://www.reddit.com/r/i3wm/comments/8h2961/using_i3_for_better_accessibility_with_parkinsons/[I posted on reddit],
 saying that the i3 window manager was very well suited to my needs
 as someone living with Parkinson's Disease,
 a condition that arises when https://en.wikipedia.org/wiki/Dopamine[dopamine]
 producing neurons in the brain start dying.
-
 You are currently reading the README for the github repository https://github.com/EllaTheCat/dopamine[dopamine],
 that I'm using and actively working on. I chose the name dopamine to be short and memorable.
-
 I made a follow-up post on reddit about the dopamine project and there was once again
 https://www.reddit.com/r/i3wm/comments/b1i2io/dopamine_using_i3_when_the_user_has_a_movement/[an
 ongoing discussion].
-
 Dopamine is as much about evaluating what doesn't work as it is about what works!
 
-== How to run dopamine
+=== How to run dopamine
 I'd like to know if anyone tries or wants to try, but it's a mess.  I'll help you.
-
 Consider evaluating dopamine on a VirtualBox VM because
-(1) you minimise the risk ofbreaking your current install, and because
-(2) dopamne is running on Xubuntu 16.04/18.04 LTS].
-
-http://feeblenerd.blogspot.com/2015/11/pretty-i3-with-xfce.html
+(1) you minimise the risk of breaking your current install, and because
+(2) dopamine is running on Xubuntu 16.04/18.04 LTS].
+See http://feeblenerd.blogspot.com/2015/11/pretty-i3-with-xfce.html for an easy and safe way
+to install i3 on Xubuntu (i3 replaces the XFCE window manager).
 
 == Scope
-
 === i3files directory
 The i3files directory contains my i3 configuration files and some i3-related helper scripts.
 The other directories contain configurations and scripts that I use in conjunction with the aforementioned i3 files.
 These other files provide context for i3 and my PD; on github they act as my backups.
 The i3files are discussed in depth in a later section.
+
+=== i3-make script
+i3-make is a script that calls 'make' on the Makefile in the 'i3files' working directory. I have it bound to Control-Menu.
+Running i3-make will run ShellCheck on any script in the working directory that differs from its counterpart
+scripts in the installation directory, if ShellCheck is happy, the modified script is installed.
+The i3 config file and the i3status file are installed if i3 is happy; i3 config is reloaded and i3 is restarted as
+necessary.
+
+The example below shows how to configure Makefile variables (for my machine)
+by editing i3-make instead of editing the Makefile.
+
+----
+#!/bin/bash
+#
+# i3-make
+#
+
+I3FILES=$(readlink -f ${HOME}/1/EllaTheCat/github/dopamine/i3files)
+cd ${I3FILES}
+make \
+    CONFIGURED=true I3BIN="${HOME}/local/bin" \
+    -f ${I3FILES}/Makefile -C ${I3FILES} "$@"
+----
 
 === dotfiles directory
 My PD makes dot-inputrc absolutely essential; combined with a huge bash history size set by dot-bashrc,
@@ -52,7 +71,6 @@ These are scripts have come in handy, for example when making a video.
 The files here are the ones I use. Nothing here is installed by the Makefile in i3files.
 
 == Ergonomics
-
 === Numpad
 At first I thought modes would replace modifiers in my way of working.
 I've realised that there are some i3 commands that don't suit modes,
@@ -79,10 +97,13 @@ bindsym KP_Next move right
 bindsym KP_Delete (reserved)
 ----
 
-=== Arrows
-Using the numpad for focus hasn't worked as well as anticipated.
-Here's what works for me, and yes, it uses modifiers:
+Note that there is more horizontally oriented focus activity than
+vertically, because multiple monitors are in landscape orientation and
+are placed side by side. Vertically oriented focus activity can rely on
+wraparound to require only one of focus up or focus down keys.
 
+=== Arrows
+At one stage I added the bindings below, "just in case", even though they are using modifiers.
 ----
 bindsym $i3arrowmodifier+Left focus left
 bindsym $i3arrowmodifier+Down focus down
@@ -91,7 +112,6 @@ bindsym $i3arrowmodifier+Right focus right
 ----
 
 === i3 modes
-
 There are now only three i3 modes: the default mode, the Primary mode, and the Secondary mode.
 The Menu key cycles through these modes, the space key returns to default mode from the other two.
 The screen will dim when in Primary or Secondary mode.
@@ -104,25 +124,24 @@ If a Primary or Secondary mode binding returns to default mode automatically, th
 - OK mode doesn't count when we say there are three modes.
 
 === Commands
+Commands are a hangover from a past attempt to make a mouse-heavy
+window manager keyboard-operable. The concept was to either launch a
+program or switch to a running instance.
 
 Press Menu followed by Tab to show a dmenu with a "Command:" prompt.
 There is just enough time to enter two or three characters before the dmenu
 is automatically dismissed. Whatever has been entered is evaluated as a command.
-Pressing backslash instead of Tab
-is slightly easier with a UK keyboard.
+Pressing backslash instead of Tab is an alternative binding on my 105 key keyboard.
 
-Pressing KP_Insert shows the same dmenu. The numpad reconfigures to
-supply the numbers on keys KP_0 KP_1 ... KP_8 KP_9. Entering 2 or 3 digit
-commands is easier via the numpad, even with my right hand tremor,
-probably due to the compact arrangement of the digits.
+Pressing KP_Insert shows the same dmenu with its "Command:" prompt
+The numpad reconfigures to supply the numbers on keys KP_0 KP_1 ... KP_8 KP_9.
+Entering 2 or 3 digit commands is facilitated, even with my right hand tremor,
+probably due to the compact arrangement of the numpad.
 
-Commands are a hangover from a past attempt to make a mouse-heavy
-window manager keyboard-operable. The concept was to either launch a
-program or switch to a running instance.
-This is explained in more detail in subsection "Launch or Focus" in section "i3-wrapper".
+Commands themselves are explained in more detail in
+subsection "Launch or Focus" in section "i3-wrapper".
 
 === Numeric Commands
-
 I have only recently found a reliable method of saying two or three digit numbers
 that returns consistently formatted values.
 To issue the command "42", say "42 dollars", Google returns "$42", strip the dollar sign, apply a leading zero
@@ -135,7 +154,6 @@ the ten Google Chrome commands g[0-9].
 They are discussed in more detail in the section "Launch or Focus".
 
 == Marks
-
 === Numeric Marks
 Whenever a terminal, emacs frame, or google chrome window is created,
 a unique two digit mark is allocated and displayed on the right side of the titlebar.
@@ -170,15 +188,6 @@ plus the homage to Alt-Tab.
 This all works, but has been seldom used.
 It does no harm at present so there is no reason to remove it.
 
-== i3-make
-The i3files directory contais several files, copies of which must be installed in their
-run-time locations. Changing the i3 configuration requires that i3 reloads,
-changing the i3-status script requires that i3 restarts.
-The repository Makefile is used to automate installation, reloading and restarting.
-The i3-make script is a wrapper for 'make' calling the Makefile with custom make variables.
-The example just happens to work for me by default,
-the user should modify it to suit their system.
-
 == Bash scripts
 
 === i3-wrapper
@@ -207,18 +216,6 @@ by one-third of the window width and one-third of the window height.
 Using the mouse to focus a window with a single click highlights the
 region between the mouse click point and the keyboard focus point. Using
 a slow double-click instead leaves no highlight.
-
-The following ideas didn't work out for me and have been removed,
-but should not be forgotten.
-
- The mouse will automatically disable the mouse inside any Emacs window inside
-any of the standard Emacs workspaces e[0-9] and em.
-This is a deliberate decision, to encourage keyboard use and discourage mouse use.
-To prevent the mouse being disabled for the session,
-either move the window or rename the workspace.
-To enable the mouse for just long enough to escape such a mousetrap
-press Menu at least once, until default mode is reactivated.
-There is no need to restart the focus watcher.
 
 === i3-display
 I simply don't like automatic display blanking, but because
@@ -297,20 +294,6 @@ My decision to use Control+Delete despite my right hand tremors
 relies on the space between the two key clusters to the left of the numpad
 to rest my fingers and steady my hand.
 
-=== Tiled Terminals
-I use tiled terminals laid out in a limited number of different arrangements,
-which result in bindings to bash functions that perform these operations:
-
-- 1 terminal opened to the right of an existing container.
-- 1 terminal opened underneath an existing container.
-- 2 terminals opened to the right of an existing container, stacked vertically.
-- Given two terminals stacked one above the other, arrange them side-by-side.
-- Given two terminals stacked side-by-side, arrange them one above the other.
-- 3 terminals opened on an empty workspace.
-
-The hardcore i3 user might be able to split but it made my head hurt.
-These terminal commands combine the splitting and the invoking.
-
 == AutoVoice
 My external speech to text engine uses the Android apps Tasker and AutoVoice.
 Tasker writes a sentence or command into the file monitored by the file watcher.
@@ -321,7 +304,7 @@ This requires streaming audio out of the machine at roughly 128 kbps,
 so be careful if your broadband is metered, or if you wish to keep secrets.
 
 The i3-tasker function i3-autovoice uses xdotool to toggle AutoVoice
-on/off on the extension's webpage chrome://extensions/?id=... (not the
+on/off on the extension's webpage "chrome://extensions/?id=..." (not the
 Options page) as of Chrome Version 77.0.3865.90 (Official Build)
 (64-bit). I hope it stays available.  This is the better choice to
 serve as an on/off switch provided that the user accepts the
