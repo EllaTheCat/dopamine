@@ -36,6 +36,7 @@ do
             path=$(dirname "$0")
             # Is the eval required?
             (eval "${path}/i3-wrapper --file-watcher") &
+            /usr/bin/compton-trans -c -o 70
         fi
         ;;
 
@@ -46,6 +47,7 @@ do
         if  [ "_${verb}" = "_start" ]; then
             # TV Headend behaves better without authentication.
             (eval xfce4-terminal -T 'tvheadend' -x tvheadend --noacl) &
+            /usr/bin/compton-trans -c -o 70
         fi
         ;;
 
