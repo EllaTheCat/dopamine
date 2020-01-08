@@ -131,6 +131,11 @@ bindsym KP_Next move right
 # Do not rebind KP_0, KP_1 ... KP_8, KP_9, KP_Decimal.
 bindsym KP_Insert $default, $i3wrapper -p
 
+# Currently, I have 2 microphones, so can repurpose this key to
+# toggle the AutoVoice for Chrome extension on-off.
+bindsym KP_Delete \
+        $i3tasker "i3_generic :autovoice continuous ${lmon}"
+
 # Numpad keys that are unaffected by the NumLock state.
 # There are five: arithmetic signs / * - + and the enter key.
 # Do not rebind KP_Enter! This is a design decision.
@@ -147,11 +152,6 @@ bindsym KP_Subtract \
         exec --no-startup-id pactl set-source-mute $usbaudiosource toggle
 bindsym KP_Add \
         exec --no-startup-id pactl set-source-mute $analogaudiosource toggle
-
-# Currently, I have 2 microphones, so can repurpose this key to
-# toggle the AutoVoice for Chrome extension on-off.
-bindsym KP_Delete \
-        $i3tasker "i3_generic :autovoice continuous ${lmon}"
 
 #
 # MODES
@@ -255,7 +255,7 @@ mode "Primary" {
     bindsym semicolon floating toggle
     bindsym apostrophe focus mode_toggle
 
-    bindsym Return $primarynop
+    bindsym Return $default, [workspace="phonecall1"] kill,  [workspace="phonecall2"] kill;
 
     bindsym backslash $default, $i3wrapper -p
 
@@ -290,7 +290,7 @@ mode "Primary" {
     bindsym Up focus up
     bindsym Right focus right
 
-    # Numpad keys identical to default mode.
+    # Numpad key binds are nearly identical to default mode.
     bindsym KP_Left focus left
     bindsym KP_Right focus right
     bindsym KP_Home focus output $lmon
@@ -301,7 +301,6 @@ mode "Primary" {
     bindsym KP_Begin move up
     bindsym KP_Next move right
     bindsym KP_Insert $default, $i3wrapper -p
-    # Except for this.
     bindsym KP_Delete $primarynop
 
     # Numpad keys that are unaffected by the NumLock state.
@@ -313,7 +312,7 @@ mode "Primary" {
     # Eye candy. KP_Add increases translucency. KP_Subtract will not
     # set opacity beyond 100%, hence using keyboard autorepeat will
     # safely make the window opaque.
-    bindsggym KP_Subtract \
+    bindsym KP_Subtract \
             exec --no-startup-id compton-trans -c -o +10
     bindsym KP_Add \
             exec --no-startup-id compton-trans -c -o -10
@@ -575,7 +574,7 @@ exec --no-startup-id xfce4-panel
 # Applications.
 # The 10 second delay ensures that the dialog appears after the
 # desktop background changes.
-exec --no-startup-id sleep 10s && ~/local/bin/i3-apps start everything
+exec --no-startup-id sleep 10s && $i3apps start everything
 
 #
 # Done

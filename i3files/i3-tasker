@@ -52,6 +52,9 @@ i3_generic()
             (/home/shevek/*/firewall)
             eval "${@:2}"
             ;;
+            (phonecall)
+             i3-msg "exec ${HOME}/Programs/scripts/phonecall"
+            ;;
         esac
         ;;
         # Autovoice for Chrome.
