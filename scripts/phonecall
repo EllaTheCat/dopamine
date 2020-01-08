@@ -4,11 +4,11 @@
 # Both displays switch to dedicated workspaces showing images.
 #
 i3-msg "workspace phonecall1"
-i3-msg "exec /usr/bin/eog /home/shevek/1/Pictures/phonecall1.jpg"
+i3-msg "exec --no-startup-id /usr/bin/eog /home/shevek/1/Pictures/phonecall1.jpg"
 i3-msg "move workspace to output HDMI1"
 sleep 1
 i3-msg "workspace phonecall2"
-i3-msg "exec /usr/bin/eog /home/shevek/1/Pictures/phonecall2.jpg"
+i3-msg "exec --no-startup-id /usr/bin/eog /home/shevek/1/Pictures/phonecall2.jpg"
 i3-msg "move workspace to output HDMI2"
 # Pressing Return will remove the phonecall images.
 i3-msg "mode Primary"
