@@ -138,13 +138,15 @@ bindsym KP_Divide workspace prev_on_output
 bindsym KP_Multiply workspace next_on_output
 
 # Microphone muting (for privacy and phone conferencing).
-# The i3bar displays the status of three or fewer microphones:
+# The i3bar displays the status of up to three microphones:
 # 0 == muted; 1 == not muted == a "hot" microphone.
 # These are NOT bound in Primary or Secondary modes.
+# - USB adapter audio is reserved for Skype,
+# - Analog audio is reserved for Google including Autovoice.
 bindsym KP_Subtract \
-        exec --no-startup-id pactl set-source-mute $analogaudiosource toggle
-bindsym KP_Add \
         exec --no-startup-id pactl set-source-mute $usbaudiosource toggle
+bindsym KP_Add \
+        exec --no-startup-id pactl set-source-mute $analogaudiosource toggle
 
 # Currently, I have 2 microphones, so can repurpose this key to
 # toggle the AutoVoice for Chrome extension on-off.
@@ -311,7 +313,7 @@ mode "Primary" {
     # Eye candy. KP_Add increases translucency. KP_Subtract will not
     # set opacity beyond 100%, hence using keyboard autorepeat will
     # safely make the window opaque.
-    bindsym KP_Subtract \
+    bindsggym KP_Subtract \
             exec --no-startup-id compton-trans -c -o +10
     bindsym KP_Add \
             exec --no-startup-id compton-trans -c -o -10
