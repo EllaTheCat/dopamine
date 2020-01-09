@@ -255,7 +255,9 @@ mode "Primary" {
     bindsym semicolon floating toggle
     bindsym apostrophe focus mode_toggle
 
-    bindsym Return $default, [workspace="phonecall1"] kill,  [workspace="phonecall2"] kill;
+    bindsym Return $default, [workspace="phonecall1"] kill,  [workspace="phonecall2"] kill, \
+            focus output HDMI1, workspace prev_on_output, \
+            focus output HDMI2, workspace prev_on_output;
 
     bindsym backslash $default, $i3wrapper -p
 
