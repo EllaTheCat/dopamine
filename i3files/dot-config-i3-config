@@ -1,9 +1,7 @@
 # -*- Mode: Shell-script -*-
 #
-
 # i3 config file (v4)
 # i3 v4.17.1 on Xubuntu 16.04 LTS on quietpc
-#
 # Please see http://i3wm.org/docs/userguide.html for a complete reference!
 
 #
@@ -51,8 +49,7 @@ set $analogaudiosink alsa_output.pci-0000_00_1b.0.analog-stereo
 set $bluetoothaudiosink bluez_sink.00_01_01_00_12_CB
 set $hdmiaudiosink alsa_output.pci-0000_00_03.0.hdmi-stereo
 set $usbaudiosink alsa_output.usb-C-Media_Electronics_Inc._USB_Audio_Device-00.analog-stereo
-# Type 'pacmd list sources' to list audio inputs. One microphone
-# lives in my webcam, the other in my headset / headphones.
+# Type 'pacmd list sources' to list audio inputs.
 set $webcamaudiosource alsa_input.usb-Alcor_Micro__Corp._TeckNet-02.analog-mono
 set $analogaudiosource alsa_input.pci-0000_00_1b.0.analog-stereo
 set $usbaudiosource alsa_input.usb-C-Media_Electronics_Inc._USB_Audio_Device-00.analog-mono
@@ -130,12 +127,7 @@ bindsym KP_Next move right
 # Command prompt.
 # The numpad enters numbers during command entry.
 # Do not rebind KP_0, KP_1 ... KP_8, KP_9, KP_Decimal.
-bindsym KP_Insert $default, $i3wrapper -p
-
-# Currently, I have 2 microphones, so can repurpose this key to
-# toggle the AutoVoice for Chrome extension on-off.
-bindsym KP_Delete \
-        $i3tasker "i3_generic :autovoice continuous ${lmon}"
+bindsym KP_Insert $i3wrapper -p
 
 # Numpad keys that are unaffected by the NumLock state.
 # There are five: arithmetic signs / * - + and the enter key.
@@ -147,12 +139,15 @@ bindsym KP_Multiply workspace next_on_output
 # The i3bar displays the status of up to three microphones:
 # 0 == muted; 1 == not muted == a "hot" microphone.
 # These are NOT bound in Primary or Secondary modes.
-# - USB adapter audio is reserved for Skype,
+# - USB adapter audio is reserved for Skype.
 # - Analog audio is reserved for Google including Autovoice.
+# - Webcam audio is supported.
 bindsym KP_Subtract \
         exec --no-startup-id pactl set-source-mute $usbaudiosource toggle
 bindsym KP_Add \
         exec --no-startup-id pactl set-source-mute $analogaudiosource toggle
+bindsym KP_Delete \
+        exec --no-startup-id pactl set-source-mute $webcamaudiosource toggle
 
 #
 # MODES
@@ -216,7 +211,7 @@ mode "Primary" {
     bindsym u $default, [urgent=latest] focus
 
     # [I]nfo on keyboard bindings.
-    bindsym i $default, $i3wrapper --keyboard-binding-info
+    bindsym i $default, $i3make, $i3wrapper --keyboard-binding-info
 
     # P for Parent. O for Offspring.
     bindsym o focus child
@@ -304,7 +299,12 @@ mode "Primary" {
     bindsym KP_Begin move up
     bindsym KP_Next move right
     bindsym KP_Insert $default, $i3wrapper -p
-    bindsym KP_Delete $primarynop
+
+    # This toggles the AutoVoice for Chrome extension on-off.
+    # It requres a Chrome instance running on workspace g9.
+    # It breaks far too easily, don't change the window layout.
+    bindsym KP_Delete \
+            $i3tasker "i3_generic :autovoice continuous ${lmon}"
 
     # Numpad keys that are unaffected by the NumLock state.
     # There are five: arithmetic signs / * - + and the enter key.
@@ -413,8 +413,7 @@ mode "Secondary" {
     bindsym Control+Mod4+Mod1+Delete  $default, $i3apps stop everything
 
     # Pressing cycles through the three modes. Sec->Def->Pri->Sec.
-    # Triple-pressing(!) in default mode enables mouse in Emacs.
-    bindsym Menu $default, $i3wrapper --toggle-emacs-mouse
+    bindsym Menu $default
     # Go back to normal. Using space is a design decision, please do
     # not change.
     bindsym space $default
