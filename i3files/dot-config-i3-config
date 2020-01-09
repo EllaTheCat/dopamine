@@ -299,12 +299,7 @@ mode "Primary" {
     bindsym KP_Begin move up
     bindsym KP_Next move right
     bindsym KP_Insert $default, $i3wrapper -p
-
-    # This toggles the AutoVoice for Chrome extension on-off.
-    # It requres a Chrome instance running on workspace g9.
-    # It breaks far too easily, don't change the window layout.
-    bindsym KP_Delete \
-            $i3tasker "i3_generic :autovoice continuous ${lmon}"
+    bindsym KP_Delete $primarynop
 
     # Numpad keys that are unaffected by the NumLock state.
     # There are five: arithmetic signs / * - + and the enter key.
@@ -381,7 +376,13 @@ mode "Secondary" {
     # Set modifiers with 'xcape', set CapsLock to Control,
     # mimic US layout on UK keyboard.
     bindsym k $default, $i3keyboard
-    bindsym l $secondarynop
+
+    # This toggles the AutoVoice for Chrome extension on-off.
+    # It requres a Chrome instance running on workspace g9.
+    # It breaks far too easily, don't change the window layout.
+    # Mnemonic: "[L]isten" c.f. Control-Shift-l in Chrome.
+    bindsym l $default, \
+            $i3tasker "i3_generic :autovoice continuous ${lmon}"
 
     bindsym Return $secondarynop
 
@@ -399,7 +400,6 @@ mode "Secondary" {
 
     # Desktop background.
     bindsym n $default, exec --no-startup-id nitrogen --restore
-
     bindsym m $secondarynop
 
     bindsym comma $secondarynop
