@@ -576,7 +576,7 @@ exec --no-startup-id xfce4-panel
 # Applications.
 # The 10 second delay ensures that the dialog appears after the
 # desktop background changes.
-exec --no-startup-id sleep 10s && $i3apps start everything
+exec --no-startup-id sleep 10s && ~/local/bin/i3-apps start everything
 
 #
 # Done
