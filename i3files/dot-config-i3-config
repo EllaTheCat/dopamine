@@ -368,10 +368,9 @@ mode "Secondary" {
     bindsym d $default, $i3mouse disable
     bindsym f $default, $i3mouse fast
 
-    # Focus mpv then {decrease|increase} audio delay by 100ns.
+    # Focus mpv then {decrease|increase} audio delay by 100 ms.
     # Use these when switching between speakers and headphones.
-    # - Bluetooth transmitter and headphones introduce a 200 ns delay.
-    # - ${HOME} config/mpv/mpv.conf hardcodes the headphones delay.
+    # - Bluetooth transmitter and headphones introduce a 200 ms delay.
     bindsym g [title="mpv$"]  focus, \
             exec /usr/bin/xdotool key control+minus;
     bindsym j  [title="mpv$"]  focus, \
