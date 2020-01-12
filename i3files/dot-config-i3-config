@@ -230,9 +230,7 @@ mode "Primary" {
     # Toggle a one-above-the-other pair to side-by-side.
     # S for Side by Side.
     bindsym s $default, focus down, split h, focus up, move down, move left;
-
-    # Tiled containers are the [d]efault.
-    bindsym d $default, layout default
+    bindsym d $default, $primarynop
 
     # Enter [f]ullscreen mode for the focused container.
     bindsym f $default, fullscreen toggle
@@ -277,8 +275,9 @@ mode "Primary" {
             -P '(move container to workspace): ' \
             -F 'move container to workspace "%s"'
 
-    bindsym comma $primarynop
-    bindsym period $primarynop
+    # Layouts. No obvious mnemonics remain available, sorry.
+    bindsym comma $default, layout default
+    bindsym period $default, layout tabbed
     bindsym slash $primarynop
 
     # Simple focus keys similar to default mode.
@@ -338,8 +337,7 @@ mode "Secondary" {
     bindsym e $default, $i3mouse enable
     bindsym r $default, $i3mouse reset
 
-    # [T]abbed layout.
-    bindsym t $default, layout tabbed
+    bindsym t $secondarynop
     bindsym y $secondarynop
 
     # Spin down the USB drives attached to my desktop PC, their blue
@@ -370,8 +368,14 @@ mode "Secondary" {
     bindsym d $default, $i3mouse disable
     bindsym f $default, $i3mouse fast
 
-    bindsym g $secondarynop
-    bindsym j $secondarynop
+    # Focus mpv then {decrease|increase} audio delay by 100ns.
+    # Use these when switching between speakers and headphones.
+    # - Bluetooth transmitter and headphones introduce a 200 ns delay.
+    # - ${HOME} config/mpv/mpv.conf hardcodes the headphones delay.
+    bindsym g [title="mpv$"]  focus, \
+            exec /usr/bin/xdotool key control+minus;
+    bindsym j  [title="mpv$"]  focus, \
+            exec /usr/bin/xdotool key control+shift+plus;
 
     # Set modifiers with 'xcape', set CapsLock to Control,
     # mimic US layout on UK keyboard.
@@ -576,6 +580,7 @@ exec --no-startup-id xfce4-panel
 # Applications.
 # The 10 second delay ensures that the dialog appears after the
 # desktop background changes.
+# Do not be tempted to substitute "$i3apps" here!
 exec --no-startup-id sleep 10s && ~/local/bin/i3-apps start everything
 
 #
