@@ -376,6 +376,9 @@ i3_lower_lower_hard()
         # These simply don't fit the easy launch-or-focus template.
         (sg)
         xfce4-screenshooter -d 2 ;;
+        (vv)
+        killall -q pavucontrol  # Ensure a singleton instance.
+        pavucontrol ;;
         (wc)
         eval cheese >/dev/null 2>&1 ;;
 
