@@ -192,7 +192,7 @@ mode "Primary" {
             $default, exec i3-input -f $i3inputfont  -l 2 \
             -P '(workspace): ' -F 'workspace "%s"'
 
-    # A dmenu showing window titles and their associatef marks.
+    # A dmenu showing window titles and their associated marks.
     # The use case is finding the title a mark is associated with.
     # Selecting an item visits the mark.
     bindsym e $default, $i3wrapper --visit-mark
@@ -368,13 +368,8 @@ mode "Secondary" {
     bindsym d $default, $i3mouse disable
     bindsym f $default, $i3mouse fast
 
-    # Focus mpv then {decrease|increase} audio delay by 100 ms.
-    # Use these when switching between speakers and headphones.
-    # - Bluetooth transmitter and headphones introduce a 200 ms delay.
-    bindsym g [title="mpv$"]  focus, \
-            exec /usr/bin/xdotool key control+minus;
-    bindsym j  [title="mpv$"]  focus, \
-            exec /usr/bin/xdotool key control+shift+plus;
+    bindsym g $secondarynop
+    bindsym j $secondarynop
 
     # Set modifiers with 'xcape', set CapsLock to Control,
     # mimic US layout on UK keyboard.
@@ -398,8 +393,7 @@ mode "Secondary" {
     bindsym x focus output $cmon, mode Primary;
     bindsym c focus output $rmon, mode Primary;
 
-    # Volume Control (alias "pavucontrol", "Sound Settings..."),
-    bindsym v $default, exec --no-startup-id pavucontrol
+    bindsym v $secondarynop
 
     # Desktop background.
     bindsym n $default, exec --no-startup-id nitrogen --restore
