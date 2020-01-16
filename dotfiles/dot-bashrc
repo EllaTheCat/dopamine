@@ -70,7 +70,7 @@ alias visudo='EDITOR=/usr/bin/vim.tiny /usr/sbin/visudo'
 
 export EDITOR="/usr/bin/vim.tiny"
 export HISTCONTROL="ignoredups:erasedups"
-export HISTIGNORE="&:cd:h:hc:rm:l[ls]:[bf]g:exit:[ ]*"
+export HISTIGNORE="&:cd:h:hc:kill:rm:l[ls]:[bf]g:exit:[ ]*"
 export HISTSIZE=99999
 export HISTFILESIZE=99999
 export IGNOREEOF=999

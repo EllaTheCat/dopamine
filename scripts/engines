@@ -5,7 +5,8 @@
 
 case $(hostname) in
     (quietpc)
-    nohup xfce4-terminal -T Engines -e 'play -c2 -n synth whitenoise band -n 100 24 band -n 300 100 gain +20' &
+    play -q -c2 -n synth whitenoise band -n 100 24 band -n 300 100 gain +20 &
+    echo kill "$(pgrep -f 'play -q -c2 -n synth whitenoise')"
     ;;
 esac
 
