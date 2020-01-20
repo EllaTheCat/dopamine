@@ -104,15 +104,6 @@ bindsym Print $i3wrapper --unique-mark
 # without having to precisely position the mouse on window edges.
 floating_modifier Mod4
 
-# The modifier used with the arrow keys.
-set $i3arrowmodifier Mod4
-
-# Modifiers can be the better choice sometimes.
-bindsym $i3arrowmodifier+Left focus left
-bindsym $i3arrowmodifier+Down focus down
-bindsym $i3arrowmodifier+Up focus up
-bindsym $i3arrowmodifier+Right focus right
-
 # Numpad cursor controls (highly recommended).
 bindsym KP_Left focus left
 bindsym KP_Right focus right
@@ -123,6 +114,11 @@ bindsym KP_End move left
 bindsym KP_Down move down
 bindsym KP_Begin move up
 bindsym KP_Next move right
+
+# Define an inverse T cursor cluster not a cross.
+set $i3arrowmodifier Mod4
+bindsym $i3arrowmodifier+KP_Up focus up
+bindsym $i3arrowmodifier+KP_ Begin focus down
 
 # Command prompt.
 # The numpad enters numbers during command entry.
@@ -214,8 +210,8 @@ mode "Primary" {
     bindsym i $default, $i3make, $i3wrapper --keyboard-binding-info
 
     # P for Parent. O for Offspring.
-    bindsym o focus child
-    bindsym p focus parent
+    bindsym o $default, focus child
+    bindsym p $default, focus parent
 
     # Scratchpad (exclude the scratchpad terminal which is a special case).
     bindsym bracketleft move scratchpad
@@ -279,32 +275,6 @@ mode "Primary" {
     bindsym comma $default, layout default
     bindsym period $default, layout tabbed
     bindsym slash $primarynop
-
-    # Simple focus keys similar to default mode.
-    # YMMV but I prefer to omit the i3arrowmodifier here.
-    bindsym Left focus left
-    bindsym Down focus down
-    bindsym Up focus up
-    bindsym Right focus right
-
-    # Numpad key binds are nearly identical to default mode.
-    bindsym KP_Left focus left
-    bindsym KP_Right focus right
-    bindsym KP_Home focus output $lmon
-    bindsym KP_Up focus output $cmon
-    bindsym KP_Prior focus output $rmon
-    bindsym KP_End move left
-    bindsym KP_Down move down
-    bindsym KP_Begin move up
-    bindsym KP_Next move right
-    bindsym KP_Insert $default, $i3wrapper -p
-    bindsym KP_Delete $primarynop
-
-    # Numpad keys that are unaffected by the NumLock state.
-    # There are five: arithmetic signs / * - + and the enter key.
-    # Do not rebind KP_Enter! This is a design decision.
-    bindsym KP_Divide workspace prev_on_output
-    bindsym KP_Multiply workspace next_on_output
 
     # Eye candy. KP_Add increases translucency. KP_Subtract will not
     # set opacity beyond 100%, hence using keyboard autorepeat will
