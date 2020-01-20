@@ -14,11 +14,11 @@ esac
 
 ################################################################
 
-export PATH=${HOME}/bin:${HOME}/local/bin
-export PATH=${PATH}:/snap/bin
+export PATH=${PATH}:${HOME}/local/bin
 export PATH=${PATH}:${HOME}/Programs/scripts:${HOME}/Programs/scrypts
-export PATH=${PATH}:/usr/local/bin:/usr/bin:/bin
+export PATH=${PATH}:/snap/bin
 export PATH=${PATH}:/usr/local/sbin:/usr/sbin:/sbin
+export PATH=${PATH}:/usr/local/bin:/usr/bin:/bin
 
 ################################################################
 
