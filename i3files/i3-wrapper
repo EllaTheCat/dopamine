@@ -130,7 +130,7 @@ i3_unique_mark()
     while : ; do
         id=$((10#$(date +%N) % 100))
         id=$(printf "%02d" "${id}")
-        count=$(for m in $(i3-msg -t get_marks | sed 's/,/\ /g');
+        count=$(for m in $(i3-msg -t get_marks | grep '[0-9][0-9]' | sed 's/,/\ /g');
                 do echo "${m}"; done | grep -c "${id}")
         if [ "${count}" -eq 0 ]; then break; fi
     done
