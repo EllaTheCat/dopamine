@@ -14,6 +14,20 @@ fi
 
 case "$1" in
     (default)
+    i3-msg "unmark default, unmark Primary, unmark Secondary"
+    ;;
+    (Primary)
+    i3-msg "unmark default, unmark Secondary"
+    i3-msg "mark --add --toggle Primary"
+    ;;
+    (Secondary)
+    i3-msg "unmark Primary, unmark default"
+    i3-msg "mark --add --toggle Secondary"
+    ;;
+esac
+
+case "$1" in
+    (default)
     i3-msg "mode \"$1\""
     for output in ${outputs} ; do
         xrandr --output "${output}" --brightness 1.0
