@@ -285,7 +285,7 @@ mode "Primary" {
             exec --no-startup-id compton-trans -c -o -10
 
     # Pressing cycles through the three modes. Pri->Sec->Def->Pri.
-    bindsym Menu mode "Secondary"
+    bindsym Menu $i3mode "Secondary"
     # Go back to normal. Using space is a design decision, please do
     # not change.
     bindsym space $default
