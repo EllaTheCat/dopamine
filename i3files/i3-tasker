@@ -18,9 +18,7 @@ i3_autovoice()
         sleep "${delay}"
         i3-msg "move workspace to output ${cmon}"
         sleep  "${delay}"
-        i3-msg "exec xdotool mousemove  3180 285 click 1"
-        sleep "${delay}"
-        i3-msg "workspace back_and_forth"
+        i3-msg "exec xdotool mousemove 3180 285 click 1"
         ;;
     esac
 }
