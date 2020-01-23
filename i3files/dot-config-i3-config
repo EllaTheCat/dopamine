@@ -307,7 +307,8 @@ mode "Secondary" {
     bindsym e $default, $i3mouse enable
     bindsym r $default, $i3mouse reset
 
-    bindsym t $secondarynop
+    # Reddit asked how to inject text, this is a proof-of-concept demo.
+    bindsym t $default, exec sleep 0.3 && xdotool getwindowfocus windowfocus type "hello world"
     bindsym y $secondarynop
 
     # Spin down the USB drives attached to my desktop PC, their blue
