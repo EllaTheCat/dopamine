@@ -8,8 +8,8 @@ do
     port=$(sudo ufw status numbered | egrep -c "192.168.1.33.*.*ALLOW IN*")
     live=$(lsof /dev/video0 | awk '{print $1}' | grep -v COMMAND | uniq | sed 's/skypeforl*/skype/g')
     live=${live:-'0'}
-    mute2=$(pactl list sources | grep -A 7 TeckNet-02.analog-mono | grep -c 'Mute: no')
-    mute3=$(pactl list sources | grep -A 7 alsa_input.pci-0000_00_1b.0.analog-stereo | grep -c 'Mute: no')
+    mute2=$(pactl list sources | grep -A 7 alsa_input.pci-0000_00_1b.0.analog-stereo | grep -c 'Mute: no')
+    mute3=$(pactl list sources | grep -A 7 TeckNet-02.analog-mono | grep -c 'Mute: no')
     mute4=$(pactl list sources | grep -A 7 alsa_input.usb-C-Media_Electronics_Inc._USB_Audio_Device-00.analog-mono | grep -c 'Mute: no')
     marks=$(i3-msg -t get_marks | sed 's:\"::g')
     eval "$(xdotool getmouselocation --shell)"

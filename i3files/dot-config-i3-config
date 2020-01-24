@@ -124,6 +124,7 @@ bindsym $i3arrowmodifier+KP_ Begin focus down
 # The numpad enters numbers during command entry.
 # Do not rebind KP_0, KP_1 ... KP_8, KP_9, KP_Decimal.
 bindsym KP_Insert $i3wrapper -p
+bindsym KP_Delete nop
 
 # Numpad keys that are unaffected by the NumLock state.
 # There are five: arithmetic signs / * - + and the enter key.
@@ -135,15 +136,10 @@ bindsym KP_Multiply workspace next_on_output
 # The i3bar displays the status of up to three microphones:
 # 0 == muted; 1 == not muted == a "hot" microphone.
 # These are NOT bound in Primary or Secondary modes.
-# - USB adapter audio is reserved for Skype.
-# - Analog audio is reserved for Google including Autovoice.
-# - Webcam audio is supported.
 bindsym KP_Subtract \
-        exec --no-startup-id pactl set-source-mute $usbaudiosource toggle
-bindsym KP_Add \
-        exec --no-startup-id pactl set-source-mute $analogaudiosource toggle
-bindsym KP_Delete \
         exec --no-startup-id pactl set-source-mute $webcamaudiosource toggle
+bindsym KP_Add \
+        exec --no-startup-id pactl set-source-mute $usbaudiosource toggle
 
 #
 # MODES
