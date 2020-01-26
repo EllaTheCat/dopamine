@@ -105,20 +105,18 @@ bindsym Print $i3wrapper --unique-mark
 floating_modifier Mod4
 
 # Numpad cursor controls (highly recommended).
+# Give priority to left-right actions over up-down actions.
+bindsym KP_Home focus output left
+bindsym KP_Up focus up
+bindsym KP_Prior focus output right
 bindsym KP_Left focus left
+bindsym KP_Begin focus down
 bindsym KP_Right focus right
-bindsym KP_Home focus output $lmon
-bindsym KP_Up focus output $cmon
-bindsym KP_Prior focus output $rmon
 bindsym KP_End move left
 bindsym KP_Down move down
-bindsym KP_Begin move up
 bindsym KP_Next move right
-
-# Define an inverse T cursor cluster not a cross.
-set $i3arrowmodifier Mod4
-bindsym $i3arrowmodifier+KP_Up focus up
-bindsym $i3arrowmodifier+KP_ Begin focus down
+# This compromise allows for two inverted T cursors.
+bindsym Mod4+KP_Begin move up
 
 # Command prompt.
 # The numpad enters numbers during command entry.

@@ -83,33 +83,8 @@ The NumLock key toggles between two sets of keys:
 the KP_0 set for numeric entry and
 the KP_Insert set for navigation.
 The arithmetic operators and KP_Enter are unaffected by NumLock.
-Here's what works for me:
-----
-bindsym KP_Left focus left
-bindsym KP_Right focus right
-bindsym KP_Home focus output $lmon
-bindsym KP_Up focus output $cmon
-bindsym KP_Prior focus output $rmon
-bindsym KP_End move left
-bindsym KP_Down move down
-bindsym KP_Begin move up
-bindsym KP_Next move right
-bindsym KP_Delete (reserved)
-----
 
-Note that there is more horizontally oriented focus activity than
-vertically, because multiple monitors are in landscape orientation and
-are placed side by side. Vertically oriented focus activity can rely on
-wraparound to require only one of focus up or focus down keys.
-
-=== Arrows
-At one stage I added the bindings below, "just in case", even though they are using modifiers.
-----
-bindsym $i3arrowmodifier+Left focus left
-bindsym $i3arrowmodifier+Down focus down
-bindsym $i3arrowmodifier+Up focus up
-bindsym $i3arrowmodifier+Right focus right
-----
+Take a look at "i3files/dot-config-i3-config" for the bindings.
 
 === i3 modes
 There are now only three i3 modes: the default mode, the Primary mode, and the Secondary mode.
