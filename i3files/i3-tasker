@@ -18,7 +18,9 @@ i3_autovoice()
         sleep "${delay}"
         i3-msg "move workspace to output ${cmon}"
         sleep  "${delay}"
-        i3-msg "exec xdotool mousemove 3180 285 click 1"
+        # Single window or left window of a side-by-side pair.
+        #### "exec xdotool mousemove 3180 285 click 1"
+        i3-msg "exec xdotool mousemove 2706 285 click 1"
         ;;
     esac
 }
@@ -33,10 +35,6 @@ i3_generic()
         (:shell)
         case "$2" in
             (mpv)
-            # The subshell allows this script to continue on error
-            # should nothing match. The pattern isn't watertight but
-            # it only matches the newest instance, so good enough.
-            (pkill -n -f 'mpv http') &
             # Brute force to ensure that the 'mp' workspace appears,
             # that the video window opens inside it, that the window
             # has focus, and that the mark is set on its titlebar.
@@ -47,20 +45,27 @@ i3_generic()
             sleep 10  # Better late than never, unobtrusive.
             i3-msg "exec ${HOME}/local/bin/i3-wrapper  --unique-mark"
             ;;
-            (/home/shevek/*/firewall)
-            eval "${@:2}"
+            # Autovoice for Chrome on/off switch.
+            (autovoice)
+            i3_autovoice "$3" "$4"
             ;;
+            # Clipboard buffer. It doesn't have to be the current
+            # buffer for AutoVoice to write into it. It can be given
+            # another name but AutoVoice expects the default.
+            (emacs)
+            emacsclient.emacs24 -e  "(switch-to-buffer \"${3:-Clipboard}\")"
+            ;;
+            # Command to insert or delete a special firewall rule.
+            (firewall)
+            i3-msg "exec ${HOME}/Programs/scrypts/firewall $3"
+            ;;
+            # When the phone rings get the user's attention.
             (phonecall)
-             i3-msg "exec ${HOME}/Programs/scripts/phonecall"
+            i3-msg "exec ${HOME}/Programs/scripts/phonecall"
             ;;
         esac
         ;;
-        # Autovoice for Chrome.
-        (:autovoice)
-        i3_autovoice "${*:2}"
-        ;;
-        # Clipboard commands. The buffer doesn't have to be the
-        # current buffer.
+        # Clipboard command.
         (:clipboard)
         # This assignment could be replaced with a script to process
         # the 'all lower case' text sent from AutoVoice.

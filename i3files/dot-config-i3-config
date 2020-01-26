@@ -347,7 +347,7 @@ mode "Secondary" {
     # It breaks far too easily, don't change the window layout.
     # Mnemonic: "[L]isten" c.f. Control-Shift-l in Chrome.
     bindsym l $default, \
-            $i3tasker "i3_generic :autovoice continuous ${lmon}"
+            $i3tasker "i3_generic :shell autovoice continuous ${lmon}"
 
     bindsym Return $secondarynop
 
