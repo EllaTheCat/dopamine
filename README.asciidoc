@@ -16,7 +16,7 @@ ongoing discussion].
 Dopamine is as much about evaluating what doesn't work as it is about what works!
 
 === How to run dopamine
-I'd like to know if anyone tries or wants to try, but it's a mess.  I'll help you.
+I'd like to know if anyone tries or wants to try, but it's a mess.  I'll help you if you ask on reddit.
 Consider evaluating dopamine on a VirtualBox VM because
 (1) you minimise the risk of breaking your current install, and because
 (2) dopamine is running on Xubuntu 16.04/18.04 LTS].
@@ -35,7 +35,7 @@ i3-make is a script that calls 'make' on the Makefile in the 'i3files' working d
 Running i3-make will run ShellCheck on any script in the working directory that differs from its counterpart
 scripts in the installation directory, if ShellCheck is happy, the modified script is installed.
 The i3 config file and the i3status file are installed if i3 is happy; i3 config is reloaded and i3 is restarted as
-necessary.
+necessary. If ShellCheck objects to a bad script, look at 'i3files/*.log' for the errors and suggestions to fix them.
 
 The example below shows how to configure Makefile variables (for my machine)
 by editing i3-make instead of editing the Makefile.
@@ -58,45 +58,43 @@ My PD makes dot-inputrc absolutely essential; combined with a huge bash history 
 I can recall, edit and apply commands with minimal typing. I type a few letters to filter what is to be shown,
 then use up arrow or down arrow to cycle through matching commands.
 The dot-bashrc has some nice github functions and a prompt that knows about git.
+
 The files here are the ones I use. Nothing here is installed by the Makefile in i3files.
 
 === dotemacs directory
 Emacs and dopamine provide a minimalist voice-assisted editing feature.
 Spoken sentences are converted to text externally about which more later.
-The text is inserted into an Emacs buffer as a single line by default, the user can choose to remove said single line.
+The text is inserted into an Emacs buffer as a single line by default.
+
 The files here are the ones I use. Nothing here is installed by the Makefile in i3files.
 
 === scripts directory
 These are scripts have come in handy, for example when making a video.
+
 The files here are the ones I use. Nothing here is installed by the Makefile in i3files.
 
 == Ergonomics
 === Numpad
-At first I thought modes would replace modifiers in my way of working.
+At first I thought modes would completely replace modifiers in my way of working.
 I've realised that there are some i3 commands that don't suit modes,
 but modifiers don't suit me.
 The compromise is to use the numeric keypad, alias the numpad,
 as found on the far right of full-size keyboards.
-Separate USB numpads are available for on-the-move  laptop users and left handed users.
+Separate USB numpads are an option for on-the-move laptop users and left handed users.
 
 The NumLock key toggles between two sets of keys:
-the KP_0 set for numeric entry and
-the KP_Insert set for navigation.
+the KP_0 set for numeric entry and the KP_Insert set for navigation.
 The arithmetic operators and KP_Enter are unaffected by NumLock.
 
 Take a look at "i3files/dot-config-i3-config" for the bindings.
 
 === i3 modes
-There are now only three i3 modes: the default mode, the Primary mode, and the Secondary mode.
+There are now only three major i3 modes: the default mode, the Primary mode, and the Secondary mode.
 The Menu key cycles through these modes, the space key returns to default mode from the other two.
-The screen will dim when in Primary or Secondary mode.
-If a Primary or Secondary mode binding returns to default mode automatically, the screen will dim momentarily.
+The screen dims when in Primary or Secondary mode.
 
 - Primary mode contains my most often used bindings after the numpad ones.
 - Secondary mode contains bindings to less-used functions such as settings.
-
-- OK mode is a hack to provide a visual bell for i3-make (q.v.).
-- OK mode doesn't count when we say there are three modes.
 
 === Commands
 Commands are a hangover from a past attempt to make a mouse-heavy
@@ -129,39 +127,16 @@ the ten Google Chrome commands g[0-9].
 They are discussed in more detail in the section "Launch or Focus".
 
 == Marks
-=== Numeric Marks
 Whenever a terminal, emacs frame, or google chrome window is created,
 a unique two digit mark is allocated and displayed on the right side of the titlebar.
 The quick-and-dirty implementation of mark assignment risks failing to terminate
-when the number of marked containers approaches 100.
+when the number of marked containers approaches 100. I am contemplating
+allocating marks for (almost) everything.
 
 i3 has a goto-mark function bound to the 2 digit sequence [0-9][0-9] and a
 swap-container-with-mark function bound to the 3 digit sequence 5[0-9][0-9].
 Exchanging marks can make rearranging windows easier than relying upon
 the conventional incremental movement of focus or windows alone.
-
-=== Single Letter Marks
-In addition to a two character mark matching "[0-9][0-9]",
-a single letter mark can be added or removed independently.
-There are ten such marks, which are set in Primary mode by keys 1,2,...,9,0,
-and cleared by the same keys in Secondary mode.
-The ten marks are single capital letters, two groups of three and one group of four,
-mutually non-adjacent, matching (A,B,C) (R,S,T) (W,X,Y,Z)
-
-For example, a user might edit the source for a program in one window,
-build the program in another window, and execute the program in yet
-another window.
-By marking these A,B,C respectively, the user can cycle though them
-using just one key, currently Control+Tab.
-More than one letter can mark a window,
-hence toggling between two windows marked [R] and {S][T]
-works as one would want.
-The bindings density around my left hand is quite high,
-hence the use of a modifer rather than a mode,
-plus the homage to Alt-Tab.
-
-This all works, but has been seldom used.
-It does no harm at present so there is no reason to remove it.
 
 == Bash scripts
 
@@ -224,6 +199,11 @@ This script makes explicit how the applications I use should be started and stop
 The file watcher monitors a file in shared memory, using
 inotify-hookable.  When a command is written to this file, it is
 forwarded to the i3programs() function in i3-wrapper for evaluation.
+
+As of 2020-01-28 there is a bug. Commands are ignored, the onset
+occurs soon after the session starts, it occurs once only, and the
+workaround is to type control-C in the File Watcher window, after
+which the ignore commands are executed.
 
 === Launch or Focus
 The focus function in i3-wrapper has a bash case statement that
