@@ -207,9 +207,9 @@ mode "Primary" {
     bindsym o $default, focus child
     bindsym p $default, focus parent
 
-    # Scratchpad (exclude the scratchpad terminal which is a special case).
-    bindsym bracketleft move scratchpad
-    bindsym bracketright scratchpad show
+    # Scratchpad for the pulseaudio sound settings.
+    bindsym bracketleft $default,  [title="Volume Control"]  move scratchpad
+    bindsym bracketright $default,  [title="Volume Control"]  scratchpad show
 
     # Command prompt.
     bindsym Tab $default, $i3wrapper -p
@@ -239,7 +239,10 @@ mode "Primary" {
     bindsym semicolon floating toggle
     bindsym apostrophe focus mode_toggle
 
-    bindsym Return $default, [workspace="phonecall1"] kill,  [workspace="phonecall2"] kill, \
+    # When the phone rings, related images overlay all monitors, this
+    # dismisses them with one keypress.
+    bindsym Return $default, [workspace="phonecall1"] kill, \
+            [workspace="phonecall2"] kill, \
             focus output HDMI1, workspace prev_on_output, \
             focus output HDMI2, workspace prev_on_output;
 
@@ -315,7 +318,11 @@ mode "Secondary" {
     # https://raspberrypi.stackexchange.com/a/53267
     bindsym p $default, $i3display menu
 
-    # Command prompt.
+    # Scratchpad.
+    bindsym bracketleft $default, move scratchpad
+    bindsym bracketright $default, scratchpad show
+
+       # Command prompt.
     bindsym Tab $default, $i3wrapper -p
 
     # Select an audio output.
