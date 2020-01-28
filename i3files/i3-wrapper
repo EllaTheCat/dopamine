@@ -141,51 +141,6 @@ i3_unique_mark()
 }
 
 #
-#  Focus the next mark in a circular list of single letter marks.
-#
-#  - There are two circular paths of length 3 and one of length 4
-#    for a total of 10 marks: (A,B,C) (R,S,T) (W,X,Y,Z).
-#
-i3_cycle_marks()
-{
-    # Determine the single letter mark for the currently focused window.
-    # Thanks to  u/jimbopouliot on r/i3wm (reddit) for 'jq' improvement.
-    # https://www.reddit.com/r/i3wm/comments/bcck1t/how_to_alttab_for_groups_of_windows/
-    mark=$(i3-msg -t get_tree | jq '.. | objects | select(.focused) | .marks[] | select(match("^[ABCRSTWXYZ]$"))')
-
-    # Conveniently, the letter is enclosed by double quotes.
-    case "${mark}" in
-        (\"A\") i3-msg "[ con_mark=\"B\" ] focus" ;;
-        (\"B\") i3-msg "[ con_mark=\"C\" ] focus" ;;
-        (\"C\") i3-msg "[ con_mark=\"A\" ] focus" ;;
-
-        (\"R\") i3-msg "[ con_mark=\"S\" ] focus" ;;
-        (\"S\") i3-msg "[ con_mark=\"T\" ] focus" ;;
-        (\"T\") i3-msg "[ con_mark=\"R\" ] focus" ;;
-
-        (\"W\") i3-msg "[ con_mark=\"X\" ] focus" ;;
-        (\"X\") i3-msg "[ con_mark=\"Y\" ] focus" ;;
-        (\"Y\") i3-msg "[ con_mark=\"Z\" ] focus" ;;
-        (\"Z\") i3-msg "[ con_mark=\"W\" ] focus" ;;
-
-        (*)
-        # If the mark is absent the window id does not change.
-        # If focus succeeds stop, else try again with the next mark.
-        id=$(xdotool getwindowfocus)
-        i3-msg "[ con_mark=\"A\" ] focus"
-        windowid=$(xdotool getwindowfocus)
-        if [ "${id}" = "${windowid}" ]; then
-            id="${windowid}"
-            i3-msg "[ con_mark=\"R\" ] focus"
-            windowid=$(xdotool getwindowfocus)
-            if [ "${id}" = "${windowid}" ]; then
-                i3-msg "[ con_mark=\"X\" ] focus"
-            fi
-        fi
-    esac
-}
-
-#
 # Display the title and the mark for all marked windows inside a
 # dmenu; selecting visits the window.
 #
@@ -600,7 +555,6 @@ case ${XDG_CURRENT_DESKTOP} in
         (-p) dashp ;;
         # Verbosity over obscurity, not enough single letters.
         (--file-watcher) i3filewatcher ;;
-        (--cycle-through-marks) i3_cycle_marks ;;
         (--unique-mark) i3_unique_mark ;;
         (--keyboard-binding-info) i3kb ;;
         (--visit-mark) i3_visit_mark ;;

@@ -77,10 +77,6 @@ bindsym Menu $i3mode Primary
 # This bindng may be easier even though it uses a modifier.
 bindsym Mod4+Tab $i3wrapper -p
 
-# Focus the next mark in a circular list of secondary marks.
-# There are two lists of length 3 and one list of length 4.
-bindsym Control+Tab $i3wrapper --cycle-through-marks
-
 # i3-make installs the configuration files kept under a single
 # directory under git into their runtime locations, and where
 # necessary, reloads i3 config or restarts i3. The Makefile is
@@ -150,29 +146,6 @@ bindsym KP_Add \
 # Primary mode.
 # Use this mode for window management, not settings.
 mode "Primary" {
-
-    # Add a single letter mark. See also secondary mode.
-    # These number bindings map to single letter marks.
-    # Consider using i3-input and typing the letter.
-    bindsym 1 $default, mark --add --toggle A
-    bindsym 2 $default, mark --add --toggle B
-    bindsym 3 $default, mark --add --toggle C
-    bindsym 4 $default, mark --add --toggle R
-    bindsym 5 $default, mark --add --toggle S
-    bindsym 6 $default, mark --add --toggle T
-    bindsym 7 $default, mark --add --toggle W
-    bindsym 8 $default, mark --add --toggle X
-    bindsym 9 $default, mark --add --toggle Y
-    bindsym 0 $default, mark --add --toggle Z
-
-    # Remove an entire group of single letter marks.
-    # These are on the same row as the digits.
-    bindsym grave $default, \
-            unmark A, unmark B, unmark C
-    bindsym minus $default, \
-            unmark R, unmark S, unmark T
-    bindsym equal $default, \
-            unmark W, unmark X, unmark Y, unmark Z
 
     # This is independent of the similarly named configuration setting.
     bindsym q $default, workspace back_and_forth
