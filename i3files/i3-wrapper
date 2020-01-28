@@ -242,6 +242,10 @@ i3_triple_terminal_workspace()
 # $3 emacs24 -rv, google-chrome
 # $4 emacsclient.emacs24 -c, google-chrome --new-window
 #
+# Launching from an empty workspace with a name that matches the
+# command sometimes silently fails, nothing will happen. Use 'em' or
+# 'gc' to work around this misfeature.
+#
 i3emgc ()
 {
     cws=$(i3-msg -t get_workspaces | jq '.[] | .name,.focused' | grep true -B1 | grep -v true)
@@ -376,9 +380,6 @@ i3_lower_lower_hard()
         # These simply don't fit the easy launch-or-focus template.
         (sg)
         xfce4-screenshooter -d 2 ;;
-        (vv)
-        killall -q pavucontrol  # Ensure a singleton instance.
-        pavucontrol ;;
         (wc)
         eval cheese >/dev/null 2>&1 ;;
 
@@ -518,6 +519,9 @@ i3command ()
 # changes, call i3wrapper with the file contents passed as argument.
 #
 # Don't call this directly. Called from i3-apps at startup.
+#
+# ATTENTION: As of 2020-01-01 this seems to hang once per session, the
+# workaround is ctrl-c in the 'wm' tab, it restarts(?) automatically(?).
 #
 i3filewatcher ()
 {
