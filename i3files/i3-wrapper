@@ -352,14 +352,33 @@ i3_lower_lower_hard()
     esac
 }
 
+pulseaudio_latency_offset ()
+{
+    # Use "pactl list cards" to get the CARD and PORT names. Those
+    # used here apply to the Plugable USB Audio Adapter. This provides
+    # the analogue audio to a dedicated Bluetooth transmitter box that
+    # feeds my Bluetooth headphones. These latter two devices cause
+    # the latency. 10 ms steps are sufficient for compensation values,
+    # so two digits 00-99 suffice at the command prompt.
+    latency=${1}0000
+    pactl set-port-latency-offset \
+          "$(pactl list cards | grep Name: | grep C-Media | awk '{print $2}')" \
+          analog-output-speaker  "${latency}"
+}
+
 #
-# 1. Manage containers with marks. 2. Manage headphone volumes.
+# 1. Manage containers with marks.
+# 2. Manage headphone volumes.
+# 3. Manage headphone latency.
 #
 i3_digit_digits()
 {
     case "$1" in
         ([9][0-9][0-9])
         i3_nine_hundreds "$1"  # Delegate these for a tidy function.
+        ;;
+        ([8][0-9][0-9])
+        pulseaudio_latency_offset  "${1:1:2}"  # 2 digits 00->99.
         ;;
         ([4][0-9][0-9])
         arg="${1:1:2}"  # Green jack volume as a percentage.
