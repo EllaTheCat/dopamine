@@ -244,6 +244,20 @@ function vp
 
 ################################################################
 
+function ffmpeg42
+{
+    cd /home/sheve\k/1/packages/ffmpeg-static/ffmpeg-4.2-amd64-static
+    command ./ffmpeg "$@"
+}
+
+function ffprobe42
+{
+    cd /home/sheve\k/1/packages/ffmpeg-static/ffmpeg-4.2-amd64-static
+    command ./ffprobe "$@"
+}
+
+################################################################
+
 # TSduck installs in "${HOME}/usr/local" by default, hence this.
 [ -e  ${HOME}/Programs/scripts/tsduck-environment ] &&  source tsduck-environment
 
