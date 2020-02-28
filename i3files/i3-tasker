@@ -34,13 +34,13 @@ i3_generic()
         # Shell commands. These are reserved for apps like tvheadend.
         (:shell)
         case "$2" in
-            (mpv)
+            (mpv|vlc)
             # Brute force to ensure that the 'mp' workspace appears,
             # that the video window opens inside it, that the window
             # has focus, and that the mark is set on its titlebar.
             i3-msg "focus output ${lmon}"
             i3-msg "workspace \"zz\""
-            i3-msg "workspace \"mp\""
+            i3-msg "workspace \"${2:0:1}p\""  # => mp or vp
             i3-msg "exec ${*:2}"
             sleep 10  # Better late than never, unobtrusive.
             i3-msg "exec ${HOME}/local/bin/i3-wrapper  --unique-mark"
