@@ -44,7 +44,8 @@ set $rmon VGA1
 
 # Type 'pacmd list sinks' to list audio outputs. I use an HDMI to DVI
 # cable from PC to monitor, it carries only video. To get audio the
-# simplest method is to use the rear headphone jack.
+# simplest method is to use the rear headphone jack. A low cost USB
+# audio dongle (£7) moves the analogue audio away from the PC.
 set $analogaudiosink alsa_output.pci-0000_00_1b.0.analog-stereo
 set $bluetoothaudiosink bluez_sink.00_01_01_00_12_CB
 set $hdmiaudiosink alsa_output.pci-0000_00_03.0.hdmi-stereo
@@ -245,14 +246,6 @@ mode "Primary" {
     bindsym comma $default, layout default
     bindsym period $default, layout tabbed
     bindsym slash $primarynop
-
-    # Eye candy. KP_Add increases translucency. KP_Subtract will not
-    # set opacity beyond 100%, hence using keyboard autorepeat will
-    # safely make the window opaque.
-    bindsym KP_Subtract \
-            exec --no-startup-id compton-trans -c -o +10
-    bindsym KP_Add \
-            exec --no-startup-id compton-trans -c -o -10
 
     # Pressing cycles through the three modes. Pri->Sec->Def->Pri.
     bindsym Menu $i3mode "Secondary"
@@ -470,10 +463,11 @@ bar {
     status_command ~/local/bin/i3-status --config ~/.config/i3status/config
     tray_output $cmon
     font pango:DejaVu Sans 11
-    # Bar related actions only please.
-    # The wallpaper attribution notice can be requested at any time.
+    #
     bindsym button2 $default, [urgent=latest] focus
     bindsym button3 $default, $i3apps start wallpaper
+    bindsym button4 exec --no-startup-id compton-trans -c -o +5
+    bindsym button5 exec --no-startup-id compton-trans -c -o -5
 }
 
 # Mouse behaviour wrt windows. Prefer click-to-focus, default is no.
