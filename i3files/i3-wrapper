@@ -541,8 +541,9 @@ dashp ()
         # You may prefer these menu items in the opposite order.
         list="cancel help"
     else
-        # This branch is taken after choosing help. The menu is
-        # displayed with a command list and does not timeout.
+        # This branch is taken by _highlighting_ help without pressing
+        # the Return key. The menu is displayed with a command list
+        # and does not timeout.
         list=$(egrep "\([a-zA-Z][a-zA-Z0-9]\)$" "$0" | sort | sed 's/[ ()]//g')
         list="cancel ${list}"
     fi
