@@ -14,13 +14,13 @@ i3_autovoice()
         (continuous)
         # Start at one second, be careful with a smaller value.
         delay=0.33
+        # g9 is not mapped at present, but this would override it.
         i3-msg "workspace g9"
         sleep "${delay}"
-        i3-msg "move workspace to output ${cmon}"
+        i3-msg "move workspace to output ${lmon}"
         sleep  "${delay}"
-        # Single window or left window of a side-by-side pair.
-        #### "exec xdotool mousemove 3180 285 click 1"
-        i3-msg "exec xdotool mousemove 2706 285 click 1"
+        # The left window of a side-by-side pair on the left monitor.
+        i3-msg "exec xdotool mousemove 786 260 click 1"
         ;;
     esac
 }
