@@ -417,6 +417,8 @@ for_window [class="ffplay"] floating enable;
 for_window [title="Volume Control"] \
            floating enable, move absolute position 2400 48, \
            resize set 50 ppt 80 ppt;
+for_window [class="Display"] floating enable;
+for_window [class="Display-im6"] floating enable;
 
 # Application windows.
 for_window [instance="xfce4-terminal"] $i3wrapper --unique-mark;
