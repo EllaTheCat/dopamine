@@ -68,8 +68,11 @@ i3_generic()
         # Clipboard command.
         (:clipboard)
         # Process the 'all lower case' text sent from AutoVoice.
+        # Quotes substituted in Tasker to avoid misbehaviour.
         # shellcheck disable=SC2002
         contents=$(echo "${*:2}" | sed 's/DQUOTE/\"/g' | sed "s/SQUOTE/\'/g")
+        # Make the string more "sentence--like".
+        contents=$(mksentence "${contents}")
         # Insert into both clipboards and then paste into Emacs.
         echo "${contents}" | xclip -selection primary     # mouse button 2
         echo "${contents}" | xclip -selection clipboard   # emacs control y
@@ -77,6 +80,28 @@ i3_generic()
         ;;
     esac
 }
+
+mksentence ()
+{
+    mkeye "$1"
+}
+
+mkeye ()
+{
+    # 1st person singular pronoun is common.
+    # "I know I am i'm sure I am i'm h a p p y"
+    # >I know I am i'm sure I am I'm h a p p y<
+
+    s="${1/^i\ /I\ }"  # Capital 'I' at beginning.
+    s="${s/i\ /I\ }"     # Capital 'I' then space
+    s="${s/i\ /I\ }"
+    s="${s/i\ /I\ }"
+    s="${s/i\ /I\ }"
+    s="${s/i\'/I\'}"     # Capital 'I' then apostrophe.
+    s="${s/i\'/I\'}"
+    echo "$s"
+}
+
 
 #
 # Start here.
