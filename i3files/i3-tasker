@@ -81,12 +81,17 @@ clipboard ()
 
 mksentence ()
 {
-    mkeye "$1"
+    s=$(mkeye "$1")
+    s=$(mkfirst "$s")
+    s=$(mklast "$s")
+    echo "$s"
 }
 
+#
+# Capitalise the 1st person singular pronoun 'I'.
+#
 mkeye ()
 {
-    # 1st person singular pronoun is common.
     # "I know I am i'm sure I am i'm h a p p y"
     # >I know I am i'm sure I am I'm h a p p y<
 
@@ -100,6 +105,29 @@ mkeye ()
     echo "$s"
 }
 
+#
+# Capitalise the 1st letter of the 1st word of a sentence.
+#
+mkfirst ()
+{
+    echo  "${1^}"  # bash 4.0
+}
+
+#
+# Close sentence with '.' or '?' using a heuristic to decide.
+#
+mklast ()
+{
+    s="$*"
+    case "$1" in
+        (What*|When*|Which*|Who*|How*)
+        echo "${s}?"
+        ;;
+        (*)
+        echo "${s}."
+        ;;
+    esac
+}
 
 #
 # Start here.
