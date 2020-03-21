@@ -8,7 +8,7 @@ export cmon=HDMI1
 # Enable or disable AutoVoice for Chrome (lAutoInput style).
 # chrome://extensions/?id=mefllcpfdfhohmeadieejdjcdcbibeml
 #
-i3_autovoice()
+autovoice()
 {
     case "$1" in
         (continuous)
@@ -20,65 +20,63 @@ i3_autovoice()
         i3-msg "move workspace to output ${lmon}"
         sleep  "${delay}"
         # The left window of a side-by-side pair on the left monitor.
-        i3-msg "exec xdotool mousemove 786 260 click 1"
+        i3-msg "exec xdotool mousemove 786 322 click 1"
         ;;
     esac
 }
 
 #
-#  Shell commands. AutoVoice on/off. Clipboard.
+#  Shell commands.
 #
-i3_generic()
+shell ()
 {
     case "$1" in
-        # Shell commands. These are reserved for apps like tvheadend.
-        (:shell)
-        case "$2" in
-            (mpv|vlc)
-            # Brute force to ensure that the 'mp' workspace appears,
-            # that the video window opens inside it, that the window
-            # has focus, and that the mark is set on its titlebar.
-            i3-msg "focus output ${lmon}"
-            i3-msg "workspace \"zz\""
-            i3-msg "workspace \"${2:0:1}p\""  # => mp or vp
-            i3-msg "exec ${*:2}"
-            sleep 10  # Better late than never, unobtrusive.
-            i3-msg "exec ${HOME}/local/bin/i3-wrapper  --unique-mark"
-            ;;
-            # Autovoice for Chrome on/off switch.
-            (autovoice)
-            i3_autovoice "$3" "$4"
-            ;;
-            # Clipboard buffer. It doesn't have to be the current
-            # buffer for AutoVoice to write into it. It can be given
-            # another name but AutoVoice expects the default.
-            (emacs)
-            emacsclient.emacs24 -e  "(switch-to-buffer \"${3:-Clipboard}\")"
-            ;;
-            # Command to insert or delete a special firewall rule.
-            (firewall)
-            i3-msg "exec ${HOME}/Programs/scrypts/firewall $3"
-            ;;
-            # When the phone rings get the user's attention.
-            (phonecall)
-            i3-msg "exec ${HOME}/Programs/scripts/phonecall"
-            ;;
-        esac
+        # Reserved for tvheadend.
+        (mpv|vlc)
+        # Brute force to ensure that the 'mp' workspace appears,
+        # that the video window opens inside it, that the window
+        # has focus, and that the mark is set on its titlebar.
+        i3-msg "focus output ${lmon}"
+        i3-msg "workspace \"zz\""
+        i3-msg "workspace \"${1:0:1}p\""  # => mp or vp
+        i3-msg "exec ${*:1}"
+        sleep 10  # Better late than never, unobtrusive.
+        i3-msg "exec ${HOME}/local/bin/i3-wrapper  --unique-mark"
         ;;
-        # Clipboard command.
-        (:clipboard)
-        # Process the 'all lower case' text sent from AutoVoice.
-        # Quotes substituted in Tasker to avoid misbehaviour.
-        # shellcheck disable=SC2002
-        contents=$(echo "${*:2}" | sed 's/DQUOTE/\"/g' | sed "s/SQUOTE/\'/g")
-        # Make the string more "sentence--like".
-        contents=$(mksentence "${contents}")
-        # Insert into both clipboards and then paste into Emacs.
-        echo "${contents}" | xclip -selection primary     # mouse button 2
-        echo "${contents}" | xclip -selection clipboard   # emacs control y
-        emacsclient.emacs24 -e "(with-current-buffer \"Clipboard\" (yank))"
+        # Autovoice for Chrome on/off switch.
+        (autovoice)
+        autovoice "$2" "$3"
+        ;;
+        # Clipboard buffer. It doesn't have to be the current
+        # buffer for AutoVoice to write into it. It can be given
+        # another name but AutoVoice expects the default.
+        (emacs)
+        emacsclient.emacs24 -e  "(switch-to-buffer \"${2:-Clipboard}\")"
+        ;;
+        # Command to insert or delete a special firewall rule.
+        (firewall)
+        i3-msg "exec ${HOME}/Programs/scrypts/firewall $2"
+        ;;
+        # When the phone rings get the user's attention.
+        (phonecall)
+        i3-msg "exec ${HOME}/Programs/scripts/phonecall"
         ;;
     esac
+}
+
+
+clipboard ()
+{
+    # Process the 'all lower case' text sent from AutoVoice.
+    # Quotes substituted in Tasker to avoid misbehaviour.
+    # shellcheck disable=SC2002
+    contents=$(echo "$*" | sed 's/DQUOTE/\"/g' | sed "s/SQUOTE/\'/g")
+    # Make the string more "sentence--like".
+    contents=$(mksentence "${contents}")
+    # Insert into both clipboards and then paste into Emacs.
+    echo "${contents}" | xclip -selection primary     # mouse button 2
+    echo "${contents}" | xclip -selection clipboard   # emacs control y
+    emacsclient.emacs24 -e "(with-current-buffer \"Clipboard\" (yank))"
 }
 
 mksentence ()
@@ -107,7 +105,14 @@ mkeye ()
 # Start here.
 #
 
-eval  "$1" "${@:2}"
+case "$1" in
+    (:clipboard)
+    clipboard "${@:2}"
+    ;;
+    (:shell)
+    shell "${@:2}"
+    ;;
+esac
 
 #
 # Done.

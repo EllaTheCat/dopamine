@@ -466,7 +466,7 @@ start ()
         i3_digit_digits "$1"
         ;;
         (:*)
-        eval "${HOME}/local/bin/i3-tasker" 'i3_generic' "$*"
+        eval "${HOME}/local/bin/i3-tasker" "$*"
         ;;
     esac
 }
