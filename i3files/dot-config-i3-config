@@ -119,7 +119,12 @@ bindsym Mod4+KP_Begin move up
 # The numpad enters numbers during command entry.
 # Do not rebind KP_0, KP_1 ... KP_8, KP_9, KP_Decimal.
 bindsym KP_Insert $i3wrapper -p
-bindsym KP_Delete nop
+
+# This toggles the AutoVoice for Chrome extension on-off.
+# It requires a Chrome instance running on workspace g9.
+# It breaks far too easily, don't change the window layout.
+# Mnemonic: "[L]isten" c.f. Control-Shift-l in Chrome.
+bindsym KP_Delete $default,$i3tasker :shell autovoice-toggle-switch
 
 # Numpad keys that are unaffected by the NumLock state.
 # There are five: arithmetic signs / * - + and the enter key.
@@ -312,13 +317,7 @@ mode "Secondary" {
     # Set modifiers with 'xcape', set CapsLock to Control,
     # mimic US layout on UK keyboard.
     bindsym k $default, $i3keyboard
-
-    # This toggles the AutoVoice for Chrome extension on-off.
-    # It requres a Chrome instance running on workspace g9.
-    # It breaks far too easily, don't change the window layout.
-    # Mnemonic: "[L]isten" c.f. Control-Shift-l in Chrome.
-    bindsym l $default, \
-            $i3tasker ":shell autovoice continuous ${lmon}"
+    bindsym l  $secondarynop
 
     bindsym Return $secondarynop
 

@@ -5,13 +5,15 @@ export lmon=HDMI2
 export cmon=HDMI1
 
 #
-# Enable or disable AutoVoice for Chrome (lAutoInput style).
-# chrome://extensions/?id=mefllcpfdfhohmeadieejdjcdcbibeml
+# Shell commands.
+# - Tasker announces these with ":shell", I forget why I chose that.
+# - Everything that isn't ":clipboard" belongs here.
 #
-autovoice()
+shell ()
 {
     case "$1" in
-        (continuous)
+        # Autovoice for Chrome Extension for Linux on/off switch.
+        (autovoice-toggle-switch)
         # Start at one second, be careful with a smaller value.
         delay=0.33
         # g9 is not mapped at present, but this would override it.
@@ -22,16 +24,17 @@ autovoice()
         # The left window of a side-by-side pair on the left monitor.
         i3-msg "exec xdotool mousemove 786 322 click 1"
         ;;
-    esac
-}
-
-#
-#  Shell commands.
-#
-shell ()
-{
-    case "$1" in
-        # Reserved for tvheadend.
+        # Clipboard buffer. It doesn't have to be the current
+        # buffer for AutoVoice to write into it. It can be given
+        # another name but AutoVoice expects the default.
+        (emacs-clipboard-buffer)
+        emacsclient.emacs24 -e  "(switch-to-buffer \"${2:-Clipboard}\")"
+        ;;
+        # Command to insert or delete a special firewall rule.
+        (firewall-rule)
+        i3-msg "exec ${HOME}/Programs/scrypts/firewall $2"
+        ;;
+        # Playback DVB streams supplied by tvheadend.
         (mpv|vlc)
         # Brute force to ensure that the 'mp' workspace appears,
         # that the video window opens inside it, that the window
@@ -43,20 +46,6 @@ shell ()
         sleep 10  # Better late than never, unobtrusive.
         i3-msg "exec ${HOME}/local/bin/i3-wrapper  --unique-mark"
         ;;
-        # Autovoice for Chrome on/off switch.
-        (autovoice)
-        autovoice "$2" "$3"
-        ;;
-        # Clipboard buffer. It doesn't have to be the current
-        # buffer for AutoVoice to write into it. It can be given
-        # another name but AutoVoice expects the default.
-        (emacs)
-        emacsclient.emacs24 -e  "(switch-to-buffer \"${2:-Clipboard}\")"
-        ;;
-        # Command to insert or delete a special firewall rule.
-        (firewall)
-        i3-msg "exec ${HOME}/Programs/scrypts/firewall $2"
-        ;;
         # When the phone rings get the user's attention.
         (phonecall)
         i3-msg "exec ${HOME}/Programs/scripts/phonecall"
@@ -65,10 +54,13 @@ shell ()
 }
 
 
+#
+# Enhance the 'all lower case' text sent from AutoVoice and put the
+# result into the Emacs buffer "Clipboard".
+#
 clipboard ()
 {
-    # Process the 'all lower case' text sent from AutoVoice.
-    # Quotes substituted in Tasker to avoid misbehaviour.
+    # Restore the quotes substituted in Tasker to avoid misbehaviour.
     # shellcheck disable=SC2002
     contents=$(echo "$*" | sed 's/DQUOTE/\"/g' | sed "s/SQUOTE/\'/g")
     # Make the string more "sentence--like".
@@ -114,17 +106,39 @@ mkfirst ()
 }
 
 #
-# Close sentence with '.' or '?' using a heuristic to decide.
+# Close sentence with '.' or '?' or '!'.
 #
 mklast ()
 {
-    s="$*"
+    s="$1"
     case "$1" in
-        (What*|When*|Which*|Who*|How*)
-        echo "${s}?"
+        # Use this to be explicit and override any heuristics.
+        # Say "full stop" or "stop" to be reliably recognised.
+        (\.*|Stop*)
+        s=${s/\.\ /}
+        s=${s/Stop\ /}
+        s=$(mkfirst "$s")
+        printf "%s." "${s}"
         ;;
+        # Say "question" to be reliably recognised.
+        (Question*)
+        s=${s/Question\ /}
+        s=$(mkfirst "$s")
+        printf "%s?" "${s}"
+        ;;
+        # Say "shout" to be reliably recognised.
+        (Shout*)
+        s=${s/Shout\ /}
+        s=$(mkfirst "$s")
+        printf "%s!" "${s}"
+        ;;
+        # Use a simple heuristic with "question words" as a fallback.
+        (What*|When*|Which*|Who*|How*)
+        printf "%s?" "${s}"
+        ;;
+        # This default is 9888a reliable heuristic.
         (*)
-        echo "${s}."
+        printf "%s." "${s}"
         ;;
     esac
 }
