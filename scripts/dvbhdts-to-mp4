@@ -1,0 +1,17 @@
+#!/bin/bash
+#
+# Change the format of a DVB HD transport stream to mp4.
+
+src=$(dirname $1)/$(basename $1).ts
+dst=$(dirname $2)/$(basename $2).mp4
+
+options[0]=-vcodec copy -acodec copy
+options[1]=-vcodec copy -bsf:a aac_adtstoasc
+
+flags=${options[${3:-0}]}
+
+echo ffmpeg42 -i ${src}.ts  ${flags} ${dst}.mp4
+
+#
+# Done.
+#
