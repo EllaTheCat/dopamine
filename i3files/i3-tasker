@@ -107,13 +107,15 @@ mkfirst ()
 
 #
 # Close sentence with '.' or '?' or '!'.
+# - Unfortunately the format is specified before the text of the sentence.
 #
 mklast ()
 {
     s="$1"
     case "$1" in
-        # Use this to be explicit and override any heuristics.
+        # Use this to override the question heuristic.
         # Say "full stop" or "stop" to be reliably recognised.
+        # Google actually punctuates in response to the former.
         (\.*|Stop*)
         s=${s/\.\ /}
         s=${s/Stop\ /}
@@ -132,11 +134,13 @@ mklast ()
         s=$(mkfirst "$s")
         printf "%s!" "${s}"
         ;;
-        # Use a simple heuristic with "question words" as a fallback.
-        (What*|When*|Which*|Who*|How*)
+        # Use a simple heuristic with "question words" as a fallback
+        # should you either forget to prefix or should AutoVoice miss
+        # the first word as sometimes happens.
+        (What*|When*|Which*|Who*|How*|Do*)
         printf "%s?" "${s}"
         ;;
-        # This default is 9888a reliable heuristic.
+        # This default is frequently correct.
         (*)
         printf "%s." "${s}"
         ;;

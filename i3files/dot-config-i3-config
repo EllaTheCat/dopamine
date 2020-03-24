@@ -312,7 +312,7 @@ mode "Secondary" {
     bindsym g $default, $i3tasker :shell autovoice-toggle-switch
     # This switches to the emacs buffer used as a clipboard
     # for AutoVoice speech-to-text. The buffer is created if it
-    # does not exist. Mnemonic: none .
+    # does not exist.
     bindsym j $default, $i3tasker :shell emacs-clipboard-buffer
 
     # Set modifiers with 'xcape', set CapsLock to Control,
