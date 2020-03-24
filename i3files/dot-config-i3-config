@@ -113,18 +113,12 @@ bindsym KP_End move left
 bindsym KP_Down move down
 bindsym KP_Next move right
 # This compromise allows for two inverted T cursors.
-bindsym Mod4+KP_Begin move up
+bindsym KP_Delete move up
 
 # Command prompt.
 # The numpad enters numbers during command entry.
 # Do not rebind KP_0, KP_1 ... KP_8, KP_9, KP_Decimal.
 bindsym KP_Insert $i3wrapper -p
-
-# This toggles the AutoVoice for Chrome extension on-off.
-# It requires a Chrome instance running on workspace g9.
-# It breaks far too easily, don't change the window layout.
-# Mnemonic: "[L]isten" c.f. Control-Shift-l in Chrome.
-bindsym KP_Delete $default,$i3tasker :shell autovoice-toggle-switch
 
 # Numpad keys that are unaffected by the NumLock state.
 # There are five: arithmetic signs / * - + and the enter key.
@@ -293,7 +287,7 @@ mode "Secondary" {
     bindsym bracketleft $default, move scratchpad
     bindsym bracketright $default, scratchpad show
 
-       # Command prompt.
+    # Command prompt.
     bindsym Tab $default, $i3wrapper -p
 
     # Select an audio output.
@@ -311,8 +305,15 @@ mode "Secondary" {
     bindsym d $default, $i3mouse disable
     bindsym f $default, $i3mouse fast
 
-    bindsym g $secondarynop
-    bindsym j $secondarynop
+    # This toggles the AutoVoice for Chrome extension on-off.
+    # It requires a Chrome instance running on workspace g9.
+    # It breaks far too easily, don't change the window layout.
+    # Mnemonic: g for Google Chrome g9.
+    bindsym g $default, $i3tasker :shell autovoice-toggle-switch
+    # This switches to the emacs buffer used as a clipboard
+    # for AutoVoice speech-to-text. The buffer is created if it
+    # does not exist. Mnemonic: none .
+    bindsym j $default, $i3tasker :shell emacs-clipboard-buffer
 
     # Set modifiers with 'xcape', set CapsLock to Control,
     # mimic US layout on UK keyboard.
