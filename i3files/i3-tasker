@@ -22,7 +22,7 @@ shell ()
         i3-msg "move workspace to output ${lmon}"
         sleep  "${delay}"
         # The left window of a side-by-side pair on the left monitor.
-        i3-msg "exec xdotool mousemove 786 322 click 1"
+        i3-msg "exec xdotool mousemove 786 265 click 1"
         ;;
         # Clipboard buffer. It doesn't have to be the current
         # buffer for AutoVoice to write into it. It can be given
@@ -30,7 +30,7 @@ shell ()
         (emacs-clipboard-buffer)
         emacsclient.emacs24 -e  "(switch-to-buffer \"${2:-Clipboard}\")"
         ;;
-        # Command to insert or delete a special firewall rule.
+        # Command to append or delete a special firewall rule.
         (firewall-rule)
         i3-msg "exec ${HOME}/Programs/scrypts/firewall $2"
         ;;
@@ -111,26 +111,25 @@ mkfirst ()
 #
 mklast ()
 {
-    s="$1"
     case "$1" in
         # Use this to override the question heuristic.
         # Say "full stop" or "stop" to be reliably recognised.
         # Google actually punctuates in response to the former.
         (\.*|Stop*)
-        s=${s/\.\ /}
+        s=${1/\.\ /}
         s=${s/Stop\ /}
         s=$(mkfirst "$s")
         printf "%s." "${s}"
         ;;
         # Say "question" to be reliably recognised.
         (Question*)
-        s=${s/Question\ /}
+        s=${1/Question\ /}
         s=$(mkfirst "$s")
         printf "%s?" "${s}"
         ;;
         # Say "shout" to be reliably recognised.
         (Shout*)
-        s=${s/Shout\ /}
+        s=${1/Shout\ /}
         s=$(mkfirst "$s")
         printf "%s!" "${s}"
         ;;
@@ -138,11 +137,11 @@ mklast ()
         # should you either forget to prefix or should AutoVoice miss
         # the first word as sometimes happens.
         (What*|When*|Which*|Who*|How*|Do*)
-        printf "%s?" "${s}"
+        printf "%s?" "$1"
         ;;
         # This default is frequently correct.
         (*)
-        printf "%s." "${s}"
+        printf "%s." "$1"
         ;;
     esac
 }
@@ -150,6 +149,10 @@ mklast ()
 #
 # Start here.
 #
+
+if [ "$*" = ":clipboard ok talk to you later" ]; then
+    eval "shell autovoice-toggle-switch"
+fi
 
 case "$1" in
     (:clipboard)
