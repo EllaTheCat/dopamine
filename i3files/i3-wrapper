@@ -158,7 +158,10 @@ i3_visit_mark()
     # ]
     menu="$(i3-msg -t get_tree | jq '.. | objects | .name,.marks' | \
                   grep -B1 -A1 [[] | tr -d \\n[  | sed 's/--/\n/g')"
-    pair=$(echo  "${menu}" | dmenu -b -m 0 -fn 'pango:DejaVu Sans 11')
+    case "$1" in
+        (-s) pair=$(echo  "${menu}" | dmenu -b -m 0 -fn 'pango:DejaVu Sans 11') ;;
+        (-v) pair=$(echo  "${menu}" | dmenu -b -m 0 -fn 'pango:DejaVu Sans 11' -l 25) ;;
+    esac
     # The list item format is ->"string1" "string2"<- e.g. the above
     # becomes: "reddit...Google Chrome" "36"
     for s in ${pair}; do mark=$s; done
@@ -576,7 +579,7 @@ case ${XDG_CURRENT_DESKTOP} in
         (--file-watcher) i3filewatcher ;;
         (--unique-mark) i3_unique_mark ;;
         (--keyboard-binding-info) i3kb ;;
-        (--visit-mark) i3_visit_mark ;;
+        (--visit-mark) i3_visit_mark "$2" ;;
         # In production, do nothing here?
         (*) start "$@" ;;
     esac

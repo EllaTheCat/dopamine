@@ -155,8 +155,6 @@ mode "Primary" {
             $default, exec i3-input -f $i3inputfont  -l 2 \
             -P '(workspace): ' -F 'workspace "%s"'
 
-    bindsym e $primarynop
-
     # (R)ename a workspace.
     bindsym r \
             $default, exec i3-input -f $i3inputfont -l 2 \
@@ -194,7 +192,8 @@ mode "Primary" {
     # [D]menu showing window titles and their associated marks.
     # The use case is finding the title a mark is associated with.
     # Selecting an item visits the mark.
-    bindsym d $default, $i3wrapper --visit-mark
+    bindsym d $default, $i3wrapper --visit-mark -s    # scroll sideways
+    bindsym e $default, $i3wrapper --visit-mark -v    # vertical menu
 
     # Enter [f]ullscreen mode for the focused container.
     bindsym f $default, fullscreen toggle
