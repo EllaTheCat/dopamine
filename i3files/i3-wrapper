@@ -78,7 +78,7 @@ focus ()
             if [ "$3" == 'none' ]; then
                 i3-msg "exec ${*:5};"
             else
-                i3-msg "workspace $3; exec ${*:5};"
+                i3-msg "workspace --no-auto-back-and-forth $3; exec ${*:5};"
             fi
             # Marks are typically allocated with "for_window", but
             # here is easier.
@@ -94,7 +94,7 @@ focus ()
         fi
     else
         # Focus the program.
-        i3-msg "workspace $3"
+        i3-msg "workspace --no-auto-back-and-forth $3"
     fi
 }
 
@@ -177,7 +177,7 @@ i3_triple_terminal_workspace()
                  grep true -B1 | grep -v true)
     tws=$(i3-msg -t get_workspaces | jq '.[] | .name' | grep -c "$1")
     if [ "${cws}" != "\"$1\"" ]; then
-        i3-msg "workspace $1"
+        i3-msg "workspace --no-auto-back-and-forth $1"
         if [ "${tws}" -eq 0 ]; then
             # One subshell.  The marks and the focusing are required.
             ( xfce4-terminal -T "xfce4-terminal"
@@ -210,7 +210,7 @@ i3emgc ()
     if [ "$(pgrep -c $2)" -eq 0 ]; then
         if  [ "${cws}" != "${arg}" ]; then
             # shellcheck disable=2086
-            i3-msg "workspace ${arg}, exec sleep 1"
+            i3-msg "workspace --no-auto-back-and-forth ${arg}, exec sleep 1"
         fi
         i3-msg "exec  $3"
     else
@@ -218,11 +218,11 @@ i3emgc ()
         count=$(i3-msg -t get_workspaces | jq 'map(.name)' | grep -c \"${arg}\")
         if [ "${count}" -eq 0 ]; then
             if  [ "${cws}" != "${arg}" ]; then
-                i3-msg "workspace ${arg}, exec sleep 1"
+                i3-msg "workspace --no-auto-back-and-forth ${arg}, exec sleep 1"
             fi
             i3-msg "exec $4"
         else
-            i3-msg "workspace ${arg}"
+            i3-msg "workspace --no-auto-back-and-forth ${arg}"
         fi
     fi
 }
@@ -341,11 +341,11 @@ i3_lower_lower_hard()
 
         # Eye candy. Reveal background. KISS.
         (zz)
-        i3-msg "focus output \"${lmon}\", workspace \"$1\"" ;;
+        i3-msg "focus output \"${lmon}\", workspace --no-auto-back-and-forth \"$1\"" ;;
         (xx)
-        i3-msg "focus output \"${cmon}\", workspace \"$1\"" ;;
+        i3-msg "focus output \"${cmon}\", workspace  --no-auto-back-and-forth \"$1\"" ;;
         (cc)
-        i3-msg "focus output \"${rmon}\", workspace \"$1\"" ;;
+        i3-msg "focus output \"${rmon}\", workspace  --no-auto-back-and-forth \"$1\"" ;;
 
         # Visit the eponymous workspace if it exists, otherwise create
         # the workspace and launch three side-by-side terminals there.
