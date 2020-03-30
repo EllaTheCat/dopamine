@@ -164,7 +164,7 @@ i3_visit_mark()
     esac
     # The list item format is ->"string1" "string2"<- e.g. the above
     # becomes: "reddit...Google Chrome" "36"
-    for s in ${pair}; do mark=$s; done
+    for s in ${pair}; do mark=${s/,/}; done
     i3-msg "[ con_mark=${mark} ] focus"
 }
 
