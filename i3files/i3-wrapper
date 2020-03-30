@@ -216,6 +216,8 @@ i3emgc ()
             i3-msg "workspace --no-auto-back-and-forth ${arg}, exec sleep 1"
         fi
         i3-msg "exec  $3"
+        sleep 3
+        i3-msg "mark --add --toggle  _${arg}"
     else
         # shellcheck disable=2086
         count=$(i3-msg -t get_workspaces | jq 'map(.name)' | grep -c \"${arg}\")
@@ -224,8 +226,21 @@ i3emgc ()
                 i3-msg "workspace --no-auto-back-and-forth ${arg}, exec sleep 1"
             fi
             i3-msg "exec $4"
+            sleep 3
+            i3-msg "mark --add --toggle  _${arg}"
         else
-            i3-msg "workspace --no-auto-back-and-forth ${arg}"
+            # Without a window carrying the invisible mark '_ws' on
+            # workspac 'ws" create such a window on this workspace
+            # 'ws'. NOTE: BUG: The search looks over all workspaces.
+            count=$(i3-msg -t get_marks | sed 's/[]["]//g' | sed 's/,/\n /g' | grep -c "_${arg}")
+            if [ ${count} -eq 0 ]; then
+                i3-msg "workspace --no-auto-back-and-forth ${arg}"
+                i3-msg "exec $4"
+                sleep 3
+                i3-msg "mark --add --toggle  _${arg}"
+            else
+                i3-msg "workspace --no-auto-back-and-forth ${arg}"
+            fi
         fi
     fi
 }
