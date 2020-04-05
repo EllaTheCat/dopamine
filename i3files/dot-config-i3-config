@@ -192,8 +192,8 @@ mode "Primary" {
     # [D]menu showing window titles and their associated marks.
     # The use case is finding the title a mark is associated with.
     # Selecting an item visits the mark.
-    bindsym d $default, $i3wrapper --visit-mark -s    # scroll sideways
-    bindsym e $default, $i3wrapper --visit-mark -v    # vertical menu
+    bindsym d $default, $i3wrapper --visit-mark --column $lmon
+    bindsym e $default, $i3wrapper --visit-mark --column $cmon
 
     # Enter [f]ullscreen mode for the focused container.
     bindsym f $default, fullscreen toggle

@@ -142,10 +142,8 @@ i3_unique_mark()
 }
 
 #
-# Display the title and the mark for all marked windows inside a
-# dmenu; selecting visits the window.
-#
-# - This is effectively a popup side scrolling taskbar.
+# Inside a dmenu, display the title and the mark for all marked
+# windows. Select a dmenu item to visit the associated window.
 #
 i3_visit_mark()
 {
@@ -158,14 +156,21 @@ i3_visit_mark()
     # ]
     menu="$(i3-msg -t get_tree | jq '.. | objects | .name,.marks' | \
                   grep -B1 -A1 [[] | tr -d \\n[  | sed 's/--/\n/g')"
+    # Arrgument parsing is order dependent. $1 required $2 optional.
+    # S1 How menu items are laid out. $2 Where to put the window.
     case "$1" in
-        (-s) pair=$(echo  "${menu}" | dmenu -b -m 0 -fn 'pango:DejaVu Sans 11') ;;
-        (-v) pair=$(echo  "${menu}" | dmenu -b -m 0 -fn 'pango:DejaVu Sans 11' -l 25) ;;
+        (--row)
+        pair=$(echo  "${menu}" | dmenu -b -m 0 -fn 'pango:DejaVu Sans 11') ;;
+        (--column)
+        pair=$(echo "${menu}" | dmenu -b -m 0 -fn 'pango:DejaVu Sans 11' -l 25) ;;
     esac
     # The list item format is ->"string1" "string2"<- e.g. the above
     # becomes: "reddit...Google Chrome" "36"
+    # The comma is removed to fix a bug that appeared with emgc marks
+    # alongside N digit marks.
     for s in ${pair}; do mark=${s/,/}; done
     i3-msg "[ con_mark=${mark} ] focus"
+    i3-msg "move workspace to output $2"
 }
 
 #
@@ -594,7 +599,7 @@ case ${XDG_CURRENT_DESKTOP} in
         (--file-watcher) i3filewatcher ;;
         (--unique-mark) i3_unique_mark ;;
         (--keyboard-binding-info) i3kb ;;
-        (--visit-mark) i3_visit_mark "$2" ;;
+        (--visit-mark) i3_visit_mark "$2"  "$3" ;;
         # In production, do nothing here?
         (*) start "$@" ;;
     esac
