@@ -307,6 +307,8 @@ i3_lower_lower_easy()
 
         (sk)
         focus instance skype 'sk' ${rmon} /snap/bin/skype ;;
+        (tm)
+        focus class "Microsoft Teams - Preview" 'tm' ${rmon} /usr/bin/teams ;;
         (ws)
         focus instance wireshark 'ws' ${cmon} wireshark ;;
         (sy)
