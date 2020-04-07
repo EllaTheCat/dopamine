@@ -1,0 +1,26 @@
+#!/bin/bash
+vlcCall="vlc --intf dummy --fullscreen --no-osd"
+function cleanup(){
+    for pid in $(pgrep -f "$vlcCall"); do
+        kill -9 $pid
+    done
+    killall rygel
+}
+function waitCpuDecrease(){
+    pid=$1
+    lastCpu="0.0"
+    while true; do
+        cpu=$(ps S -p $pid -o pcpu=)
+        sleep 0.2
+        [ $(bc <<< "$cpu < $lastCpu") == 1 ] && break
+        lastCpu=$cpu
+    done
+}
+# killall rygel and vlc
+cleanup
+# launch vlc in background
+$vlcCall &
+# wait until vlc has done most stuff
+waitCpuDecrease $!
+# start rygel
+rygel
