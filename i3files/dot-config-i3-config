@@ -101,30 +101,27 @@ bindsym Print $i3wrapper --unique-mark
 # without having to precisely position the mouse on window edges.
 floating_modifier Mod4
 
-# Numpad cursor controls (highly recommended).
-# Give priority to left-right actions over up-down actions.
-bindsym KP_Home focus output left
-bindsym KP_Up focus up
-bindsym KP_Prior focus output right
-bindsym KP_Left focus left
-bindsym KP_Begin focus down
-bindsym KP_Right focus right
+# Numpad keys that are unaffected by the NumLock state:
+# There are five: arithmetic signs / * - + and the enter key.
+# Do not rebind KP_Enter! This is a design decision.
+
+# Inverted T cursor keys.
+bindsym KP_Divide focus upp
+bindsym KP_Home focus left
+bindsym KP_Up focus down
+bindsym KP_Prior focus right
+
+# Inverted T cursor keys.
+bindsym KP_Begin move up
 bindsym KP_End move left
 bindsym KP_Down move down
 bindsym KP_Next move right
-# This compromise allows for two inverted T cursors.
-bindsym KP_Delete move up
 
-# Command prompt.
-# The numpad enters numbers during command entry.
-# Do not rebind KP_0, KP_1 ... KP_8, KP_9, KP_Decimal.
-bindsym KP_Insert $i3wrapper -p
-
-# Numpad keys that are unaffected by the NumLock state.
-# There are five: arithmetic signs / * - + and the enter key.
-# Do not rebind KP_Enter! This is a design decision.
-bindsym KP_Divide workspace prev_on_output
-bindsym KP_Multiply workspace next_on_output
+# Rotated T unused.
+bindsym KP_Left workspace prev_on_output
+bindsym KP_Right workspace next_on_output
+bindsym KP_Multiply nop
+bindsym KP_Delete nop
 
 # Microphone muting (for privacy and phone conferencing).
 # The i3bar displays the status of up to three microphones:
@@ -134,6 +131,11 @@ bindsym KP_Subtract \
         exec --no-startup-id pactl set-source-mute $webcamaudiosource toggle
 bindsym KP_Add \
         exec --no-startup-id pactl set-source-mute $usbaudiosource toggle
+
+# Command prompt.
+# The numpad enters numbers during command entry.
+# Do not rebind KP_0, KP_1 ... KP_8, KP_9, KP_Decimal.
+bindsym KP_Insert $i3wrapper -p
 
 #
 # MODES
@@ -189,11 +191,9 @@ mode "Primary" {
     # S for Side by Side.
     bindsym s $default, focus down, split h, focus up, move down, move left;
 
-    # [D]menu showing window titles and their associated marks.
-    # The use case is finding the title a mark is associated with.
-    # Selecting an item visits the mark.
-    bindsym d $default, $i3wrapper --visit-mark --column $lmon
-    bindsym e $default, $i3wrapper --visit-mark --column $cmon
+    # Layouts.
+    bindsym d $default, layout default
+    bindsym e $default, layout tabbed
 
     # Enter [f]ullscreen mode for the focused container.
     bindsym f $default, fullscreen toggle
@@ -241,10 +241,12 @@ mode "Primary" {
             -P '(move container to workspace): ' \
             -F 'move container to workspace "%s"'
 
-    # Layouts. No obvious mnemonics remain available, sorry.
-    bindsym comma $default, layout default
-    bindsym period $default, layout tabbed
-    bindsym slash $primarynop
+    # [D]menu showing window titles and their associated marks.
+    # The use case is finding the title a mark is associated with.
+    # Selecting an item visits the mark.
+    bindsym comma $default, $i3wrapper --visit-mark --column $lmon
+    bindsym period $default, $i3wrapper --visit-mark --column $cmon
+    bindsym slash $default, $i3wrapper --visit-mark --column $rmon
 
     # Pressing cycles through the three modes. Pri->Sec->Def->Pri.
     bindsym Menu $i3mode "Secondary"

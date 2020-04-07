@@ -170,7 +170,7 @@ i3_visit_mark()
     # alongside N digit marks.
     for s in ${pair}; do mark=${s/,/}; done
     i3-msg "[ con_mark=${mark} ] focus"
-    i3-msg "move workspace to output $2"
+    i3-msg "[ con_mark=${mark} ] move workspace to output $2"
 }
 
 #
