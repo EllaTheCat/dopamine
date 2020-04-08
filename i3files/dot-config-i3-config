@@ -106,7 +106,7 @@ floating_modifier Mod4
 # Do not rebind KP_Enter! This is a design decision.
 
 # Inverted T cursor keys.
-bindsym KP_Divide focus upp
+bindsym KP_Divide focus up
 bindsym KP_Home focus left
 bindsym KP_Up focus down
 bindsym KP_Prior focus right
