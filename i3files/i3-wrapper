@@ -80,9 +80,6 @@ focus ()
             else
                 i3-msg "workspace --no-auto-back-and-forth $3; exec ${*:5};"
             fi
-            # Marks are typically allocated with "for_window", but
-            # here is easier.
-            i3_unique_mark
             # Change to the specified output when the window appears.
             # Set $4 'none' to stay on current output.
             case "$4" in
@@ -91,6 +88,9 @@ focus ()
                 i3-msg "move workspace to output $4"
                 ;;
             esac
+            # Marks are typically allocated with "for_window", but
+            # here is easier.
+            i3_unique_mark
         fi
     else
         # Focus the program.
@@ -190,9 +190,9 @@ i3_triple_terminal_workspace()
         i3-msg "workspace --no-auto-back-and-forth $1"
         if [ "${tws}" -eq 0 ]; then
             # One subshell.  The marks and the focusing are required.
-            ( xfce4-terminal -T "xfce4-terminal"
-              xfce4-terminal -T "xfce4-terminal"
-              xfce4-terminal -T "xfce4-terminal"
+            ( xfce4-terminal -T "xfce4-terminal" && sleep 2
+              xfce4-terminal -T "xfce4-terminal" && sleep 2
+              xfce4-terminal -T "xfce4-terminal" && sleep 2
               i3-msg "focus left"
               i3-msg "focus left"
             ) &
@@ -329,7 +329,7 @@ i3_lower_lower_easy()
         focus class mpv 'mp' ;;   # launched by 'tvheadend'.
 
         (vp)
-        focus instance vlc 'vp' ${lmon} /snap/bin/vlc ;;
+        focus instance vlc 'vp' ${lmon} vlc-rygel ;;
         (hb)
         focus instance handbrake 'hb' ${cmon} \
               "${HOME}/Programs/scripts//handbrake-cpulimit" ;;
