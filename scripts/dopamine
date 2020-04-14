@@ -23,7 +23,7 @@ cat $0 | while read line; do
         sleep ${seconds}
         ;;
         (:return)
-        # IThis should be separate from the key and text commands,
+        # This should be separate from the key and text commands,
         # neither of which should include it.
         xdotool key --clearmodifiers Return
         ;;
@@ -40,13 +40,17 @@ cat $0 | while read line; do
             (1|2|3|4|5) xdotool click ${button} ;;
         esac
         ;;
-        (:comment*)
-        # Pass (x y comment). Uses 'yad' as a comment bubble.
+        (:text*)
+        # Pass {x y timeout text}. Use it like a transient speech
+        # bubble to comment about what's happening.
         x=$(echo $line | awk '{print $2}')
         y=$(echo $line | awk '{print $3}')
-        message=${line/:comment $x $y /}
+        t=$(echo $line | awk '{print $4}')
+        message=${line/:text $x $y $t /}
         xdotool mousemove --sync $x $y
-        2>&1  yad --mouse --title=Comment --timeout=7 --text="${message}" | \
+        2>&1  yad --mouse --no-buttons \
+              --timeout=${t} --timeout-indicator=bottom \
+              --title=Comment --text="${message}" | \
             grep -v 'Gtk-Message: GtkDialog mapped without a transient parent. This is discouraged.'
         ;;
         (:s)
@@ -64,7 +68,7 @@ exit 0
 # Custom script
 #
 
-:comment 3333 333 Hello World
+:text 3333 333 5 Hello World
 :quit
 :mouse 1 1931 969
 :mouse 1 1931 1069
