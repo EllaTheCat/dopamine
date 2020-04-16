@@ -118,7 +118,7 @@ bindsym KP_Down focus down
 bindsym KP_Next focus right
 
 # Rotated T unused.
-bindsym KP_Left workspace prev_on_output
+bindsym KP_Left workspace prev
 bindsym KP_Right workspace next_on_output
 bindsym KP_Multiply nop
 bindsym KP_Delete nop
