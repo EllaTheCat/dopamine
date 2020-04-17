@@ -12,6 +12,35 @@
 #
 cat $0 | while read line; do
     case ${line} in
+        # Zero, one or two Menu key presses followed by zero or one
+        # short strings.
+        (:m0*)
+        string=${line/:m0 /}
+        if [ "${string}" != "null" ]; then
+            dash -c "xdotool type --clearmodifiers ${string}"
+            sleep 0.2
+        fi
+        ;;
+        (:m1*)
+        string=${line/:m1 /}
+        dash -c "xdotool key --clearmodifiers Menu"
+        sleep 0.2
+        dash -c "xdotool getactivewindow type --clearmodifiers ${string}"
+        sleep 0.2
+        ;;
+        (:m2*)
+        string=${line/:m2 /}
+        dash -c "xdotool key --clearmodifiers Menu"
+        sleep 0.2
+        dash -c "xdotool key --clearmodifiers Menu"
+        sleep 0.2
+        if [ "${string}" != "null" ]; then
+            dash -c "xdotool getactivewindow type --clearmodifiers ${string}"
+            sleep 0.2
+        fi
+        ;;
+
+        # Menu followed by backslash or Tab prompts for a short string.
         (:cmd*)
         string=${line/:cmd /}
         dash -c "xdotool key --clearmodifiers Menu"
@@ -20,37 +49,13 @@ cat $0 | while read line; do
         sleep 1
         if [ "${string}" = "timeout" ]; then
             dash -c "xdotool key --clearmodifiers Right"
-            sleep 10
-            dash -c "xdotool key --clearmodifiers Escape"
+            sleep 9.8
+            dash -c "xdotool key --clearmodifiers Return"
         else
             dash -c "xdotool type --clearmodifiers ${string}"
-            sleep 5
+            sleep 4.8
         fi
-        ;;
-        (:str*)
-        string=${line/:str /}
-        dash -c "xdotool type --clearmodifiers  ${string}"
         sleep 0.2
-        ;;
-        (:def*)
-        string=${line/:def /}
-        dash -c "xdotool type --clearmodifiers ${string}"
-        sleep 0.2
-        ;;
-        (:pri*)
-        string=${line/:pri /}
-        dash -c "xdotool key --clearmodifiers Menu"
-        sleep 0.2
-        dash -c "xdotool type --clearmodifiers ${string}"
-        sleep 0.2
-        ;;
-        (:sec*)
-        string=${line/:sec /}
-        dash -c "xdotool key --clearmodifiers Menu"
-        sleep 0.2
-        dash -c "xdotool key --clearmodifiers Menu"
-        sleep 0.2
-        dash -c "xdotool type --clearmodifiers ${string}"
         ;;
 
         (:mouse*)
@@ -63,6 +68,7 @@ cat $0 | while read line; do
         esac
         sleep 0.2
         ;;
+        # Balloon Help.
         (:yad*)
         x=$(echo $line | awk '{print $2}')
         y=$(echo $line | awk '{print $3}')
@@ -71,13 +77,13 @@ cat $0 | while read line; do
         xdotool mousemove --sync $x $y
         2>&1  yad --width 200 --mouse --no-buttons \
               --timeout=${t} --timeout-indicator=bottom \
-              --title=Comment --text="${message}" | \
-            grep -v 'Gtk-Message: GtkDialog mapped without a transient parent. This is discouraged.'
+              --title=Help --text="${message}" | \
+            grep -v 'Gtk-Message: GtkDialog mapped without a transient parent.'
         sleep 0.2
         ;;
-        (:sleep*)
-        sleep ${line/:sleep /}
-        ;;
+        (pause*)
+        string=${line/:pause /}
+        sleep $((string / 1000))
         (:quit)
         exit 0
         ;;
@@ -89,12 +95,25 @@ exit 0
 # Custom scripts
 #
 
-:yad 2112 600 7 "Menu | Tab or Menu | backslash presents a dmenu at the bottom of the screen that expects a two or three character command. The timeout is expected to expire after four seconds, at which time the command is dispatched. Users can type Return for faster dispatch. Hovering over Cancel dismisses. Hovering over Help presents a sideways scrolling dmenu showing a subset of some two character commands automatically extracted from the source."
-:cmd timeout
+:yad 2112 600 5 "i3 is configured to use modes in preference to modifiers. The Menu key cycles through three modes: defult, Primary, Secondary, and back to default. The left Windows key behaves like Menu when used on its own. The space key returns to default mode from the other two modes.  In Primary or Secondary mode, the screen dims, the tile bar of the curently focused window shows  the mode name and the i3bar shows a red tab with the mode name."
+:pause 3333
+:m1 t
+:pause 3333
+:m2 t
 :quit
-:cmd g7
-:mouse 1 2190 61
-:quit
+
+
+
+
+
+
+#yad 2112 600 7 "Menu | backslash presents a dmenu at the bottom of the screen that expects a two or three character command. The timeout is expected to expire after four seconds, at which time the command is dispatched. Users can type Return for faster dispatch. Hovering over Cancel dismisses. Hovering over Help presents a sideways scrolling dmenu showing two character commands".
+#cmd timeout
+#yad 2112 600 7 "Menu | backslash | g7 presents the workspace g7 with a Google Chrome instance inside. If workspace g7 is empty another Google Chrome instance is created inside it."
+#cmd g7
+#yad 2112 600 7 "Google Chrome is configured with an extension such that openng a new tab opens a new window containing the new tab. This will be done next, leaving two windows in the workspace. Observe the i3 vim-like marks, [two digits inside square brackets] placed at the right end of the title bar."
+#mouse 1 2190 61
+#quit
 
 #
 # Done.
