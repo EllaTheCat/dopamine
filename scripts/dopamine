@@ -74,19 +74,14 @@ cat $0 | while read line; do
         esac
         sleep 0.2
         ;;
-        # Balloon Help.
-        (:yad*)
-        x=$(echo $line | awk '{print $2}')
-        y=$(echo $line | awk '{print $3}')
-        t=$(echo $line | awk '{print $4}')
-        message=${line/:yad $x $y $t /}
-        xdotool mousemove --sync $x $y
-        2>&1  yad --width 400 --height 150 --mouse --no-buttons \
-              --timeout=${t} --timeout-indicator=bottom \
-              --title=Help --text="${message}" | \
-            grep -v 'Gtk-Message: GtkDialog mapped without a transient parent.'
-        sleep 0.2
+        # Use dmenu as a narrator.
+        (:msg*)
+        message=${line/:msg /}
+        echo -e "=== README ===" "\n" \
+             ${message} | fmt -w 160 | \
+            dmenu -b -l 8 -fn "Sans 24" -sb Black -nb Black -sf Yellow -nf Yellow
         ;;
+
         (pause*)
         string=${line/:pause /}
         sleep $((string / 1000))
@@ -98,13 +93,13 @@ exit 0
 #
 # Custom scripts
 #
-
-:yad 2112 600 3 i3 is configured to use modes instead of modifiers. The Menu key cycles through three modes: default, Primary, Secondary, and then back to default. The left Windows key behaves like Menu when used on its own. The space key returns to default mode from Primary and Secondary modes.
-:yad 2112 600 3 Primary mode binds 'i' (for info) to the full screen display of all bindings, arranged by mode. Note: The last four are i3bar mouse bindings, this needs improvement.
+:msg "Yellow text on a black background indicates a message from the narrator of this demo. This text and the title above it are the welcome message. Video playback presents and dismisses messages automatically. Scripting mode playback pauses the demo after presenting each message, and the user must press the Escape key to continue playing the demo."
+:pause 5555
+:msg "i3 is configured to use modes instead of modifiers. The Menu key cycles through three modes: default, Primary, Secondary, and then back to default. The left Windows key behaves like Menu when used on its own. The space key returns to default mode from Primary and Secondary modes.Primary mode binds 'i' (for info) to the full screen display of all bindings, arranged by mode."
 :m1 i
 :pause 9999
 :quit
-:yad 2112 600 3 In Primary or Secondary mode, the screen dims, the title bar of the currently focused window shows the mode name and the i3bar shows a red tab with the mode name. One of these would be sufficient, but some people disa ble the title bar, and some the workspace indicators.
+:msg "In Primary or Secondary mode, the screen dims, the title bar of the currently focused window shows the mode name and the i3bar shows a red tab with the mode name. One of these would be sufficient, but some people disa ble the title bar, and some the workspace indicators. The next scene will create a workspace called 'kb' and a single terminal to show all the key bindings."
 :cmd xx
 :pause 9999
 :m1 t
