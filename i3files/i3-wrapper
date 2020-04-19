@@ -537,15 +537,33 @@ i3filewatcher ()
 }
 
 #
-# List all the keybindings.
+# Show all the keybindings inside a dedicated workspace.
 #
-# - 2019-06-07: bound to Primary+i (for info).
+# - 2019-06-07: bound to Primary+i ('i' for info).
 #
 i3kb ()
 {
-    which i3-make && i3-make
-    i3-msg [title=\"i3 key bindings\"] kill
-    xfce4-terminal -T 'i3 key bindings' -e "less /dev/shm/$USER/i3/bindings" &
+    if [ -e  "/dev/shm/$USER/i3/kb" ];
+       # If the workspace exists the Makefile has ensured that the
+       # bindings are still valid.
+       i3-msg "workspace kb"
+    then
+        # 1st step is done in the Makefile, extracting from i3-wrapper.
+        which i3-make && i3-make
+        # 2nd step ensures a non-transient window & no need to scroll.
+        i3-msg "workspace kb" && sleep 0.75 && \
+            xfce4-terminal -T "xfce4-terminal" && sleep 0.75
+        # 3rd step should be done in the Makefile. It converts a list
+        # of bindings into an executable script that has no spaces in
+        # its path and no arguments. All this because xdotool "type"
+        # stubbornly ignores whitespace and return.
+        echo "#!/bin/bash" > "/dev/shm/$USER/i3/kb"
+        echo "column  /dev/shm/$USER/i3/bindings" >> "/dev/shm/$USER/i3/kb"
+        chmod 700 "/dev/shm/$USER/i3/kb"
+        # 4th step runs the script.
+        xdotool type --clearmodifiers  "/dev/shm/$USER/i3/kb"
+        xdotool key Return
+    fi
 }
 
 #
