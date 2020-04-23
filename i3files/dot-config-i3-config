@@ -338,8 +338,7 @@ mode "Secondary" {
     # Desktop background.
     bindsym n $default, exec --no-startup-id nitrogen --restore
 
-    # Test Harness.
-    bindsym m $default, exec --no-startup-id dopamine
+    bindsym m $secondarynop
 
     bindsym comma $secondarynop
     bindsym period $secondarynop
@@ -393,6 +392,9 @@ workspace "g0" output $cmon
 workspace "g1" output $cmon
 workspace "g2" output $cmon
 workspace "g3" output $cmon
+
+workspace "g8" output $lmon
+workspace "g9" output $lmon
 
 # Assign applications to workspaces.
 # Use this method when launching applications indirectly.
