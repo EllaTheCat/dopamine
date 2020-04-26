@@ -6,7 +6,8 @@
 # -  2020-04-15: My understanding of xdotool has been proven to be
 #    inadequate. It's important to understand what is wrong and why.
 #
-
+# - 2020-04-24: CAUTION: X server crashes may be caused by
+# - interrupting dmenu.
 #
 # Bash script.
 #
@@ -115,19 +116,6 @@ cat $0 | while read line; do
             dmenu -b -l 8 -fn "Sans 24" -sb Black -nb Black -sf Yellow -nf Yellow
         sleep 0.2
         ;;
-
-        # The colon character that indicates a command is prone to
-        # typos that my eyesight may not notice.
-        (:punct:*)
-        case "${line:0:1}" in
-            (:) ;;
-            (:punct:*)
-            message="[Line ${lineno}] Syntax error"
-            echo  "${message}" | fmt -w 160 | \
-                dmenu -b -l 8  -p '>>>>>>>>' -fn "Sans 24" -sb Black -nb Black -sf Yellow -nf Yellow
-            exit -1
-        esac
-        ;;
     esac
 done
 exit 0
@@ -135,25 +123,22 @@ exit 0
 #
 # Custom script.
 #
-
-:msg "Github hosts a repository called 'dopamine' developed by 'EllaTheCat', my nickname on reddit. I have Parkinson's Disease. I like my desktop to look good, but my primary interest is in human interface ergonomics for users with Parkinson's Disease. The demo tries to show what I've done."
+:cmd zz
 :pause 1
-:msg "I currently have two 1920x1080 monitors side-by side. Making a video at 16:9 aspect ratio would require 50% of the total screen area to be letterbox."
+:cmd xx
 :pause 1
-:msg "Desktop Background: Attribution:  Photo by Gregg M. Erickson,https://commons.wikimedia.org/wiki/File:London_360%C2%B0_Panorama_from_the_London_Eye.jpg"
+:msg "Github hosts a repository called 'dopamine' developed by 'EllaTheCat', my nickname on reddit. I have Parkinson's Disease. I like my desktop to look good, but my primary interest is in human interface ergonomics for users with PD and similar conditions. The demo tries to show what I've done."
 :pause 1
-:msg "The default i3 config uses the Super_L key as a modifier. The xcape utility lets us use Super_L  on its own. I have mapped it to Menu. Here are three (major) modes: the built-in 'default' mode, and two custom modes: Primary and Secondary. The Menu key cycles through the three modes. In Primary or Secondary mode, the title bar of the currently focused window shows the mode name, and the screen dims."
+:msg "The default i3 config uses the Super_L key as a modifier. The xcape utility lets us use Super_L  on its own. I have mapped it to Menu for use as a 'mode' key. Here are three (major) modes: the built-in 'default' mode, and two custom modes: Primary and Secondary. The Menu key cycles through the three modes. In Primary or Secondary mode, the title bar of the currently focused window shows the mode name, and the screen dims."
 :pause 1
 :m1 i
-:pause 2
 :msg "This screen shows the key bindings for the three modes. The bindings have all been extracted programmatically."
 :pause 1
-:pause 5
-:msg "The  current i3 config delegates certain commands to the i3-wrapper script.  For example a prompt appears when the Menu and Tab keys (or Menu and backslash keys) are pressed in succession.  The prompt expects a two character command.  A command EITHER launches a designated application in a fresh workspace named after the command, OR brings into focus the running application on its designated workspace. This has been extended to provide ten workspaces for Emacs, e[0-9], and ten for Google Chrome, g[0-9]."
+:msg "The  current i3 config delegates certain commands to the i3-wrapper script.  For example a prompt appears when the Menu and Tab keys (or Menu and backslash keys) are pressed in succession.  The prompt expects a two character command.  A  typical ommand Ebrings into focus the running application on its designated workspace, launching an instance as necessary. This has been extended to provide ten workspaces for Emacs frames, e[0-9], and ten for Google Chrome tabs, g[0-9].  The 'em' and 'gc' commands always launch and alwayd use the current workspace, They are used to add a second instance of Emacs or Google Chrome to e[0-9] and g[0-9] workspaces (amongst other uses)."
 :pause 1
-:icmd "The next scene shows several things in action: (1) command prompt. [2] launching browsers on workspaces [3] adding browsers to workspaces [4] focusing an existing browser workspace [5] Adding a unique two digit i3 mark to windows [6] displaying the unique two digit mark on the titlebar of a window'."
+:cmd "The next scene shows: (1) command prompt. [2] launching browsers on workspaces [3] adding browsers to workspaces [4] focusing an existing browser workspace [5] Adding a unique two digit i3 mark to windows [6] displaying the unique two digit mark on the titlebar of a window'."
 :pause 1
-:msg "Put two browsers on the leftmost monitor. The subject is XFCE/XUbuntu. Please be patient if you can't see the left output of i3. This should take about 7 seconds. Put two browsers on the rightmost monitor. The subject is i3wm."
+:msg "Put two browsers on the leftmost monitor. The subject is XFCE/XUbuntu. Put two browsers on the rightmost monitor. The subject is i3wm."
 :cmd g9
 :pause 1
 :link http://feeblenerd.blogspot.com/2015/11/pretty-i3-with-xfce.html
@@ -169,11 +154,15 @@ exit 0
 :cmd gc
 :pause 1
 :link https://www.reddit.com/r/i3wm/
-:pause
-:msg "I often switch the left hand monitor to receive from a Set Top Box, Fire Stick or ChromeCast, instead of from i3. I might then want to access a workspace on the left by bringing it across to the right.  There is a menu and a keybinding per output such that selecting a window by title or mark brings the entire workspace across."
-:m1 .
+:pause 1
+:cmd g9
 :pause 3
-:msg "That's all."
+:cmd zz
+:cmd xx
+:msg "Sometimes I might switch the left hand monitor HDMI source away from i3 in order to watch TV. I might then want to access a workspace on the left by bringing it across to the right.  There is a menu and a keybinding per output such that selecting a window by title or mark brings the entire workspace across."
+:m1 .
+:msg "Desktop Background: Attribution:  Photo by Gregg M. Erickson,https://commons.wikimedia.org/wiki/File:London_360%C2%B0_Panorama_from_the_London_Eye.jpg"
+
 
 #
 # Done.
