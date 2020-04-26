@@ -76,9 +76,9 @@ focus ()
             # Change to the specified workspace and launch from there.
             # Set $3 'none' to stay on current workspace.
             if [ "$3" == 'none' ]; then
-                i3-msg "exec ${*:5};"
+                i3-msg "exec --no-startup-id ${*:5};"
             else
-                i3-msg "workspace --no-auto-back-and-forth $3; exec ${*:5};"
+                i3-msg "workspace --no-auto-back-and-forth $3; exec --no-startup-id ${*:5};"
             fi
             # Change to the specified output when the window appears.
             # Set $4 'none' to stay on current output.
@@ -222,7 +222,7 @@ i3emgc ()
             # shellcheck disable=2086
             i3-msg "workspace --no-auto-back-and-forth ${arg}, exec sleep 1"
         fi
-        i3-msg "exec  $3"
+        i3-msg "exec --no-startup-id  $3"
         sleep 3
         i3-msg "mark --add --toggle  _${arg}"
     else
@@ -232,7 +232,7 @@ i3emgc ()
             if  [ "${cws}" != "${arg}" ]; then
                 i3-msg "workspace --no-auto-back-and-forth ${arg}, exec sleep 1"
             fi
-            i3-msg "exec $4"
+            i3-msg "exec --no-startup-id $4"
             sleep 3
             i3-msg "mark --add --toggle  _${arg}"
         else
@@ -242,7 +242,7 @@ i3emgc ()
             count=$(i3-msg -t get_marks | sed 's/[]["]//g' | sed 's/,/\n /g' | grep -c "_${arg}")
             if [ ${count} -eq 0 ]; then
                 i3-msg "workspace --no-auto-back-and-forth ${arg}"
-                i3-msg "exec $4"
+                i3-msg "exec  --no-startup-id $4"
                 sleep 3
                 i3-msg "mark --add --toggle  _${arg}"
             else
@@ -356,9 +356,9 @@ i3_lower_lower_hard()
 
         # Use these to add an instance into an existing workspace.
         (em)
-        i3-msg "exec emacsclient.emacs24 -c" ;;
+        i3-msg "exec  --no-startup-id emacsclient.emacs24 -c" ;;
         (gc)
-        i3-msg "exec google-chrome --new-window" ;;
+        i3-msg "exec  --no-startup-id google-chrome --new-window" ;;
 
         # These simply don't fit the easy launch-or-focus template.
         (sg)

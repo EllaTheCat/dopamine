@@ -164,8 +164,8 @@ mode "Primary" {
             -F 'rename workspace to "%s"'
 
     # Launch a terminal. The 'tt' and 'yy' commands are deprecated.
-    bindsym t $default, split h, exec xfce4-terminal -T "xfce4-terminal" &
-    bindsym y $default, split v, exec xfce4-terminal -T "xfce4-terminal" &
+    bindsym t $default, split h, exec  --no-startup-id xfce4-terminal -T "xfce4-terminal" &
+    bindsym y $default, split v, exec  --no-startup-id xfce4-terminal -T "xfce4-terminal" &
 
     # Focus the workspace with the latest [u]rgency hint.
     bindsym u $default, [urgent=latest] focus
@@ -272,7 +272,8 @@ mode "Secondary" {
     bindsym r $default, $i3mouse reset
 
     # Reddit asked how to inject text, this is a proof-of-concept demo.
-    bindsym t $default, exec sleep 0.3 && xdotool getwindowfocus windowfocus type "hello world"
+    bindsym t $default, exec  --no-startup-id \
+            sleep 0.3 && xdotool getwindowfocus windowfocus type "hello world"
     bindsym y $secondarynop
 
     # Spin down the USB drives attached to my desktop PC, their blue
@@ -293,13 +294,13 @@ mode "Secondary" {
     bindsym Tab $default, $i3wrapper -p
 
     # Select an audio output.
-    bindsym a  $default, exec pactl move-sink-input \
+    bindsym a  $default, exec  --no-startup-id pactl move-sink-input \
             "$(pactl list short sink-inputs | awk '{print $1}')" $analogaudiosink ;
-    bindsym h  $default, exec pactl move-sink-input \
+    bindsym h  $default, exec  --no-startup-id pactl move-sink-input \
             "$(pactl list short sink-inputs | awk '{print $1}')" $hdmiaudiosink ;
-    bindsym b  $default, exec pactl move-sink-input \
+    bindsym b  $default, exec  --no-startup-id pactl move-sink-input \
             "$(pactl list short sink-inputs | awk '{print $1}')" $bluetoothaudiosink ;
-    bindsym u  $default, exec pactl move-sink-input \
+    bindsym u  $default, exec  --no-startup-id pactl move-sink-input \
             "$(pactl list short sink-inputs | awk '{print $1}')" $usbaudiosink ;
 
     # {s,d,f} {w,e,r} keys.
