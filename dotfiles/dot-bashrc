@@ -1,6 +1,6 @@
 #!/bin/bash
 # dot-bashrc
-# ubuntu 16.04
+# xbuntu 20.04 LTS
 
 ################################################################
 
@@ -14,8 +14,10 @@ esac
 
 ################################################################
 
+export DOPA=/mnt/94bd806f-4aa9-4514-b2fc-9688182fa571/shevek/EllaTheCat/github/dopamine
+
 export PATH=${PATH}:${HOME}/local/bin
-export PATH=${PATH}:${HOME}/Programs/scripts:${HOME}/Programs/scrypts
+export PATH=${PATH}:${DOPA}/scripts:${DOPA}/scrypts
 export PATH=${PATH}:/snap/bin
 export PATH=${PATH}:/usr/local/sbin:/usr/sbin:/sbin
 export PATH=${PATH}:/usr/local/bin:/usr/bin:/bin
@@ -70,7 +72,7 @@ alias visudo='EDITOR=/usr/bin/vim.tiny /usr/sbin/visudo'
 
 export EDITOR="/usr/bin/vim.tiny"
 export HISTCONTROL="ignoredups:erasedups"
-export HISTIGNORE="&:cd:h:hc:kill:rm:l[ls]:[bf]g:exit:[ ]*"
+export HISTIGNORE="&:cd:h:hc:kill:rm:l[ls]:[bf]g:sudo:exit:[ ]*"
 export HISTSIZE=99999
 export HISTFILESIZE=99999
 export IGNOREEOF=999
@@ -95,8 +97,8 @@ case "$-" in
 esac
 
 # Suppress completion on backups.
-chmod -x ${HOME}/Programs/scripts/*~
-chmod -x ${HOME}/Programs/scrypts/*~
+chmod -x ${DOPA}/scripts/*~
+chmod -x ${DOPA}/scrypts/*~
 
 # Be quiet.
 # setterm -blength 0
@@ -259,7 +261,7 @@ function ffprobe42
 ################################################################
 
 # TSduck installs in "${HOME}/usr/local" by default, hence this.
-[ -e  ${HOME}/Programs/scripts/tsduck-environment ] &&  source tsduck-environment
+[ -e  ${DOPA}/scripts/tsduck-environment ] &&  source tsduck-environment
 
 ################################################################
 # Done.
